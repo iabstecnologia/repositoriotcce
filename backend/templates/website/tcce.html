@@ -1,0 +1,443 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block extra_css %}
+<style>
+/* Estilo Padrão (Botão Inativo): Fonte Branca (já configurada com text-white) */
+.nav-link-custom {
+    color: white; /* Garante que a fonte seja branca, sobrescrevendo qualquer estilo padrão do nav-link */
+    background-color:#72808A;
+    border: none; /* Remove a borda padrão do nav-tabs para um visual mais limpo */
+}
+
+/* Estilo para o Botão Ativo: Fonte Cinza */
+.nav-link-custom.active {
+    color: #6c757d; /* Cor cinza padrão do Bootstrap (text-secondary) */
+    background-color:#f8f9fa;
+    /* Garante que o fundo não mude, se necessário */
+    border-radius: 5px 5px 0 0; /* Exemplo de indicador sutil para o ativo */
+}
+
+/* Estilo ao Passar o Mouse (Hover) */
+.nav-link-custom:hover:not(.active) {
+    color: #f8f9fa; /* Branco mais claro no hover para inativos */
+    border: none;
+}
+
+/* CONTAINER DAS IMAGENS */
+.timeline-container {
+    /* Corresponde a style="width: 286px; height: 206px;" */
+    width: 286px;
+    height: 206px;
+}
+
+/* IMAGEM 1: Imagem Ilustrativa (200-5522.svg) */
+.timeline-image-main {
+    /* Corresponde a style="width: 224.81px; height: 142px; left: 30.74px; top: 0;" */
+    width: 224.81px;
+    height: 142px;
+    left: 30.74px;
+    top: 0;
+}
+
+/* IMAGEM 2: Linha do Tempo (200-5481.svg) */
+.timeline-image-line {
+    /* Corresponde a style="width: 286px; height: 23.62px; left: 0; top: 161.81px;" */
+    width: 286px;
+    height: 23.62px;
+    left: 0;
+    top: 161.81px;
+}
+
+/* IMAGEM 3: Datas (200-5497.svg) */
+.timeline-image-dates {
+    /* Corresponde a style="width: 217.27px; height: 13.82px; left: 34.68px; top: 192.16px;" */
+    width: 217.27px;
+    height: 13.82px;
+    left: 34.68px;
+    top: 192.16px;
+}
+
+/* ESTILOS DE TEXTO */
+
+/* Título Secundário (COMPENSAÇÃO ESPELEOLÓGICA) */
+.text-header-pretitle {
+    /* Corresponde a style="font-size: 16px; margin-top: 40px;" */
+    font-size: 16px;
+    margin-top: 40px;
+}
+
+/* Título Principal (TCCE ICMBio/Vale I/2018) */
+.text-header-title {
+    /* Corresponde a style="font-size: 48px; margin-top: -10px;" */
+    font-size: 48px;
+    margin-top: -10px;
+}
+
+/* Parágrafo de Conteúdo */
+.text-body-paragraph {
+    /* Corresponde a style="font-size: 18px; line-height: 1.5;" */
+    font-size: 18px;
+    line-height: 1.5;
+}
+
+/* Força dimensões fixas para todos os ícones */
+.icon-stat {
+    width: 60px;  /* Ajuste este valor para a largura desejada, exemplo: 60px */
+    height: 60px; /* Ajuste este valor para a altura desejada (deve ser o mesmo que a largura) */
+    object-fit: contain; /* Garante que a imagem se ajuste dentro das dimensões sem ser cortada */
+    margin-bottom: 1rem; /* Mantém o espaçamento para o elemento abaixo (counter-value) */
+}
+
+/* Opcional: Se os ícones forem SVGs, você pode querer centralizá-los dentro de um wrapper.
+   No seu HTML, o <img> já está dentro de um d-flex align-items-center,
+   então definir width/height fixos já deve ser suficiente.
+*/
+
+/* CSS para garantir altura uniforme do texto do parágrafo */
+.stat-text-footer {
+    /* Define uma altura mínima que acomode o texto mais longo (Estimativa de Kilometragem Percorrida) */
+    /* Assumindo line-height de ~1.5, 3em acomoda 2 linhas confortavelmente. Ajuste conforme necessário. */
+    min-height: 3em;
+    line-height: 1.5;
+    /* Garante que o texto longo demais seja cortado, se necessário, em vez de quebrar o layout */
+    overflow: hidden;
+}
+</style>
+{% endblock extra_css %}
+
+{% block title %}Página Inicial - Repositório TCCEs{% endblock title %}
+
+{% block hero_title %}
+    Repositório TCCEs
+{% endblock hero_title %}
+
+{% block hero_content %}{% endblock hero_content %}
+
+{% block content %}
+
+    <div class="w-100 bg-custom-dark-gray">
+        <div class="container h-100">
+            <div class="row h-100 align-items-center justify-content-center">
+                <div class="col-12">
+
+                    <ul class="nav nav-tabs justify-content-center border-0" id="tcceTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+
+                            <button class="nav-link-custom active font-open-sans fw-extrabold fs-5 p-2"
+                                    id="tcce1-tab"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#tcce1"
+                                    type="button"
+                                    role="tab"
+                                    aria-controls="tcce1"
+                                    aria-selected="true">
+                                TCCE nº 1/2018
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link-custom font-open-sans fw-extrabold fs-5 p-2"
+                                    id="tcce2-tab"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#tcce2"
+                                    type="button"
+                                    role="tab"
+                                    aria-controls="tcce2"
+                                    aria-selected="false">
+                                TCCE nº 2/2020
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link-custom font-open-sans fw-extrabold fs-5 p-2"
+                                    id="tcce3-tab"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#tcce3"
+                                    type="button"
+                                    role="tab"
+                                    aria-controls="tcce3"
+                                    aria-selected="false">
+                                TCCE nº 1/2022
+                            </button>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="divider mt-1"></div>
+
+    <!-- TCCE Tabs Content -->
+    <div>
+        <div class="tab-content" id="tcceTabsContent">
+            <!-- TCCE Details Section (TCCE nº 1/2018) -->
+            <div class="tab-pane fade show active" id="tcce1" role="tabpanel" aria-labelledby="tcce1-tab">
+                <div class="w-100 bg-custom-light-gray">
+                    <div class="container py-5">
+                        <div class="row justify-content-center">
+                            <div class="col-12">
+                                <div class="row align-items-center gy-4">
+                                    <div class="col-lg-4 d-flex justify-content-center">
+                                        <div class="position-relative overflow-hidden timeline-container">
+                                            <img src="{% static 'assets/200-5522.svg' %}" class="position-absolute timeline-image-main" alt="Imagem Ilustrativa" />
+                                            <img src="{% static 'assets/200-5481.svg' %}" class="position-absolute timeline-image-line" alt="Linha do Tempo" />
+                                            <img src="{% static 'assets/200-5497.svg' %}" class="position-absolute timeline-image-dates" alt="Datas" />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-8">
+                                        <p class="text-custom-light-gray font-open-sans fw-bold text-uppercase text-header-pretitle">COMPENSAÇÃO ESPELEÓGICA</p>
+                                        <h2 class="text-custom-medium-gray font-chunkfive text-header-title">TCCE ICMBio/Vale I/2018</h2>
+                                        <p class="text-custom-dark font-montserrat text-body-paragraph">
+                                            O Termo de Compromisso de Compensação Espeleológica – TCCE, celebrado entre o Instituto Chico Mendes de Conservação da Biodiversidade
+                                            – ICMBio e a VALE S.A. tem como objetivo consolidar obrigações entre as partes para conservação e compensação de cavidades de alta relevância,
+                                            em decorrência do processo de empreendimento “Ampliação dos Corpos N4 e N5, Serra Norte – Complexo Minerador Ferro Carajás”, entre as obrigações
+                                            assumidas pela VALE é previsto o custeamento de ações de estudos, pesquisas e de infraestrutura para pesquisa que contribuam com o avanço do
+                                            conhecimento no tema de Espeleologia.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Contador -->
+                <div class="container py-5">
+                    <div class="row text-center row-cols-2 row-cols-md-3 row-cols-lg-6 g-4 align-items-stretch">
+
+                        <div class="col">
+                            <div class="d-flex flex-column align-items-center h-100 p-2">
+                                <img src="{% static 'assets/11-1149.svg' %}" alt="Ícone Produções Acadêmicas" class="icon-stat mb-3" />
+                                <div class="counter-value font-open-sans fw-bold display-4" data-target="81">0</div>
+                                <p class="text-muted font-open-sans mt-auto stat-text-footer">Produções Acadêmicas</p>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="d-flex flex-column align-items-center h-100 p-2">
+                                <img src="{% static 'assets/11-1288.svg' %}" alt="Ícone Produções Acadêmicas Publicadas" class="icon-stat mb-3" />
+                                <div class="counter-value font-open-sans fw-bold display-4" data-target="44">0</div>
+                                <p class="text-muted font-open-sans mt-auto stat-text-footer">Produções Acadêmicas Publicadas</p>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="d-flex flex-column align-items-center h-100 p-2">
+                                <img src="{% static 'assets/11-1294.svg' %}" alt="Ícone Espécies Novas" class="icon-stat mb-3" />
+                                <div class="counter-value font-open-sans fw-bold display-4" data-target="16">0</div>
+                                <p class="text-muted font-open-sans mt-auto stat-text-footer">Espécies Novas</p>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="d-flex flex-column align-items-center h-100 p-2">
+                                <img src="{% static 'assets/11-1304.svg' %}" alt="Ícone Kilometragem Percorrida" class="icon-stat mb-3" />
+                                <div class="counter-value font-open-sans fw-bold display-4" data-target="117050" data-format="km">0</div>
+                                <p class="text-muted font-open-sans mt-auto stat-text-footer">Estimativa de Kilometragem Percorrida (km)</p>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="d-flex flex-column align-items-center h-100 p-2">
+                                <img src="{% static 'assets/11-1149.svg' %}" alt="Ícone Saídas de Campo Programadas" class="icon-stat mb-3" />
+                                <div class="counter-value font-open-sans fw-bold display-4" data-target="73">0</div>
+                                <p class="text-muted font-open-sans mt-auto stat-text-footer">Saídas de Campo Programadas</p>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="d-flex flex-column align-items-center h-100 p-2">
+                                <img src="{% static 'assets/11-1288.svg' %}" alt="Ícone Saídas de Campo Realizadas" class="icon-stat mb-3" />
+                                <div class="counter-value font-open-sans fw-bold display-4" data-target="104">0</div>
+                                <p class="text-muted font-open-sans mt-auto stat-text-footer">Saídas de Campo Realizadas</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!-- TCCE Details Section (TCCE nº 2/2020) -->
+            <div class="tab-pane fade" id="tcce2" role="tabpanel" aria-labelledby="tcce2-tab">
+                <div class="w-100 bg-custom-light-gray">
+                    <div class="container py-5">
+                        <div class="row justify-content-center">
+                            <div class="col-12">
+                                <div class="row align-items-center gy-4">
+                                    <div class="col-lg-4 d-flex justify-content-center">
+                                        <div class="position-relative overflow-hidden timeline-container">
+                                            <img src="{% static 'assets/200-5522.svg' %}" class="position-absolute timeline-image-main" alt="Imagem Ilustrativa" />
+                                            <img src="{% static 'assets/200-5481.svg' %}" class="position-absolute timeline-image-line" alt="Linha do Tempo" />
+                                            <img src="{% static 'assets/200-5497.svg' %}" class="position-absolute timeline-image-dates" alt="Datas" />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-8">
+                                        <p class="text-custom-light-gray font-open-sans fw-bold text-uppercase text-header-pretitle">COMPENSAÇÃO ESPELEÓGICA</p>
+                                        <h2 class="text-custom-medium-gray font-chunkfive text-header-title">TCCE ICMBio/Vale II/2020</h2>
+                                        <p class="text-custom-dark font-montserrat text-body-paragraph">
+                                            O Termo de Compromisso de Compensação Espeleológica – TCCE, celebrado entre o Instituto Chico Mendes de Conservação da Biodiversidade
+                                            – ICMBio e a VALE S.A. tem como objetivo consolidar obrigações entre as partes para conservação e compensação de cavidades de alta relevância,
+                                            em decorrência do processo de empreendimento “Ampliação dos Corpos N4 e N5, Serra Norte – Complexo Minerador Ferro Carajás”, entre as obrigações
+                                            assumidas pela VALE é previsto o custeamento de ações de estudos, pesquisas e de infraestrutura para pesquisa que contribuam com o avanço do
+                                            conhecimento no tema de Espeleologia.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Contador -->
+                <div class="container py-5">
+                    <div class="row text-center row-cols-2 row-cols-md-3 row-cols-lg-6 g-4 align-items-stretch">
+
+                        <div class="col">
+                            <div class="d-flex flex-column align-items-center h-100 p-2">
+                                <img src="{% static 'assets/11-1149.svg' %}" alt="Ícone Produções Acadêmicas" class="icon-stat mb-3" />
+                                <div class="counter-value font-open-sans fw-bold display-4" data-target="81">0</div>
+                                <p class="text-muted font-open-sans mt-auto stat-text-footer">Produções Acadêmicas</p>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="d-flex flex-column align-items-center h-100 p-2">
+                                <img src="{% static 'assets/11-1288.svg' %}" alt="Ícone Produções Acadêmicas Publicadas" class="icon-stat mb-3" />
+                                <div class="counter-value font-open-sans fw-bold display-4" data-target="44">0</div>
+                                <p class="text-muted font-open-sans mt-auto stat-text-footer">Produções Acadêmicas Publicadas</p>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="d-flex flex-column align-items-center h-100 p-2">
+                                <img src="{% static 'assets/11-1294.svg' %}" alt="Ícone Espécies Novas" class="icon-stat mb-3" />
+                                <div class="counter-value font-open-sans fw-bold display-4" data-target="16">0</div>
+                                <p class="text-muted font-open-sans mt-auto stat-text-footer">Espécies Novas</p>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="d-flex flex-column align-items-center h-100 p-2">
+                                <img src="{% static 'assets/11-1304.svg' %}" alt="Ícone Kilometragem Percorrida" class="icon-stat mb-3" />
+                                <div class="counter-value font-open-sans fw-bold display-4" data-target="117050" data-format="km">0</div>
+                                <p class="text-muted font-open-sans mt-auto stat-text-footer">Estimativa de Kilometragem Percorrida (km)</p>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="d-flex flex-column align-items-center h-100 p-2">
+                                <img src="{% static 'assets/11-1149.svg' %}" alt="Ícone Saídas de Campo Programadas" class="icon-stat mb-3" />
+                                <div class="counter-value font-open-sans fw-bold display-4" data-target="73">0</div>
+                                <p class="text-muted font-open-sans mt-auto stat-text-footer">Saídas de Campo Programadas</p>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="d-flex flex-column align-items-center h-100 p-2">
+                                <img src="{% static 'assets/11-1288.svg' %}" alt="Ícone Saídas de Campo Realizadas" class="icon-stat mb-3" />
+                                <div class="counter-value font-open-sans fw-bold display-4" data-target="104">0</div>
+                                <p class="text-muted font-open-sans mt-auto stat-text-footer">Saídas de Campo Realizadas</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- TCCE Details Section (TCCE nº 1/2022) -->
+            <div class="tab-pane fade" id="tcce3" role="tabpanel" aria-labelledby="tcce3-tab">
+                <div class="w-100 bg-custom-light-gray">
+                    <div class="container py-5">
+                        <div class="row justify-content-center">
+                            <div class="col-12">
+                                <div class="row align-items-center gy-4">
+                                    <div class="col-lg-4 d-flex justify-content-center">
+                                        <div class="position-relative overflow-hidden timeline-container">
+                                            <img src="{% static 'assets/200-5522.svg' %}" class="position-absolute timeline-image-main" alt="Imagem Ilustrativa" />
+                                            <img src="{% static 'assets/200-5481.svg' %}" class="position-absolute timeline-image-line" alt="Linha do Tempo" />
+                                            <img src="{% static 'assets/200-5497.svg' %}" class="position-absolute timeline-image-dates" alt="Datas" />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-8">
+                                        <p class="text-custom-light-gray font-open-sans fw-bold text-uppercase text-header-pretitle">COMPENSAÇÃO ESPELEOLÓGICA</p>
+                                        <h2 class="text-custom-medium-gray font-chunkfive text-header-title">TCCE ICMBio/Vale I/2022</h2>
+                                        <p class="text-custom-dark font-montserrat text-body-paragraph">
+                                            O Termo de Compromisso de Compensação Espeleológica – TCCE, celebrado entre o Instituto Chico Mendes de Conservação da Biodiversidade
+                                            – ICMBio e a VALE S.A. tem como objetivo consolidar obrigações entre as partes para conservação e compensação de cavidades de alta relevância,
+                                            em decorrência do processo de empreendimento “Ampliação dos Corpos N4 e N5, Serra Norte – Complexo Minerador Ferro Carajás”, entre as obrigações
+                                            assumidas pela VALE é previsto o custeamento de ações de estudos, pesquisas e de infraestrutura para pesquisa que contribuam com o avanço do
+                                            conhecimento no tema de Espeleologia.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Contador -->
+                <div class="container py-5">
+                    <div class="row text-center row-cols-2 row-cols-md-3 row-cols-lg-6 g-4 align-items-stretch">
+
+                        <div class="col">
+                            <div class="d-flex flex-column align-items-center h-100 p-2">
+                                <img src="{% static 'assets/11-1149.svg' %}" alt="Ícone Produções Acadêmicas" class="icon-stat mb-3" />
+                                <div class="counter-value font-open-sans fw-bold display-4" data-target="81">0</div>
+                                <p class="text-muted font-open-sans mt-auto stat-text-footer">Produções Acadêmicas</p>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="d-flex flex-column align-items-center h-100 p-2">
+                                <img src="{% static 'assets/11-1288.svg' %}" alt="Ícone Produções Acadêmicas Publicadas" class="icon-stat mb-3" />
+                                <div class="counter-value font-open-sans fw-bold display-4" data-target="44">0</div>
+                                <p class="text-muted font-open-sans mt-auto stat-text-footer">Produções Acadêmicas Publicadas</p>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="d-flex flex-column align-items-center h-100 p-2">
+                                <img src="{% static 'assets/11-1294.svg' %}" alt="Ícone Espécies Novas" class="icon-stat mb-3" />
+                                <div class="counter-value font-open-sans fw-bold display-4" data-target="16">0</div>
+                                <p class="text-muted font-open-sans mt-auto stat-text-footer">Espécies Novas</p>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="d-flex flex-column align-items-center h-100 p-2">
+                                <img src="{% static 'assets/11-1304.svg' %}" alt="Ícone Kilometragem Percorrida" class="icon-stat mb-3" />
+                                <div class="counter-value font-open-sans fw-bold display-4" data-target="117050" data-format="km">0</div>
+                                <p class="text-muted font-open-sans mt-auto stat-text-footer">Estimativa de Kilometragem Percorrida (km)</p>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="d-flex flex-column align-items-center h-100 p-2">
+                                <img src="{% static 'assets/11-1149.svg' %}" alt="Ícone Saídas de Campo Programadas" class="icon-stat mb-3" />
+                                <div class="counter-value font-open-sans fw-bold display-4" data-target="73">0</div>
+                                <p class="text-muted font-open-sans mt-auto stat-text-footer">Saídas de Campo Programadas</p>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="d-flex flex-column align-items-center h-100 p-2">
+                                <img src="{% static 'assets/11-1288.svg' %}" alt="Ícone Saídas de Campo Realizadas" class="icon-stat mb-3" />
+                                <div class="counter-value font-open-sans fw-bold display-4" data-target="104">0</div>
+                                <p class="text-muted font-open-sans mt-auto stat-text-footer">Saídas de Campo Realizadas</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}
+
+{% block extra_js %}
+
+{% endblock extra_js %}

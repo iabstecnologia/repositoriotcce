@@ -1,0 +1,44 @@
+# ----------------------------------------------------------------------
+# Estrutura Python e Ambientes Virtuais
+# ----------------------------------------------------------------------
+
+Ambientes virtuais
+
+.venv/
+env/
+venv/
+pycache/
+*.pyc
+
+Logs
+
+*.log
+
+# ----------------------------------------------------------------------
+# Configurações de Django e Arquivos Gerados
+# ----------------------------------------------------------------------
+
+Chaves secretas e configurações locais (CRÍTICO)
+
+.env
+
+Banco de dados local (se estiver usando sqlite3 no desenvolvimento)
+
+db.sqlite3
+
+Arquivos de mídia e estáticos gerados
+
+/backend/media/
+/backend/staticfiles/
+
+Pastas de migração vazias (opcional)
+
+/migrations/
+
+# ----------------------------------------------------------------------
+# Ferramentas e IDEs
+# ----------------------------------------------------------------------
+
+.DS_Store
+PyCharm
+.idea/

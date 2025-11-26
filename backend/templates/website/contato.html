@@ -1,0 +1,88 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Página Inicial - Repositório TCCEs{% endblock title %}
+
+{% block extra_css %}{% endblock extra_css %}
+
+{% block hero_title %}
+    Contato
+{% endblock hero_title %}
+
+{% block hero_content %}{% endblock hero_content %}
+
+{% block content %}
+
+<!-- Divider -->
+<div class="divider mt-1"></div>
+
+<!-- Contact Form Section -->
+<div class="container py-5 position-relative z-1">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <!-- Container Principal de Contato (Simulando o card) -->
+            <div class="bg-custom-light-gray rounded-4 p-sm-5 p-4 shadow-lg mt-neg-150 z-2">
+
+                <form action="seu-script-de-envio.php" method="POST">
+
+                    <div class="mb-3">
+                        <label for="nomeInput" class="form-label visually-hidden">Nome</label>
+                        <input type="text"
+                            class="form-control bg-white bg-opacity-60 border border-custom-green rounded-3 font-open-sans text-placeholder h-lg-60"
+                            id="nomeInput"
+                            name="nome"
+                            placeholder="Nome"
+                            required
+                            aria-label="Nome completo" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="emailInput" class="form-label visually-hidden">Email</label>
+                        <input type="email"
+                            class="form-control bg-white bg-opacity-60 border border-custom-green rounded-3 font-open-sans text-placeholder h-lg-60"
+                            id="emailInput"
+                            name="email"
+                            placeholder="Email"
+                            required
+                            aria-label="Endereço de email" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="telefoneInput" class="form-label visually-hidden">Telefone</label>
+                        <input type="tel"
+                            class="form-control bg-white bg-opacity-60 border border-custom-green rounded-3 font-open-sans text-placeholder h-lg-60"
+                            id="telefoneInput"
+                            name="telefone"
+                            placeholder="Telefone"
+                            aria-label="Número de telefone" />
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="mensagemTextarea" class="form-label visually-hidden">Mensagem</label>
+                        <textarea class="form-control bg-white bg-opacity-60 border border-custom-green rounded-3 font-open-sans text-placeholder"
+                                id="mensagemTextarea"
+                                name="mensagem"
+                                placeholder="Mensagem"
+                                rows="8"
+                                required
+                                aria-label="Corpo da mensagem"></textarea>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit"
+                                class="btn bg-custom-green text-white font-open-sans rounded-3 px-5 py-1">
+                            ENVIAR
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block extra_js %}
+
+{% endblock extra_js %}
