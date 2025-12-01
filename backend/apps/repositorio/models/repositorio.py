@@ -52,7 +52,7 @@ class Subprojeto(models.Model):
         related_name="subprojetos",
         verbose_name="Projeto"
     )
-    nome = models.CharField(max_length=150, unique=True, verbose_name="Nome do Subprojeto")
+    nome = models.CharField(max_length=150, verbose_name="Nome do Subprojeto")
     ativo = models.BooleanField(default=True, verbose_name="Ativo")
 
     class Meta:
@@ -66,7 +66,7 @@ class Subprojeto(models.Model):
 
 class Autor(models.Model):
     """Armazena informações sobre autores/colaboradores."""
-    nome = models.CharField(max_length=255, unique=True, verbose_name="Nome Completo do Autor")
+    nome = models.CharField(max_length=255, verbose_name="Nome Completo do Autor")
     lattes_id = models.CharField(max_length=30, blank=True, null=True, verbose_name="ID Lattes")
     ativo = models.BooleanField(default=True, verbose_name="Ativo")
 
