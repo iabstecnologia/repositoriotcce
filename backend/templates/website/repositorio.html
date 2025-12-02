@@ -416,191 +416,92 @@
 
     <div class="row justify-content-center">
         <div class="col-lg-8" id="submissionsContainer">
-            <!-- Ordenação de Submissões -->
-            <div class="d-flex justify-content-end mb-3">
-                <div class="dropdown">
-                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="sortDropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                        Ordenar por: <span id="currentSortLabel">Recente</span>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="sortDropdownMenuButton">
-                        <li><a class="dropdown-item sort-option" href="#" data-sort-by="-data_publicacao">Mais Recente</a></li>
-                        <li><a class="dropdown-item sort-option" href="#" data-sort-by="data_publicacao">Mais Antigo</a></li>
-                        <li><a class="dropdown-item sort-option" href="#" data-sort-by="titulo">Título (A-Z)</a></li>
-                        <li><a class="dropdown-item sort-option" href="#" data-sort-by="-titulo">Título (Z-A)</a></li>
-                    </ul>
+            <!-- Mensagem quando não há submissões -->
+            {% if not submissoes %}
+                <div class="alert alert-info text-center">
+                    <p class="mb-0">Nenhuma submissão encontrada no momento.</p>
                 </div>
-            </div>
-            <!-- Submission Item -->
-            <div class="card border-0 card-item-hoverable">
-                <div class="row g-0 align-items-center py-3 border-bottom border-secondary-subtle p-4">
-                    <div class="col-auto">
-                        <img src="{% static 'assets/198-196.svg' %}" alt="File icon" class="submission-icon" />
-                    </div>
-                    <div class="col ps-3">
-                        <p class="mb-0 text-custom-dark font-open-sans fw-medium small">Nome Arquivo - Autor <br/>02/24/2022</p>
-                        <div class="d-flex flex-wrap gap-2 mt-2">
-                            <span class="badge rounded-pill text-bg-publicacao small">Revista</span>
-                            <span class="badge rounded-pill text-bg-ano small">2003</span>
-                            <span class="badge rounded-pill text-bg-projeto small">TCCE I</span>
-                            <span class="badge rounded-pill text-bg-ciencia small">Biologia</span>
+            {% else %}
+                <!-- Loop através das submissões -->
+                {% for submissao in submissoes %}
+                    <div class="card border-0 card-item-hoverable">
+                        <div class="row g-0 align-items-center py-3 border-bottom border-secondary-subtle p-4">
+                            <div class="col-auto">
+                                <img src="{% static 'assets/198-196.svg' %}" alt="File icon" class="submission-icon" />
+                            </div>
+                            <div class="col ps-3">
+                                <p class="mb-0 text-custom-dark font-open-sans fw-medium small">
+                                    <strong>{{ submissao.titulo }}</strong> - 
+                                    {% for autor in submissao.autores.all %}
+                                        {{ autor.nome }}{% if not forloop.last %}, {% endif %}
+                                    {% endfor %}
+                                    <br/>
+                                    {{ submissao.data_publicacao|date:"d/m/Y" }}
+                                </p>
+                                <div class="d-flex flex-wrap gap-2 mt-2">
+                                    <span class="badge rounded-pill text-bg-ciencia small">{{ submissao.area_tematica.nome }}</span>
+                                    <span class="badge rounded-pill text-bg-projeto small">{{ submissao.tipo_documento.nome }}</span>
+                                    <span class="badge rounded-pill text-bg-publicacao small">{{ submissao.tipo_publicacao.nome }}</span>
+                                </div>
+                            </div>
+                            <div class="col-auto d-flex flex-column flex-md-row gap-2">
+                                {% if submissao.arquivo %}
+                                    <a href="{{ submissao.arquivo.url }}" class="btn btn-sm bg-custom-green text-white rounded-circle d-flex align-items-center justify-content-center view-btn" title="Visualizar">
+                                        <img src="{% static 'assets/198-300.svg' %}" alt="Visualizar icon" class="view-icon" />
+                                    </a>
+                                {% endif %}
+                                <button class="btn btn-sm bg-custom-green text-white rounded-circle d-flex align-items-center justify-content-center share-btn" title="Compartilhar">
+                                    <img src="{% static 'assets/198-296.svg' %}" alt="Compartilhar icon" class="share-icon" />
+                                </button>
+                                {% if submissao.arquivo %}
+                                    <a href="{{ submissao.arquivo.url }}" download class="btn btn-sm bg-custom-green text-white rounded-circle d-flex align-items-center justify-content-center download-btn" title="Download">
+                                        <img src="{% static 'assets/198-292.svg' %}" alt="Download icon" class="download-icon" />
+                                    </a>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
-                    <div class="col-auto d-flex flex-column flex-md-row gap-2">
-                        <button class="btn btn-sm bg-custom-green text-white rounded-circle d-flex align-items-center justify-content-center view-btn" title="Visualizar">
-                            <img src="{% static 'assets/198-300.svg' %}" alt="Visualizar icon" class="view-icon" />
-                        </button>
-
-                        <button class="btn btn-sm bg-custom-green text-white rounded-circle d-flex align-items-center justify-content-center share-btn" title="Compartilhar">
-                            <img src="{% static 'assets/198-296.svg' %}" alt="Compartilhar icon" class="share-icon" />
-                        </button>
-
-                        <button class="btn btn-sm bg-custom-green text-white rounded-circle d-flex align-items-center justify-content-center download-btn" title="Download">
-                            <img src="{% static 'assets/198-292.svg' %}" alt="Download icon" class="download-icon" />
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card border-0 card-item-hoverable">
-                <div class="row g-0 align-items-center py-3 border-bottom border-secondary-subtle p-4">
-                    <div class="col-auto">
-                        <img src="{% static 'assets/198-224.svg' %}" alt="File icon" class="submission-icon" />
-                    </div>
-                    <div class="col ps-3">
-                        <p class="mb-0 text-custom-dark font-open-sans fw-medium small">Nome Arquivo - Autor <br/>02/24/2022</p>
-                        <div class="d-flex flex-wrap gap-2 mt-2">
-                            <span class="badge rounded-pill text-bg-publicacao small">Revista</span>
-                            <span class="badge rounded-pill text-bg-ano small">2003</span>
-                            <span class="badge rounded-pill text-bg-projeto small">TCCE I</span>
-                            <span class="badge rounded-pill text-bg-ciencia small">Biologia</span>
-                        </div>
-                    </div>
-                    <div class="col-auto d-flex flex-column flex-md-row gap-2">
-                        <button class="btn btn-sm bg-custom-green text-white rounded-circle d-flex align-items-center justify-content-center view-btn" title="Visualizar">
-                            <img src="{% static 'assets/198-300.svg' %}" alt="Visualizar icon" class="view-icon" />
-                        </button>
-
-                        <button class="btn btn-sm bg-custom-green text-white rounded-circle d-flex align-items-center justify-content-center share-btn" title="Compartilhar">
-                            <img src="{% static 'assets/198-296.svg' %}" alt="Compartilhar icon" class="share-icon" />
-                        </button>
-
-                        <button class="btn btn-sm bg-custom-green text-white rounded-circle d-flex align-items-center justify-content-center download-btn" title="Download">
-                            <img src="{% static 'assets/198-292.svg' %}" alt="Download icon" class="download-icon" />
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card border-0 card-item-hoverable">
-                <div class="row g-0 align-items-center py-3 border-bottom border-secondary-subtle p-4">
-                    <div class="col-auto">
-                        <img src="{% static 'assets/198-244.svg' %}" alt="File icon" class="submission-icon" />
-                    </div>
-                    <div class="col ps-3">
-                        <p class="mb-0 text-custom-dark font-open-sans fw-medium small">Nome Arquivo - Autor <br/>02/24/2022</p>
-                        <div class="d-flex flex-wrap gap-2 mt-2">
-                            <span class="badge rounded-pill text-bg-publicacao small">Revista</span>
-                            <span class="badge rounded-pill text-bg-ano small">2003</span>
-                            <span class="badge rounded-pill text-bg-projeto small">TCCE I</span>
-                            <span class="badge rounded-pill text-bg-ciencia small">Biologia</span>
-                        </div>
-                    </div>
-                    <div class="col-auto d-flex flex-column flex-md-row gap-2">
-                        <button class="btn btn-sm bg-custom-green text-white rounded-circle d-flex align-items-center justify-content-center view-btn" title="Visualizar">
-                            <img src="{% static 'assets/198-300.svg' %}" alt="Visualizar icon" class="view-icon" />
-                        </button>
-
-                        <button class="btn btn-sm bg-custom-green text-white rounded-circle d-flex align-items-center justify-content-center share-btn" title="Compartilhar">
-                            <img src="{% static 'assets/198-296.svg' %}" alt="Compartilhar icon" class="share-icon" />
-                        </button>
-
-                        <button class="btn btn-sm bg-custom-green text-white rounded-circle d-flex align-items-center justify-content-center download-btn" title="Download">
-                            <img src="{% static 'assets/198-292.svg' %}" alt="Download icon" class="download-icon" />
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card border-0 card-item-hoverable">
-                <div class="row g-0 align-items-center py-3 border-bottom border-secondary-subtle p-4">
-                    <div class="col-auto">
-                        <img src="{% static 'assets/198-265.svg' %}" alt="File icon" class="submission-icon" />
-                    </div>
-                    <div class="col ps-3">
-                        <p class="mb-0 text-custom-dark font-open-sans fw-medium small">Nome Arquivo - Autor <br/>02/24/2022</p>
-                        <div class="d-flex flex-wrap gap-2 mt-2">
-                            <span class="badge rounded-pill text-bg-publicacao small">Revista</span>
-                            <span class="badge rounded-pill text-bg-ano small">2003</span>
-                            <span class="badge rounded-pill text-bg-projeto small">TCCE I</span>
-                            <span class="badge rounded-pill text-bg-ciencia small">Biologia</span>
-                        </div>
-                    </div>
-                    <div class="col-auto d-flex flex-column flex-md-row gap-2">
-                        <button class="btn btn-sm bg-custom-green text-white rounded-circle d-flex align-items-center justify-content-center view-btn" title="Visualizar">
-                            <img src="{% static 'assets/198-300.svg' %}" alt="Visualizar icon" class="view-icon" />
-                        </button>
-
-                        <button class="btn btn-sm bg-custom-green text-white rounded-circle d-flex align-items-center justify-content-center share-btn" title="Compartilhar">
-                            <img src="{% static 'assets/198-296.svg' %}" alt="Compartilhar icon" class="share-icon" />
-                        </button>
-
-                        <button class="btn btn-sm bg-custom-green text-white rounded-circle d-flex align-items-center justify-content-center download-btn" title="Download">
-                            <img src="{% static 'assets/198-292.svg' %}" alt="Download icon" class="download-icon" />
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card border-0 card-item-hoverable">
-                <div class="row g-0 align-items-center py-3 border-bottom border-secondary-subtle p-4">
-                    <div class="col-auto">
-                        <img src="{% static 'assets/198-281.svg' %}" alt="File icon" class="submission-icon" />
-                    </div>
-                    <div class="col ps-3">
-                        <p class="mb-0 text-custom-dark font-open-sans fw-medium small">Nome Arquivo - Autor <br/>02/24/2022</p>
-                        <div class="d-flex flex-wrap gap-2 mt-2">
-                            <span class="badge rounded-pill text-bg-publicacao small">Revista</span>
-                            <span class="badge rounded-pill text-bg-ano small">2003</span>
-                            <span class="badge rounded-pill text-bg-projeto small">TCCE I</span>
-                            <span class="badge rounded-pill text-bg-ciencia small">Biologia</span>
-                        </div>
-                    </div>
-                    <div class="col-auto d-flex flex-column flex-md-row gap-2">
-                        <button class="btn btn-sm bg-custom-green text-white rounded-circle d-flex align-items-center justify-content-center view-btn" title="Visualizar">
-                            <img src="{% static 'assets/198-300.svg' %}" alt="Visualizar icon" class="view-icon" />
-                        </button>
-
-                        <button class="btn btn-sm bg-custom-green text-white rounded-circle d-flex align-items-center justify-content-center share-btn" title="Compartilhar">
-                            <img src="{% static 'assets/198-296.svg' %}" alt="Compartilhar icon" class="share-icon" />
-                        </button>
-
-                        <button class="btn btn-sm bg-custom-green text-white rounded-circle d-flex align-items-center justify-content-center download-btn" title="Download">
-                            <img src="{% static 'assets/198-292.svg' %}" alt="Download icon" class="download-icon" />
-                        </button>
-                    </div>
-                </div>
-            </div>
+                {% endfor %}
+            {% endif %}
         </div>
     </div>
 
     <!-- Pagination -->
-    <div class="d-flex justify-content-center mt-5">
-        <nav aria-label="Page navigation">
-            <ul class="pagination flex-wrap justify-content-center">
-                <li class="page-item"><a class="page-link pagination-circle bg-secondary text-white mx-1" href="#">1</a></li>
-                <li class="page-item"><a class="page-link pagination-circle bg-secondary text-white mx-1" href="#">2</a></li>
-                <li class="page-item"><a class="page-link pagination-circle bg-secondary text-white mx-1" href="#">3</a></li>
-                <li class="page-item"><a class="page-link pagination-circle bg-secondary text-white mx-1" href="#">4</a></li>
-                <li class="page-item disabled"><span class="page-link pagination-circle bg-secondary text-white mx-1">...</span></li>
-                <li class="page-item"><a class="page-link pagination-circle bg-secondary text-white mx-1" href="#">10</a></li>
-                <li class="page-item">
-                    <a class="page-link pagination-circle bg-secondary mx-2 pagination-next" href="#" aria-label="Next">
-                        <span aria-hidden="true" class="text-white">&gt;</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </div>
+    {% if is_paginated %}
+        <div class="d-flex justify-content-center mt-5">
+            <nav aria-label="Page navigation">
+                <ul class="pagination flex-wrap justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link pagination-circle bg-secondary text-white mx-1" href="?page=1">1</a>
+                        </li>
+                        {% if page_obj.previous_page_number != 1 %}
+                            <li class="page-item disabled"><span class="page-link pagination-circle bg-secondary text-white mx-1">...</span></li>
+                        {% endif %}
+                        <li class="page-item">
+                            <a class="page-link pagination-circle bg-secondary text-white mx-1" href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+                        </li>
+                    {% endif %}
+                    
+                    <li class="page-item active">
+                        <span class="page-link pagination-circle bg-custom-green text-white mx-1">{{ page_obj.number }}</span>
+                    </li>
+                    
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link pagination-circle bg-secondary text-white mx-1" href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+                        </li>
+                        {% if page_obj.next_page_number != page_obj.paginator.num_pages %}
+                            <li class="page-item disabled"><span class="page-link pagination-circle bg-secondary text-white mx-1">...</span></li>
+                        {% endif %}
+                        <li class="page-item">
+                            <a class="page-link pagination-circle bg-secondary text-white mx-1" href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    {% endif %}
 </div>
 
 {% endblock content %}
@@ -899,30 +800,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // OUTROS EVENTOS E RESPONSIVIDADE
     // ----------------------------------------------------
 
-    // Funcionalidade de paginação (Mantida a lógica de console.log)
-    document.querySelectorAll('.pagination a').forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            console.log('Página clicada (Lógica de paginação AJAX deve ser implementada):', this.textContent);
-            // Lógica de carregamento de página AJAX deve ser implementada aqui
-        });
-    });
-
-    // Funcionalidade de download (Mantida a lógica de console.log)
-    // ATENÇÃO: Use um seletor mais específico se possível para os botões de download.
-    document.querySelectorAll('.download-btn').forEach(button => {
+    // Funcionalidade de compartilhamento
+    document.querySelectorAll('.share-btn').forEach(button => {
         button.addEventListener('click', function(e) {
             e.preventDefault();
-            console.log('Download iniciado');
-            // Lógica de download deve ser implementada aqui
+            console.log('Compartilhar clicado');
+            // Lógica de compartilhamento deve ser implementada aqui
         });
     });
-
-    // 1. Chamar a função Imediatamente
-    handleMobileResponsiveness();
-
-    // 2. Chamar a função no evento de redimensionamento da janela
-    window.addEventListener('resize', handleMobileResponsiveness);
 });
 
 // Tornar as funções de toggle acessíveis globalmente, se usadas no HTML (onClick)
