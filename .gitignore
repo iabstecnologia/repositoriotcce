@@ -28,8 +28,9 @@ db.sqlite3
 
 Arquivos de mídia e estáticos gerados
 
-/backend/media/
-/backend/staticfiles/
+/media/
+/staticfiles/
+/static/
 
 Pastas de migração vazias (opcional)
 

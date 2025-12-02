@@ -1,0 +1,267 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}Pesquisa - Repositório TCCEs{% endblock title %}
+
+{% block extra_css %}
+<!-- (SEUS ESTILOS CSS PERMANECEM AQUI) -->
+<style>
+/* Estilos específicos da página de repositório */
+.advanced-search-link {
+    cursor: pointer;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+/* Estilos para ocultar/mostrar a busca avançada */
+#advancedSearchArea {
+    display: none;
+    background-color: rgba(0, 0, 0, 0.5); /* Overlay suave */
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-top: 10px;
+    position: absolute;
+    width: 100%;
+    z-index: 20;
+}
+.hero-section {
+    height: 80vh;
+}
+</style>
+{% endblock extra_css %}
+
+{% block hero %}
+<div class="hero-content container text-center mt-4">
+    <h1 class="hero-title text-white fw-bold font-chunkfive display-3 mb-4">
+        Repositório TCCEs
+    </h1>
+
+    <div class="mt-1 col-12 col-sm-12 col-md-12 col-lg-12">
+
+        <!-- O FORMULÁRIO COMPLETO COMEÇA AQUI -->
+        <form method="GET" action="{% url 'core:repositorio' %}" id="searchForm">
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <!-- Campo de Busca Principal (q) -->
+                    <div class="input-group shadow-custom rounded-3">
+                        <span class="input-group-text bg-white border-0 rounded-start-3">
+                            <img src="{% static 'assets/11-1144.svg' %}" alt="Search icon" />
+                        </span>
+                        <input type="text" class="form-control border-0 font-open-sans" id="searchInput" name="q" placeholder="Buscar no repositório..." value="{{ form.q.value|default:'' }}">
+                        <button class="btn btn-success rounded-end-3 d-flex align-items-center justify-content-center p-0 px-3" id="searchButton" type="submit">
+                            <img src="{% static 'assets/chevron-right.svg' %}" alt="Buscar" />
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-1 position-relative">
+                <div class="row">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-6">
+                        <!-- Advanced Search Link -->
+                        <div class="text-end text-white font-open-sans fw-bold text-decoration-none small">
+                            <a class="advanced-search-link" onclick="toggleAdvancedSearch(); return false;">BUSCA AVANÇADA &gt;</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AREA COM CAMPOS PARA BUSCA AVANÇADA (Oculta por JS) -->
+                <div id="advancedSearchArea" class="bg-light shadow rounded-3 p-3">
+                    <div class="row">
+                        <div class="col-md-8 col-md-offset-2"></div>
+                    </div>
+                    <h5 class="mb-3 text-custom-dark">Filtros Avançados</h5>
+                    <div class="row g-2">
+                        <!-- Filtro por Ano -->
+                        <div class="col-md-2">
+                            <label for="{{ form.ano.id_for_label }}" class="form-label small mb-1">{{ form.ano.label }}</label>
+                            {{ form.ano }}
+                        </div>
+                        <!-- Filtro de Ordenação -->
+                        <div class="col-md-3">
+                            <label for="{{ form.ordenar_por.id_for_label }}" class="form-label small mb-1">Ordenar</label>
+                            {{ form.ordenar_por }}
+                        </div>
+                        <!-- Campos explícitos do formulário (ModelChoiceFields) -->
+                        <div class="col-md-2">
+                            <label for="{{ form.subprojeto.id_for_label }}" class="form-label small mb-1">{{ form.subprojeto.label }}</label>
+                            {{ form.subprojeto }}
+                        </div>
+                        <div class="col-md-3">
+                            <label for="{{ form.autor.id_for_label }}" class="form-label small mb-1">{{ form.autor.label }}</label>
+                            {{ form.autor }}
+                        </div>
+                        <div class="col-md-2">
+                            <label for="{{ form.tag.id_for_label }}" class="form-label small mb-1">{{ form.tag.label }}</label>
+                            {{ form.tag }}
+                        </div>
+                        <div class="col-md-3">
+                            <label for="{{ form.tipo_documento.id_for_label }}" class="form-label small mb-1">{{ form.tipo_documento.label }}</label>
+                            {{ form.tipo_documento }}
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="{{ form.area_tematica.id_for_label }}" class="form-label small mb-1">{{ form.area_tematica.label }}</label>
+                            {{ form.area_tematica }}
+                        </div>
+                        <div class="col-md-3">
+                            <label for="{{ form.status.id_for_label }}" class="form-label small mb-1">{{ form.status.label }}</label>
+                            {{ form.status }}
+                        </div>
+
+                        <!-- Campo TipoPublicacao (Col span 12) -->
+                        <div class="col-md-3">
+                            <label for="{{ form.tipo_publicacao.id_for_label }}" class="form-label small mb-1">{{ form.tipo_publicacao.label }}</label>
+                            {{ form.tipo_publicacao }}
+                        </div>
+
+                        <div class="col-12 mt-3 text-center">
+                            <button type="submit" class="btn bg-custom-green text-white w-100">Aplicar Filtros</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Fim da AREA COM CAMPOS PARA BUSCA -->
+
+
+            </div>
+        </form>
+    </div>
+
+</div>
+{% endblock hero %}
+
+{% block content %}
+
+<!-- Recent Submissions Section -->
+<div class="container py-5">
+    <h2 class="text-center text-custom-dark font-open-sans fw-medium mb-5 h1" id="submissionsTitle">
+        Resultados da Pesquisa ({{ page_obj.paginator.count }} registros)
+    </h2>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8" id="submissionsContainer">
+
+            <!-- EXIBIÇÃO DOS REGISTROS -->
+            {% for registro in registros %}
+            <div class="card border-0 card-item-hoverable">
+                <div class="row g-0 align-items-center py-3 border-bottom border-secondary-subtle p-4">
+
+                    <!-- Ícone (Baseado no tipo de documento) -->
+                    <div class="col-auto">
+                        <img src="{% static 'assets/198-196.svg' %}" alt="{{ registro.tipo_documento.nome }}" class="submission-icon" />
+                    </div>
+
+                    <!-- Metadados -->
+                    <div class="col ps-3">
+                        <h5 class="mb-1 text-custom-dark font-open-sans fw-bold h6">{{ registro.titulo }}</h5>
+                        <p class="mb-0 text-custom-dark font-open-sans fw-medium small">
+                            {% for autor in registro.autores.all %}{{ autor.nome }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                            <br/>
+                            {{ registro.data_publicacao|date:"d/m/Y"|default:"" }}
+                        </p>
+
+                        <!-- Tags e Classificações -->
+                        <div class="d-flex flex-wrap gap-2 mt-2">
+                            <span class="badge rounded-pill text-bg-publicacao small">{{ registro.tipo_documento.nome }}</span>
+                            {% if registro.data_publicacao %}<span class="badge rounded-pill text-bg-ano small">{{ registro.data_publicacao|date:"Y" }}</span>{% endif %}
+                            <span class="badge rounded-pill text-bg-projeto small">{{ registro.subprojeto.projeto.nome }}</span>
+                            <span class="badge rounded-pill text-bg-ciencia small">{{ registro.area_tematica.nome }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Botões de Ação -->
+                    <div class="col-auto d-flex flex-column flex-md-row gap-2">
+                        <button class="btn btn-sm bg-custom-green text-white rounded-circle d-flex align-items-center justify-content-center view-btn" title="Visualizar">
+                            <img src="{% static 'assets/198-300.svg' %}" alt="Visualizar icon" class="view-icon" />
+                        </button>
+
+                        {% if registro.arquivo.url %}
+                        <a href="{{ registro.arquivo.url }}" target="_blank" class="btn btn-sm bg-custom-green text-white rounded-circle d-flex align-items-center justify-content-center download-btn" title="Download">
+                            <img src="{% static 'assets/198-292.svg' %}" alt="Download icon" class="download-icon" />
+                        </a>
+                        {% elif registro.link_externo %}
+                        <a href="{{ registro.link_externo }}" target="_blank" class="btn btn-sm bg-custom-green text-white rounded-circle d-flex align-items-center justify-content-center download-btn" title="Acessar Link">
+                            <img src="{% static 'assets/198-292.svg' %}" alt="Download icon" class="download-icon" />
+                        </a>
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+                <p class="text-center h5 mt-5 text-muted">Nenhum registro encontrado com os filtros aplicados.</p>
+            {% endfor %}
+
+            <!-- Paginação (usando a lógica da ListView) -->
+            {% if is_paginated %}
+            <div class="d-flex justify-content-center mt-5">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination flex-wrap justify-content-center">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item"><a class="page-link pagination-circle bg-secondary text-white mx-1" href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"> << </a></li>
+                        {% endif %}
+
+                        {% for i in page_obj.paginator.page_range %}
+                            {% if page_obj.number == i %}
+                                <li class="page-item active"><span class="page-link pagination-circle bg-custom-green text-white mx-1">{{ i }}</span></li>
+                            {% else %}
+                                <li class="page-item"><a class="page-link pagination-circle bg-secondary text-white mx-1" href="?page={{ i }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ i }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                            <li class="page-item"><a class="page-link pagination-circle bg-secondary text-white mx-1" href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"> >> </a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block extra_js %}
+<script>
+    function toggleAdvancedSearch() {
+        const area = document.getElementById('advancedSearchArea');
+        area.style.display = area.style.display === 'none' || area.style.display === '' ? 'block' : 'none';
+    }
+
+    // Mantém o estado da ordenação no dropdown após a recarga da página
+    document.addEventListener('DOMContentLoaded', function() {
+        const sortParam = new URLSearchParams(window.location.search).get('ordenar_por') || '-data_publicacao';
+        const currentSortLabel = document.getElementById('currentSortLabel');
+        const activeOption = document.querySelector(`.sort-option[data-sort-by="${sortParam}"]`);
+
+        if (activeOption) {
+            currentSortLabel.textContent = activeOption.textContent;
+        }
+
+        // Lógica para que a submissão do formulário de ordenação funcione
+        document.querySelectorAll('.sort-option').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                const form = document.getElementById('searchForm');
+
+                // Cria ou atualiza o campo oculto 'ordenar_por' com o novo valor
+                let orderByInput = form.querySelector('input[name="ordenar_por"]');
+                if (!orderByInput) {
+                    orderByInput = document.createElement('input');
+                    orderByInput.type = 'hidden';
+                    orderByInput.name = 'ordenar_por';
+                    form.appendChild(orderByInput);
+                }
+                orderByInput.value = this.getAttribute('data-sort-by');
+
+                form.submit();
+            });
+        });
+    });
+
+</script>
+{% endblock extra_js %}

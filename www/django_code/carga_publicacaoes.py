@@ -22,7 +22,7 @@ BACKEND_DIR = os.path.abspath(os.path.join(CURRENT_DIR, 'backend'))
 sys.path.insert(0, BACKEND_DIR)
 
 # 3. Define o módulo de settings.
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "repositoriotcce.settings")
 
 import django
 
