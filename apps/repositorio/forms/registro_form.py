@@ -12,7 +12,7 @@ class RegistroForm(forms.ModelForm):
     class Meta:
         model = Registro
         fields = [
-            'titulo', 'resumo', 'subprojeto', 'autores', 'tags',
+            'titulo', 'subprojeto', 'autores', 'tags',
             'tipo_documento', 'area_tematica', 'status', 'tipo_publicacao',
             'data_publicacao', 'isbn', 'arquivo', 'link_externo', 'ativo'
         ]
@@ -20,11 +20,6 @@ class RegistroForm(forms.ModelForm):
             'titulo': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Digite o título do documento'
-            }),
-            'resumo': forms.Textarea(attrs={
-                'class': 'form-control',
-                'rows': 5,
-                'placeholder': 'Descreva o conteúdo do documento'
             }),
             'subprojeto': forms.Select(attrs={'class': 'form-select'}),
             'autores': forms.CheckboxSelectMultiple(),
@@ -54,7 +49,6 @@ class RegistroForm(forms.ModelForm):
         }
         labels = {
             'titulo': 'Título do Documento',
-            'resumo': 'Resumo/Abstract',
             'subprojeto': 'Subprojeto',
             'autores': 'Autores',
             'tags': 'Palavras-chave',
