@@ -27,6 +27,71 @@
 .hero-section {
     height: 80vh;
 }
+
+/* Estilos de Botões de Ação no Card */
+.share-btn, .view-btn, .download-btn {
+    position: relative;
+    z-index: 3;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    transition: filter 0.2s ease-in-out;
+}
+
+.view-btn:hover,
+.share-btn:hover,
+.download-btn:hover {
+    background-color: #2a5229;
+}
+
+.view-icon, .share-icon, .download-icon {
+    width: 50%;
+    height: auto;
+}
+
+/* Estilos de Tag (Badges) */
+.badge {
+    cursor: pointer;
+}
+
+.text-bg-ciencia {
+    background-color: #A7674C;
+    color: #ffffff;
+}
+
+.text-bg-ciencia:hover {
+    background-color: #8c553d;
+}
+
+.text-bg-projeto {
+    background-color: #55616C;
+    color: #ffffff;
+}
+
+.text-bg-projeto:hover {
+    background-color: #434e57;
+    color: #ffffff;
+}
+
+.text-bg-ano {
+    background-color: #346933;
+    color: #ffffff;
+}
+
+.text-bg-ano:hover {
+    background-color: #254d24;
+    color: #ffffff;
+}
+
+.text-bg-publicacao {
+    background-color: #5C9541;
+    color: #ffffff;
+}
+
+.text-bg-publicacao:hover {
+    background-color: #4b7835;
+    color: #ffffff;
+}
 </style>
 {% endblock extra_css %}
 
