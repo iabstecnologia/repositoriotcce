@@ -434,12 +434,18 @@
 
                     <!-- Botões de Ação -->
                     <div class="col-auto d-flex flex-column flex-md-row gap-2">
-                        <button class="btn btn-sm bg-custom-green text-white rounded-circle d-flex align-items-center justify-content-center view-btn" title="Visualizar">
+                        {% if registro.arquivo.url %}
+                        <a href="{% url 'core:view_file' registro.pk %}" class="btn btn-sm bg-custom-green text-white rounded-circle d-flex align-items-center justify-content-center view-btn" title="Visualizar" target="_blank">
                             <img src="{% static 'assets/198-300.svg' %}" alt="Visualizar icon" class="view-icon" />
-                        </button>
+                        </a>
+                        {% elif registro.link_externo %}
+                        <a href="{{ registro.link_externo }}" class="btn btn-sm bg-custom-green text-white rounded-circle d-flex align-items-center justify-content-center view-btn" title="Visualizar" target="_blank">
+                            <img src="{% static 'assets/198-300.svg' %}" alt="Visualizar icon" class="view-icon" />
+                        </a>
+                        {% endif %}
 
                         {% if registro.arquivo.url %}
-                        <a href="{{ registro.arquivo.url }}" target="_blank" class="btn btn-sm bg-custom-green text-white rounded-circle d-flex align-items-center justify-content-center download-btn" title="Download">
+                        <a href="{% url 'core:registro_download' registro.pk %}" class="btn btn-sm bg-custom-green text-white rounded-circle d-flex align-items-center justify-content-center download-btn" title="Download">
                             <img src="{% static 'assets/198-292.svg' %}" alt="Download icon" class="download-icon" />
                         </a>
                         {% elif registro.link_externo %}

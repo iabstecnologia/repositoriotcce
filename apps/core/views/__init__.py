@@ -5,5 +5,7 @@ from .website import (
     GaleriaView,
 )
 from .repositorio import (
-    RepositorioView
+    RepositorioView,
+    download_registro,
+    view_file
 )

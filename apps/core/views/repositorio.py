@@ -1,9 +1,12 @@
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 from django.db.models import Q
 from django.shortcuts import render
 from datetime import datetime
 from apps.repositorio.models.repositorio import Registro, TipoDocumento
 from apps.core.forms import RepositorioFilterForm
+from django.shortcuts import get_object_or_404
+from django.http import FileResponse, Http404, HttpResponseRedirect
+import os
 
 
 class RepositorioView(ListView):
@@ -130,3 +133,53 @@ class RepositorioView(ListView):
         context['category_mapping'] = {k: v.id for k, v in category_mapping.items() if v}
 
         return context
+
+# Função para Download (Mantida)
+def download_registro(request, pk):
+    registro = get_object_or_404(Registro, pk=pk)
+# Função para Download (Mantida)
+def download_registro(request, pk):
+    registro = get_object_or_404(Registro, pk=pk)
+    
+    # Lógica de download (verifique o campo do seu modelo)
+    if not registro.arquivo:
+        raise Http404("Arquivo não encontrado.")
+
+    # Tenta usar o arquivo local primeiro
+    try:
+        filepath = registro.arquivo.path
+        filename = os.path.basename(filepath)
+
+        response = FileResponse(open(filepath, 'rb'), content_type='application/force-download')
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        return response
+    except (FileNotFoundError, AttributeError, ValueError):
+        # Se o arquivo local não existir ou não estiver disponível, redireciona para a URL
+        # (útil para S3 ou outros backends de armazenamento remoto)
+        if registro.arquivo.url:
+            return HttpResponseRedirect(registro.arquivo.url)
+        raise Http404("Arquivo físico não encontrado no servidor.")
+
+
+# Função para Visualizar o arquivo
+def view_file(request, pk):
+    """
+    Abre o arquivo localmente para visualização em uma nova aba.
+    """
+    registro = get_object_or_404(Registro, pk=pk)
+    
+    if not registro.arquivo:
+        raise Http404("Arquivo não encontrado.")
+
+    # Tenta usar o arquivo local primeiro
+    try:
+        filepath = registro.arquivo.path
+        # Retorna o arquivo para visualização no navegador
+        response = FileResponse(open(filepath, 'rb'))
+        return response
+    except (FileNotFoundError, AttributeError, ValueError):
+        # Se o arquivo local não existir ou não estiver disponível, redireciona para a URL
+        # (útil para S3 ou outros backends de armazenamento remoto)
+        if registro.arquivo.url:
+            return HttpResponseRedirect(registro.arquivo.url)
+        raise Http404("Arquivo físico não encontrado no servidor.")
