@@ -124,10 +124,10 @@ class RepositorioView(ListView):
         # Esse mapeamento permite que os cards usem links simples e robustos
         # Busca por correspondência parcial (icontains) para flexibilidade
         category_mapping = {
-            'Livros': tipos_documento.filter(nome__icontains='Livro').first(),
-            'Artigos': tipos_documento.filter(nome__icontains='Artigo').first(),
+            'Livros': tipos_documento.filter(nome__icontains='LIVRO').first(),
+            'Artigos': tipos_documento.filter(nome__icontains='ARTIGO').first(),
             'RelatórioTécnico': tipos_documento.filter(nome__icontains='RELATÓRIO').first(),
-            'Vídeos': tipos_documento.filter(nome__icontains='Vídeo').first() or tipos_documento.filter(nome__icontains='Video').first(),
+            'Vídeos': tipos_documento.filter(nome__icontains='VÍDEO').first(),
         }
         # Manter apenas os tipos que existem no banco; converter para IDs
         context['category_mapping'] = {k: v.id for k, v in category_mapping.items() if v}
