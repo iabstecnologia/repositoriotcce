@@ -23,6 +23,11 @@
     border: none;
 }
 
+/* Espaçamento entre os botões das abas */
+.nav-item {
+    margin-right: 1.5rem; /* Adiciona espaço à direita de cada botão */
+}
+
 /* CONTAINER DAS IMAGENS */
 .timeline-container {
     /* Corresponde a style="width: 286px; height: 206px;" */
@@ -102,6 +107,11 @@
     /* Garante que o texto longo demais seja cortado, se necessário, em vez de quebrar o layout */
     overflow: hidden;
 }
+
+/* Reduz o tamanho da fonte dos números do contador */
+.counter-value {
+    font-size: 2.5rem !important; /* Reduz de display-4 (~3.5rem) para 2.5rem */
+}
 </style>
 {% endblock extra_css %}
 
@@ -131,7 +141,7 @@
                                     role="tab"
                                     aria-controls="tcce1"
                                     aria-selected="true">
-                                TCCE nº 1/2018
+                                TCCE ICMBIO/Vale nº 1/2018
                             </button>
                         </li>
                         <li class="nav-item" role="presentation">
@@ -143,7 +153,7 @@
                                     role="tab"
                                     aria-controls="tcce2"
                                     aria-selected="false">
-                                TCCE nº 2/2020
+                                TCCE ICMBIO/Vale nº 2/2020
                             </button>
                         </li>
                         <li class="nav-item" role="presentation">
@@ -155,7 +165,7 @@
                                     role="tab"
                                     aria-controls="tcce3"
                                     aria-selected="false">
-                                TCCE nº 1/2022
+                                TCCE ICMBIO/Vale nº 1/2022
                             </button>
                         </li>
                     </ul>
@@ -187,13 +197,14 @@
                                     </div>
                                     <div class="col-lg-8">
                                         <p class="text-custom-light-gray font-open-sans fw-bold text-uppercase text-header-pretitle">COMPENSAÇÃO ESPELEÓGICA</p>
-                                        <h2 class="text-custom-medium-gray font-chunkfive text-header-title">TCCE ICMBio/Vale I/2018</h2>
+                                        <h2 class="text-custom-medium-gray font-chunkfive text-header-title">TCCE ICMBIO/Vale nº 1/2018</h2>
                                         <p class="text-custom-dark font-montserrat text-body-paragraph">
-                                            O Termo de Compromisso de Compensação Espeleológica – TCCE, celebrado entre o Instituto Chico Mendes de Conservação da Biodiversidade
-                                            – ICMBio e a VALE S.A. tem como objetivo consolidar obrigações entre as partes para conservação e compensação de cavidades de alta relevância,
-                                            em decorrência do processo de empreendimento “Ampliação dos Corpos N4 e N5, Serra Norte – Complexo Minerador Ferro Carajás”, entre as obrigações
-                                            assumidas pela VALE é previsto o custeamento de ações de estudos, pesquisas e de infraestrutura para pesquisa que contribuam com o avanço do
-                                            conhecimento no tema de Espeleologia.
+                                            O Termo de Compromisso de Compensação Espeleológica – TCCE, celebrado entre o Instituto Chico Mendes de Conservação 
+                                            da Biodiversidade – ICMBio e a VALE S.A. tem como objetivo consolidar obrigações entre as partes para conservação e 
+                                            compensação de cavidades de alta relevância, em decorrência do processo de empreendimento “Ampliação dos Corpos N4 e N5,
+                                             Serra Norte – Complexo Minerador Ferro Carajás”, entre as obrigações assumidas pela VALE é previsto o custeamento de 
+                                             ações de estudos, pesquisas e de infraestrutura para pesquisa que contribuam com o avanço do conhecimento no tema de 
+                                             Espeleologia.
                                         </p>
                                     </div>
                                 </div>
@@ -274,13 +285,16 @@
                                     </div>
                                     <div class="col-lg-8">
                                         <p class="text-custom-light-gray font-open-sans fw-bold text-uppercase text-header-pretitle">COMPENSAÇÃO ESPELEÓGICA</p>
-                                        <h2 class="text-custom-medium-gray font-chunkfive text-header-title">TCCE ICMBio/Vale II/2020</h2>
+                                        <h2 class="text-custom-medium-gray font-chunkfive text-header-title">TCCE ICMBIO/Vale nº 2/2020</h2>
                                         <p class="text-custom-dark font-montserrat text-body-paragraph">
-                                            O Termo de Compromisso de Compensação Espeleológica – TCCE, celebrado entre o Instituto Chico Mendes de Conservação da Biodiversidade
-                                            – ICMBio e a VALE S.A. tem como objetivo consolidar obrigações entre as partes para conservação e compensação de cavidades de alta relevância,
-                                            em decorrência do processo de empreendimento “Ampliação dos Corpos N4 e N5, Serra Norte – Complexo Minerador Ferro Carajás”, entre as obrigações
-                                            assumidas pela VALE é previsto o custeamento de ações de estudos, pesquisas e de infraestrutura para pesquisa que contribuam com o avanço do
-                                            conhecimento no tema de Espeleologia.
+                                            O Termo de Compromisso de Compensação Espeleológica No. 02/2020, celebrado entre o Instituto Chico Mendes de 
+                                            Conservação da Biodiversidade – ICMBio e a VALE S.A. tem como objetivo a consolidação territorial de 235,87 
+                                            hectares localizados nas propriedades MQ-12 (Fazenda Manoel José, Glebas 1 e 2, Registros M.951 e M.954) e MQ-62 
+                                            (Fazenda Gandarela – Registro M.17.865), em unidade de conservação de proteção integral – 
+                                            “Parque Nacional da Serra do Gandarela”, Estado de Minas Gerais – garantindo a preservação das 34 cavidades naturais 
+                                            ali inseridas; e outras 14 ações relacionadas à implementação de ações do Programa Nacional de 
+                                            onservação do Patrimônio Espeleológico pela Vale S.A – no limite de investimento determinado pelo cálculo já 
+                                            previsto no artigo 5o da mesma Instrução Normativa.
                                         </p>
                                     </div>
                                 </div>
@@ -362,13 +376,15 @@
                                     </div>
                                     <div class="col-lg-8">
                                         <p class="text-custom-light-gray font-open-sans fw-bold text-uppercase text-header-pretitle">COMPENSAÇÃO ESPELEOLÓGICA</p>
-                                        <h2 class="text-custom-medium-gray font-chunkfive text-header-title">TCCE ICMBio/Vale I/2022</h2>
+                                        <h2 class="text-custom-medium-gray font-chunkfive text-header-title">TCCE ICMBIO/Vale nº 2/2020</h2>
                                         <p class="text-custom-dark font-montserrat text-body-paragraph">
-                                            O Termo de Compromisso de Compensação Espeleológica – TCCE, celebrado entre o Instituto Chico Mendes de Conservação da Biodiversidade
-                                            – ICMBio e a VALE S.A. tem como objetivo consolidar obrigações entre as partes para conservação e compensação de cavidades de alta relevância,
-                                            em decorrência do processo de empreendimento “Ampliação dos Corpos N4 e N5, Serra Norte – Complexo Minerador Ferro Carajás”, entre as obrigações
-                                            assumidas pela VALE é previsto o custeamento de ações de estudos, pesquisas e de infraestrutura para pesquisa que contribuam com o avanço do
-                                            conhecimento no tema de Espeleologia.
+                                            O Termo de Compromisso de Compensação Espeleológica n° 01/2022 celebrado entre o Instituto ChicoMendes de Conservação da 
+                                            Biodiversidade – ICMBio e a Vale S.A tem como objetivo consolidar obrigações entre as partes para conservação e 
+                                            compensação pelos impactos negativos irreversíveis a cavidades naturais subterrâneas com grau de relevância alto 
+                                            ocasionados pelos empreendimentos "Ampliação dos Corpos N4 e N5, Serra Norte - Complexo Minerador Ferro Carajás". 
+                                            Entre as obrigações assumidas pela Vale é prevista a implementação de ações para a consolidação territorial do Parque 
+                                            Nacional Cavernas do Peruaçu, bem como a implementação de ações do Programa Nacional de Conservação do Patrimônio 
+                                            Espeleológico pela Vale S.A.
                                         </p>
                                     </div>
                                 </div>
