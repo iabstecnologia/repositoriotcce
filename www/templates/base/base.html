@@ -28,17 +28,17 @@
     <div class="container-fluid p-0 custom-scroll-nav">
 
         <!-- Hero Section -->
-        <div class="position-relative hero-section pb-5 d-flex flex-column">
-            <!-- IMAGEM DE FUNDO -->
-            <img src="{% static 'common/assets/img/bg-hero-image.webp' %}" class="w-100 h-100 object-fit-cover position-absolute" alt="Background" />
-            <div class="hero-overlay w-100 h-100 position-absolute pb-5 bg-custom-gray d-flex flex-column overflow-auto">
+        <div class="position-relative hero-section d-flex flex-column">
+            <!-- Fundo da Hero como background para altura fluida -->
+            <div class="position-absolute top-0 start-0 w-100 h-100" style="background-image: url('{% static 'common/assets/img/bg-hero-image.webp' %}'); background-size: cover; background-position: center;" aria-hidden="true"></div>
+            <div class="hero-overlay w-100 h-100 pb-5 bg-custom-gray d-flex flex-column" style="position: relative;">
 
                 <!-- Header Navigation -->
                 {% include 'base/includes/navigation.html' %}
 
                 <!-- Hero Content -->
                 {% block hero %}
-                <div class="hero-content container text-center d-flex flex-column align-items-center justify-content-center flex-grow-1 p-3 p-sm-4 p-md-5">
+                <div class="hero-content container text-center d-flex flex-column align-items-center justify-content-center p-3 p-sm-4 p-md-5">
                     <h1 class="hero-title text-white fw-bold font-chunkfive display-3 mb-4">
                         {% block hero_title %}{% endblock hero_title %}
                     </h1>

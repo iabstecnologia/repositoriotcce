@@ -5,8 +5,6 @@
 
 {% block extra_css %}
 <style>
-    .hero-section {height: 80vh;}
-
     .btn-tcces-saibamais{
         background-color: #72808A;
         transition: background-color 0.3s ease;
@@ -14,6 +12,12 @@
 
     .btn-tcces-saibamais:hover{
         background-color: #495965;
+    }
+
+    @media (max-width: 800px) {
+        .remove-negative-margin-mobile {
+            margin-top: 0 !important;
+        }
     }
 </style>
 {% endblock extra_css %}
@@ -44,10 +48,10 @@
 {% block content %}
 
 <div class="divider mt-1"></div>
-<div class="container position-relative z-1 py-3">
+<div class="container position-relative z-1 py-3 after-hero">
     <div class="row justify-content-center">
         <div class="col-lg-10">
-            <div class="bg-custom-light-gray rounded-4 px-lg-5 px-4 py-4 position-relative" style="margin-top: -90px;">
+            <div class="bg-custom-light-gray rounded-4 px-lg-5 px-4 py-4 position-relative">
                 <div class="row">
                     <div class="col-lg-6 mb-4 mb-lg-0 d-flex flex-column justify-content-between">
                         <div>

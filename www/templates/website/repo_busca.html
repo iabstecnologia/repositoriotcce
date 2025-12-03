@@ -223,6 +223,12 @@
         justify-content: center;
     }
 }
+
+@media (min-width: 993px) {
+    .hero-overlay {
+        padding-bottom: 80px !important; 
+    }
+}
 </style>
 {% endblock extra_css %}
 
@@ -526,6 +532,7 @@
     function toggleAdvancedSearch() {
         const area = document.getElementById('advancedSearchArea');
         const categoriesSection = document.querySelector('.categories-section');
+        const heroOverlay = document.querySelector('.hero-overlay');
 
         if (!area) return;
 
@@ -536,6 +543,16 @@
         // Quando a área avançada é mostrada, escondemos as categories; ao fechar, mostramos novamente
         if (categoriesSection) {
             categoriesSection.classList.toggle('hidden', willShow);
+        }
+
+        // Remove o padding-bottom do hero-overlay quando a busca avançada é aberta
+        if (heroOverlay) {
+            if (willShow) {
+                // Remove apenas o padding extra, mantém o pb-5 do Bootstrap (3rem)
+                heroOverlay.style.setProperty('padding-bottom', '3rem', 'important');
+            } else {
+                heroOverlay.style.removeProperty('padding-bottom');
+            }
         }
     }
 

@@ -95,11 +95,6 @@ body{
     min-width: 300px;
 }
 
-/* Garante que o container que está sendo sobreposto (Hero Section) tenha espaço */
-.hero-section {
-    padding-bottom: 10rem; /* Adiciona espaço no Hero para o card subir */
-}
-
 .nav-link {
     color: #000 !important;
 }
@@ -136,10 +131,6 @@ body{
 }
 
 /* Estilos específicos da Hero Section */
-.hero-section{
-    height: 65vh;
-    min-height: 550px;
-}
 
 .hero-overlay {
     opacity: 0.8;
@@ -187,11 +178,6 @@ body{
     #navbarNav {
         z-index: 1030 !important; 
         top: 100% !important; 
-    }
-
-    .hero-section{
-        height: 20vh;
-        min-height: 450px;
     }
 
     .hero-title{
