@@ -6,6 +6,15 @@
 {% block extra_css %}
 <style>
     .hero-section {height: 80vh;}
+
+    .btn-tcces-saibamais{
+        background-color: #72808A;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-tcces-saibamais:hover{
+        background-color: #495965;
+    }
 </style>
 {% endblock extra_css %}
 
@@ -15,15 +24,18 @@
 
 {% block hero_content %}
     <div class="text-white font-open-sans fw-semibold mb-5 scrollable-content-sm overflow-auto">
+        
+
+
         O Repositório digital é uma plataforma dedicada à disponibilização de produção intelectual, científica e técnica desenvolvidas no âmbito dos projetos
-        contemplados pelos **Termos de Compromisso de Compensação Espeleológica - TCCEs**.<br/><br/>
-        Tem como objetivo promover a **visibilidade, acessibilidade e difusão** de dados e resultados de projetos. Além disso, funciona como uma valiosa fonte
+        contemplados pelos <strong>Termos de Compromisso de Compensação Espeleológica - TCCEs</strong>.<br/><br/>
+        Tem como objetivo promover a <strong>visibilidade, acessibilidade e difusão</strong> de dados e resultados de projetos. Além disso, funciona como uma valiosa fonte
         de referência para pesquisadores, gestores ambientais e a comunidade espeleológica, apoiando iniciativas voltadas à sustentabilidade e à preservação desse
-        patrimônio, enquanto reforça o compromisso com a **transparência e o acesso à informação**.
+        patrimônio, enquanto reforça o compromisso com a <strong>transparência e o acesso à informação</strong>.
     </div>
 
     <div>
-        <a class="btn bg-custom-green text-white font-open-sans fw-bold rounded-3 px-4 py-2 text-lg-nowrap" href="../repositorio/index.html">
+        <a class="btn bg-custom-green text-white font-open-sans fw-bold rounded-3 px-4 py-2 text-lg-nowrap" href="{% url 'core:repositorio' %}">
             REPOSITÓRIO TCCEs
         </a>
     </div>
@@ -41,14 +53,21 @@
                         <div>
                             <h2 class="text-custom-dark font-open-sans fw-medium fs-2 fs-md-1 mb-4">Sobre os TCCEs</h2>
                             <p class="text-custom-dark font-open-sans fs-6">
-                                O **Termo de Compromisso de Compensação Espeleológica (TCCE)** é um documento celebrado entre o Instituto Chico Mendes de Conservação da Biodiversidade (**ICMBio**) e empresas mineradoras. Ele visa garantir a execução da compensação pelos impactos negativos irreversíveis a cavidades naturais subterrâneas com grau de relevância alto.
+                                O <strong>Termo de Compromisso de Compensação Espeleológica (TCCE)</strong> é um documento celebrado entre o 
+                                Instituto Chico Mendes de Conservação da Biodiversidade (<strong>ICMBio</strong>) e empresas mineradoras. Ele 
+                                visa garantir a execução da compensação pelos impactos negativos irreversíveis a cavidades naturais subterrâneas
+                                 com grau de relevância alto.
                                 <br/><br/>
-                                O recurso consiste na implementação de ações para **preservação de cavernas *in loco***, além da execução de ações do **Programa Nacional de Conservação do Patrimônio Espeleológico (PNCPE)**. Dentre as atividades previstas estão o financiamento de estudos, pesquisas científicas e de infraestrutura, além de cursos de capacitação e a realização de congressos nacionais e internacionais que contribuam para o avanço do conhecimento espeleológico.
+                                    O recurso consiste na implementação de ações para <strong>preservação de cavernas <em>in loco</em></strong>, além da 
+                                execução de ações do <strong>Programa Nacional de Conservação do Patrimônio Espeleológico (PNCPE)</strong>. 
+                                Dentre as atividades previstas estão o financiamento de estudos, pesquisas científicas e de infraestrutura, além
+                                 de cursos de capacitação e a realização de congressos nacionais e internacionais que contribuam para o avanço do
+                                  conhecimento espeleológico.
                             </p>
                         </div>
 
                         <div>
-                            <a class="btn btn-tcces-saibamais text-white text-wrap font-open-sans fw-bold rounded-3 px-4 py-2 mt-3" href="../tcces/index.html">
+                            <a class="btn btn-tcces-saibamais text-white text-wrap font-open-sans fw-bold rounded-3 px-4 py-2 mt-3" href="{% url 'core:tcce' %}">
                                 SAIBA MAIS SOBRE OS TCCEs
                             </a>
                         </div>
@@ -73,21 +92,6 @@
                     <div class="p-5 carousel-inner">
 
                         <div class="carousel-item active text-center">
-                            <div class="row justify-content-center h-100">
-                                <div class="col-12 col-md-10 d-flex flex-column justify-content-center align-items-center">
-
-                                    <img src="{% static 'assets/img/Vale.svg' %}" class="img-fluid" alt="Logos parceiros: Vale" style="max-height: 100px;">
-
-                                    <div class="pt-3">
-                                        <h5 class="mt-0">Parceiro Principal: Vale</h5>
-                                    </div>
-
-                                    <p class="mb-0 invisible">Este é um espaço invisível para forçar a altura mínima.</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="carousel-item text-center">
                             <div class="row h-100 justify-content-center">
                                 <div class="col-12 col-md-10 d-flex flex-column justify-content-center align-items-center">
                                     <img src="{% static 'assets/img/Vale.svg' %}" class="img-fluid" alt="Logos parceiros: Vale" style="max-height: 100px;">
@@ -105,25 +109,16 @@
                             </div>
                         </div>
 
-                        <div class="carousel-item text-center">
+                         <div class="carousel-item text-center">
                             <div class="row h-100 justify-content-center">
                                 <div class="col-12 col-md-10 d-flex flex-column justify-content-center align-items-center">
-                                    <img src="{% static 'assets/img/seu-outro-logo.svg' %}" class="img-fluid" alt="Logos parceiros: Empresa 2" style="max-height: 100px;">
-                                    <div class="pt-3">
-                                        <h5 class="mt-0">Empresa Colaboradora</h5>
-                                        <p class="mb-0">Esta empresa contribui com recursos e apoio técnico para a conservação do patrimônio espeleológico.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                                    <img src="{% static '/assets/img/cropped-iabs-logo.png' %}" class="img-fluid" alt="Logos parceiros: Vale" style="max-height: 100px;">
 
-                        <div class="carousel-item text-center">
-                            <div class="row h-100 justify-content-center">
-                                <div class="col-12 col-md-10 d-flex flex-column justify-content-center align-items-center">
-                                    <img src="{% static 'assets/img/mais-um-logo.svg' %}" class="img-fluid" alt="Logos parceiros: Empresa 3" style="max-height: 100px;">
                                     <div class="pt-3">
-                                        <h5 class="mt-0">Apoio Institucional</h5>
-                                        <p class="mb-0">Juntos, desenvolvemos pesquisas científicas e ações de infraestrutura em cavernas.</p>
+                                        <h5 class="mt-0">Apoio Institucional: IABS</h5>
+                                        <p class="mb-0">
+                                            Juntos, desenvolvemos pesquisas científicas e ações de infraestrutura em cavernas.
+                                        </p>
                                     </div>
                                 </div>
                             </div>
