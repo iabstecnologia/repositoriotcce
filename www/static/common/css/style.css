@@ -133,7 +133,7 @@ body{
 /* Estilos específicos da Hero Section */
 
 .hero-overlay {
-    opacity: 0.8;
+    background-color: rgba(73, 89, 101, 0.8) !important;
 }
 
 .divider {
