@@ -28,8 +28,9 @@ db.sqlite3
 
 Arquivos de mídia e estáticos gerados
 
-/backend/media/
-/backend/staticfiles/
+/media/
+/staticfiles/
+/static/
 
 Pastas de migração vazias (opcional)
 
@@ -42,3 +43,5 @@ Pastas de migração vazias (opcional)
 .DS_Store
 PyCharm
 .idea/
+# Não versionar PDFs de media
+www/media/*.pdf
