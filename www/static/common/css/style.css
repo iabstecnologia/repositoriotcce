@@ -93,6 +93,22 @@
 
 body{
     min-width: 300px;
+    font-family: 'Montserrat', 'Arial', sans-serif;
+    font-weight: 400;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', 'Arial', sans-serif;
+    font-weight: 600;
+}
+
+.btn {
+    font-family: 'Montserrat', 'Arial', sans-serif;
+    font-weight: 600;
+}
+
+input, textarea, select {
+    font-family: 'Montserrat', 'Arial', sans-serif;
 }
 
 .nav-link {

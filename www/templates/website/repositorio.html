@@ -211,14 +211,14 @@
         <span class="input-group-text bg-white border-0 rounded-start-3">
             <img src="{% static 'assets/11-1144.svg' %}" alt="Search icon" />
         </span>
-        <input type="text" class="form-control border-0 font-open-sans" id="searchInput" placeholder="Buscar no repositório...">
+        <input type="text" class="form-control border-0" id="searchInput" placeholder="Buscar no repositório...">
         <button class="btn btn-success rounded-end-3 d-flex align-items-center justify-content-center p-0 px-3" id="searchButton" type="button">
             <img src="{% static 'assets/chevron-right.svg' %}" alt="Buscar" />
         </button>
     </div>
     <div class="mt-1 position-relative">
         <!-- Advanced Search Link / Button -->
-        <div class="text-end text-white font-open-sans fw-bold text-decoration-none small">
+        <div class="text-end text-white text-decoration-none small">
             <a class="advanced-search-link" onclick="toggleAdvancedSearch(); return false;">BUSCA AVANÇADA &gt;</a>
         </div>
 
@@ -369,7 +369,7 @@
 <!-- Categories Section -->
 <div class="container categories-section">
     <div class="categories-title">
-        <h2 class="text-white font-open-sans fw-bolder fs-6 text-center">PRINCIPAIS CATEGORIAS</h2>
+        <h2 class="text-whiteer text-center">PRINCIPAIS CATEGORIAS</h2>
     </div>
     <div class="row d-grip justify-content-center text-center gap-4 px-3 px-sm-4 px-md-5">
         <a href="#" class="card category-card category-link text-decoration-none border-0 rounded-4 bg-custom-light-gray" data-category-name="Livros">
@@ -377,7 +377,7 @@
                 <div class="category-icon-container">
                     <img src="{% static 'assets/11-1149.svg' %}" alt="Livros" class="img-fluid" />
                 </div>
-                <p class="card-text mt-3 mb-0 text-custom-dark font-open-sans fw-medium category-text">Livros</p>
+                <p class="card-text mt-3 mb-0 text-custom-dark category-text">Livros</p>
             </div>
         </a>
 
@@ -386,7 +386,7 @@
                 <div class="category-icon-container">
                     <img src="{% static 'assets/11-1288.svg' %}" alt="Artigos" class="img-fluid" />
                 </div>
-                <p class="card-text mt-3 mb-0 text-custom-dark font-open-sans fw-medium category-text">Artigos</p>
+                <p class="card-text mt-3 mb-0 text-custom-dark category-text">Artigos</p>
             </div>
         </a>
 
@@ -395,7 +395,7 @@
                 <div class="category-icon-container">
                     <img src="{% static 'assets/11-1294.svg' %}" alt="Revistas" class="img-fluid" />
                 </div>
-                <p class="card-text mt-3 mb-0 text-custom-dark font-open-sans fw-medium category-text">Revistas</p>
+                <p class="card-text mt-3 mb-0 text-custom-dark category-text">Revistas</p>
             </div>
         </a>
 
@@ -404,7 +404,7 @@
                 <div class="category-icon-container">
                     <img src="{% static 'assets/11-1304.svg' %}" alt="Vídeos" class="img-fluid" />
                 </div>
-                <p class="card-text mt-3 mb-0 text-custom-dark font-open-sans fw-medium category-text">Vídeos</p>
+                <p class="card-text mt-3 mb-0 text-custom-dark category-text">Vídeos</p>
             </div>
         </a>
     </div>
@@ -412,7 +412,7 @@
 
 <!-- Recent Submissions Section -->
 <div class="container py-5">
-    <h2 class="text-center text-custom-dark font-open-sans fw-medium mb-5 h1" id="submissionsTitle">Submissões Recentes</h2>
+    <h2 class="text-center text-custom-dark mb-5 h1" id="submissionsTitle">Submissões Recentes</h2>
 
     <div class="row justify-content-center">
         <div class="col-lg-8" id="submissionsContainer">
@@ -437,7 +437,7 @@
                         <img src="{% static 'assets/198-196.svg' %}" alt="File icon" class="submission-icon" />
                     </div>
                     <div class="col ps-3">
-                        <p class="mb-0 text-custom-dark font-open-sans fw-medium small">Nome Arquivo - Autor <br/>02/24/2022</p>
+                        <p class="mb-0 text-custom-dark small">Nome Arquivo - Autor <br/>02/24/2022</p>
                         <div class="d-flex flex-wrap gap-2 mt-2">
                             <span class="badge rounded-pill text-bg-publicacao small">Revista</span>
                             <span class="badge rounded-pill text-bg-ano small">2003</span>
@@ -467,7 +467,7 @@
                         <img src="{% static 'assets/198-224.svg' %}" alt="File icon" class="submission-icon" />
                     </div>
                     <div class="col ps-3">
-                        <p class="mb-0 text-custom-dark font-open-sans fw-medium small">Nome Arquivo - Autor <br/>02/24/2022</p>
+                        <p class="mb-0 text-custom-dark small">Nome Arquivo - Autor <br/>02/24/2022</p>
                         <div class="d-flex flex-wrap gap-2 mt-2">
                             <span class="badge rounded-pill text-bg-publicacao small">Revista</span>
                             <span class="badge rounded-pill text-bg-ano small">2003</span>
@@ -497,7 +497,7 @@
                         <img src="{% static 'assets/198-244.svg' %}" alt="File icon" class="submission-icon" />
                     </div>
                     <div class="col ps-3">
-                        <p class="mb-0 text-custom-dark font-open-sans fw-medium small">Nome Arquivo - Autor <br/>02/24/2022</p>
+                        <p class="mb-0 text-custom-dark small">Nome Arquivo - Autor <br/>02/24/2022</p>
                         <div class="d-flex flex-wrap gap-2 mt-2">
                             <span class="badge rounded-pill text-bg-publicacao small">Revista</span>
                             <span class="badge rounded-pill text-bg-ano small">2003</span>
@@ -527,7 +527,7 @@
                         <img src="{% static 'assets/198-265.svg' %}" alt="File icon" class="submission-icon" />
                     </div>
                     <div class="col ps-3">
-                        <p class="mb-0 text-custom-dark font-open-sans fw-medium small">Nome Arquivo - Autor <br/>02/24/2022</p>
+                        <p class="mb-0 text-custom-dark small">Nome Arquivo - Autor <br/>02/24/2022</p>
                         <div class="d-flex flex-wrap gap-2 mt-2">
                             <span class="badge rounded-pill text-bg-publicacao small">Revista</span>
                             <span class="badge rounded-pill text-bg-ano small">2003</span>
@@ -557,7 +557,7 @@
                         <img src="{% static 'assets/198-281.svg' %}" alt="File icon" class="submission-icon" />
                     </div>
                     <div class="col ps-3">
-                        <p class="mb-0 text-custom-dark font-open-sans fw-medium small">Nome Arquivo - Autor <br/>02/24/2022</p>
+                        <p class="mb-0 text-custom-dark small">Nome Arquivo - Autor <br/>02/24/2022</p>
                         <div class="d-flex flex-wrap gap-2 mt-2">
                             <span class="badge rounded-pill text-bg-publicacao small">Revista</span>
                             <span class="badge rounded-pill text-bg-ano small">2003</span>
@@ -760,7 +760,7 @@ function createSubmissionItemHTML(item) {
                     <img src="${item.icon_url}" alt="File icon" class="submission-icon" />
                 </div>
                 <div class="col ps-3">
-                    <p class="mb-0 text-custom-dark font-open-sans fw-medium small">${item.title} - ${item.author} <br/>${item.date}</p>
+                    <p class="mb-0 text-custom-dark small">${item.title} - ${item.author} <br/>${item.date}</p>
                     <div class="d-flex flex-wrap gap-2 mt-2">
                         ${badgesHtml}
                     </div>

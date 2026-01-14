@@ -234,7 +234,7 @@
 
 {% block hero %}
 <div class="hero-content container text-center mt-4">
-    <h1 class="hero-title text-white fw-bold font-chunkfive display-3 mb-4">
+    <h1 class="hero-title text-white display-3 mb-4">
         Repositório TCCEs
     </h1>
 
@@ -250,7 +250,7 @@
                         <span class="input-group-text bg-white border-0 rounded-start-3">
                             <img src="{% static 'assets/11-1144.svg' %}" alt="Search icon" />
                         </span>
-                        <input type="text" class="form-control border-0 font-open-sans" id="searchInput" name="q" placeholder="Buscar no repositório..." value="{{ form.q.value|default:'' }}">
+                        <input type="text" class="form-control border-0" id="searchInput" name="q" placeholder="Buscar no repositório..." value="{{ form.q.value|default:'' }}">
                         <button class="btn btn-success rounded-end-3 d-flex align-items-center justify-content-center p-0 px-3" id="searchButton" type="submit">
                             <img src="{% static 'assets/chevron-right.svg' %}" alt="Buscar" />
                         </button>
@@ -263,7 +263,7 @@
                     <div class="col-md-3"></div>
                     <div class="col-md-6">
                         <!-- Advanced Search Link -->
-                        <div class="text-end text-white font-open-sans fw-bold text-decoration-none small">
+                        <div class="text-end text-white text-decoration-none small">
                             <a class="advanced-search-link" onclick="toggleAdvancedSearch(); return false;">BUSCA AVANÇADA &gt;</a>
                         </div>
                     </div>
@@ -341,7 +341,7 @@
 <!-- Categories Section -->
 <div class="container categories-section">
     <div class="categories-title">
-        <h2 class="text-white font-open-sans fw-bolder fs-6 text-center">PRINCIPAIS CATEGORIAS</h2>
+        <h2 class="text-whiteer text-center">PRINCIPAIS CATEGORIAS</h2>
     </div>
     <div class="row d-grip justify-content-center text-center gap-4 px-3 px-sm-4 px-md-5">
         {% if category_mapping.Livros %}
@@ -350,7 +350,7 @@
                 <div class="category-icon-container">
                     <img src="{% static 'assets/11-1149.svg' %}" alt="Livros" class="img-fluid" />
                 </div>
-                <p class="card-text mt-3 mb-0 text-custom-dark font-open-sans fw-medium category-text">Livros</p>
+                <p class="card-text mt-3 mb-0 text-custom-dark category-text">Livros</p>
             </div>
         </a>
         {% else %}
@@ -359,7 +359,7 @@
                 <div class="category-icon-container">
                     <img src="{% static 'assets/11-1149.svg' %}" alt="Livros" class="img-fluid" />
                 </div>
-                <p class="card-text mt-3 mb-0 text-custom-dark font-open-sans fw-medium category-text">Livros</p>
+                <p class="card-text mt-3 mb-0 text-custom-dark category-text">Livros</p>
             </div>
         </div>
         {% endif %}
@@ -370,7 +370,7 @@
                 <div class="category-icon-container">
                     <img src="{% static 'assets/11-1288.svg' %}" alt="Artigos" class="img-fluid" />
                 </div>
-                <p class="card-text mt-3 mb-0 text-custom-dark font-open-sans fw-medium category-text">Artigos</p>
+                <p class="card-text mt-3 mb-0 text-custom-dark category-text">Artigos</p>
             </div>
         </a>
         {% else %}
@@ -379,7 +379,7 @@
                 <div class="category-icon-container">
                     <img src="{% static 'assets/11-1288.svg' %}" alt="Artigos" class="img-fluid" />
                 </div>
-                <p class="card-text mt-3 mb-0 text-custom-dark font-open-sans fw-medium category-text">Artigos</p>
+                <p class="card-text mt-3 mb-0 text-custom-dark category-text">Artigos</p>
             </div>
         </div>
         {% endif %}
@@ -390,7 +390,7 @@
                 <div class="category-icon-container">
                     <img src="{% static 'assets/11-1294.svg' %}" alt="Relatório Técnico" class="img-fluid" />
                 </div>
-                <p class="card-text mt-3 mb-0 text-custom-dark font-open-sans fw-medium category-text">Relatório Técnico</p>
+                <p class="card-text mt-3 mb-0 text-custom-dark category-text">Relatório Técnico</p>
             </div>
         </a>
         {% else %}
@@ -399,7 +399,7 @@
                 <div class="category-icon-container">
                     <img src="{% static 'assets/11-1294.svg' %}" alt="Relatório Técnico" class="img-fluid" />
                 </div>
-                <p class="card-text mt-3 mb-0 text-custom-dark font-open-sans fw-medium category-text">Relatório Técnico</p>
+                <p class="card-text mt-3 mb-0 text-custom-dark category-text">Relatório Técnico</p>
             </div>
         </div>
         {% endif %}
@@ -410,7 +410,7 @@
                 <div class="category-icon-container">
                     <img src="{% static 'assets/11-1304.svg' %}" alt="Vídeos" class="img-fluid" />
                 </div>
-                <p class="card-text mt-3 mb-0 text-custom-dark font-open-sans fw-medium category-text">Vídeos</p>
+                <p class="card-text mt-3 mb-0 text-custom-dark category-text">Vídeos</p>
             </div>
         </a>
         {% else %}
@@ -419,7 +419,7 @@
                 <div class="category-icon-container">
                     <img src="{% static 'assets/11-1304.svg' %}" alt="Vídeos" class="img-fluid" />
                 </div>
-                <p class="card-text mt-3 mb-0 text-custom-dark font-open-sans fw-medium category-text">Vídeos</p>
+                <p class="card-text mt-3 mb-0 text-custom-dark category-text">Vídeos</p>
             </div>
         </div>
         {% endif %}
@@ -428,7 +428,7 @@
 
 <!-- Recent Submissions Section -->
 <div class="container py-5">
-    <h2 class="text-center text-custom-dark font-open-sans fw-medium mb-5 h1" id="submissionsTitle">
+    <h2 class="text-center text-custom-dark mb-5 h1" id="submissionsTitle">
         Resultados da Pesquisa ({{ page_obj.paginator.count }} registros)
     </h2>
 
@@ -447,8 +447,8 @@
 
                     <!-- Metadados -->
                     <div class="col ps-3">
-                        <h5 class="mb-1 text-custom-dark font-open-sans fw-bold h6">{{ registro.titulo }}</h5>
-                        <p class="mb-0 text-custom-dark font-open-sans fw-medium small">
+                        <h5 class="mb-1 text-custom-dark h6">{{ registro.titulo }}</h5>
+                        <p class="mb-0 text-custom-dark small">
                             {% for autor in registro.autores.all %}{{ autor.nome }}{% if not forloop.last %}, {% endif %}{% endfor %}
                             <br/>
                             {{ registro.data_publicacao|date:"d/m/Y"|default:"" }}

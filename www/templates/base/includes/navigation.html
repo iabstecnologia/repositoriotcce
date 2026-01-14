@@ -15,12 +15,12 @@
         </button>
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
             <ul class="navbar-nav align-items-center gap-lg-4">
-                <li class="nav-item"><a class="nav-link font-inter {% if request.resolver_match.url_name == 'home' %}fw-bold{% endif %}" href="{% url 'core:home' %}">Inicio</a></li>
-                <li class="nav-item"><a class="nav-link font-inter {% if request.resolver_match.url_name == 'tcce' %}fw-bold{% endif %}" href="{% url 'core:tcce' %}">TCCEs</a></li>
-                <li class="nav-item"><a class="nav-link font-open-sans {% if request.resolver_match.url_name == 'contato' %}fw-bold{% endif %}" href="{% url 'core:contato' %}">Contato</a></li>
-                <li class="nav-item"><a class="nav-link font-open-sans {% if request.resolver_match.url_name == 'galeria' %}fw-bold{% endif %}" href="{% url 'core:galeria' %}">Galeria</a></li>
+                <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'home' %}fw-bold{% endif %}" href="{% url 'core:home' %}">Inicio</a></li>
+                <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'tcce' %}fw-bold{% endif %}" href="{% url 'core:tcce' %}">TCCEs</a></li>
+                <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'contato' %}fw-bold{% endif %}" href="{% url 'core:contato' %}">Contato</a></li>
+                <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'galeria' %}fw-bold{% endif %}" href="{% url 'core:galeria' %}">Galeria</a></li>
                 <li class="nav-item mt-3 mt-lg-0">
-                    <a class="btn bg-custom-green text-white font-open-sans fw-bold rounded-3 px-4 py-2 text-lg-nowrap {% if request.resolver_match.url_name == 'repositorio' %}border-2{% endif %}" href="{% url 'core:repositorio' %}" style="{% if request.resolver_match.url_name == 'repositorio' %}border-color: #55616C;{% endif %}">REPOSITÓRIO TCCEs</a>
+                    <a class="btn bg-custom-green text-white rounded-3 px-4 py-2 text-lg-nowrap {% if request.resolver_match.url_name == 'repositorio' %}border-2{% endif %}" href="{% url 'core:repositorio' %}" style="{% if request.resolver_match.url_name == 'repositorio' %}border-color: #55616C;{% endif %}">REPOSITÓRIO TCCEs</a>
                 </li>
             </ul>
         </div>
