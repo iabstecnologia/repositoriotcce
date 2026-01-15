@@ -42,7 +42,7 @@ class RepositorioView(ListView):
         status_id = self.request.GET.get('status')
         tipo_publicacao_id = self.request.GET.get('tipo_publicacao')
         ano = self.request.GET.get('ano')
-        ordenar_por = self.request.GET.get('ordenar_por', '-data_publicacao')
+        ordenar_por = self.request.GET.get('ordenar_por', 'data_publicacao')
 
         # --- LÓGICA DE FILTRAGEM ---
 

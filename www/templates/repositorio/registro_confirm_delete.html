@@ -1,0 +1,51 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Excluir Registro - Repositório TCCE{% endblock %}
+
+{% block hero_title %}Confirmar Exclusão{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">
+                        <i class="bi bi-exclamation-triangle"></i> Confirmar Exclusão
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <strong>Atenção!</strong> Esta ação não pode ser desfeita.
+                    </div>
+
+                    <p class="lead">Você tem certeza que deseja excluir o seguinte registro?</p>
+
+                    <div class="card mb-4">
+                        <div class="card-body bg-light">
+                            <h5 class="card-title">{{ registro.titulo }}</h5>
+                            <p class="card-text mb-1"><strong>Subprojeto:</strong> {{ registro.subprojeto }}</p>
+                            <p class="card-text mb-1"><strong>Tipo:</strong> {{ registro.tipo_documento.nome }}</p>
+                            <p class="card-text mb-1"><strong>Data:</strong> {{ registro.data_publicacao|date:"d/m/Y"|default:"-" }}</p>
+                        </div>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-flex gap-2 justify-content-end">
+                            <a href="{% url 'repositorio:lista' %}" class="btn btn-secondary">
+                                <i class="bi bi-x-circle"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="bi bi-trash"></i> Sim, Excluir
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

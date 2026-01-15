@@ -1,0 +1,191 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Gestão de Registros - Repositório TCCE{% endblock %}
+
+{% block hero_title %}Gestão de Registros{% endblock %}
+
+{% block hero_content %}
+<p class="lead text-white">Gerencie todos os documentos do repositório</p>
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    
+    <!-- Mensagens de feedback -->
+    {% if messages %}
+    <div class="row mb-4">
+        <div class="col-12">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Barra de ações -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <form method="get" class="d-flex gap-2">
+                <input type="text" name="q" class="form-control" placeholder="Buscar por título ou resumo..." value="{{ search_query }}">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-search"></i> Buscar
+                </button>
+                {% if search_query %}
+                <a href="{% url 'repositorio:lista' %}" class="btn btn-secondary">
+                    <i class="bi bi-x-circle"></i> Limpar
+                </a>
+                {% endif %}
+            </form>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{% url 'repositorio:criar' %}" class="btn btn-success">
+                <i class="bi bi-plus-circle"></i> Novo Registro
+            </a>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <form method="get" class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Status</label>
+                            <select name="status" class="form-select">
+                                <option value="">Todos</option>
+                                {% for status in status_list %}
+                                <option value="{{ status.id }}" {% if request.GET.status == status.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ status.nome }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Tipo de Documento</label>
+                            <select name="tipo_documento" class="form-select">
+                                <option value="">Todos</option>
+                                {% for tipo in tipos_documento %}
+                                <option value="{{ tipo.id }}" {% if request.GET.tipo_documento == tipo.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ tipo.nome }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Subprojeto</label>
+                            <select name="subprojeto" class="form-select">
+                                <option value="">Todos</option>
+                                {% for subprojeto in subprojetos %}
+                                <option value="{{ subprojeto.id }}" {% if request.GET.subprojeto == subprojeto.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ subprojeto.nome }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary">Aplicar Filtros</button>
+                            <a href="{% url 'repositorio:lista' %}" class="btn btn-secondary">Limpar Filtros</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lista de registros -->
+    <div class="row">
+        <div class="col-12">
+            {% if registros %}
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Título</th>
+                            <th>Subprojeto</th>
+                            <th>Tipo</th>
+                            <th>Status</th>
+                            <th>Data</th>
+                            <th style="width: 200px;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for registro in registros %}
+                        <tr>
+                            <td>
+                                <strong>{{ registro.titulo|truncatewords:10 }}</strong>
+                                {% if not registro.ativo %}
+                                <span class="badge bg-secondary">Inativo</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ registro.subprojeto.nome }}</td>
+                            <td>{{ registro.tipo_documento.nome }}</td>
+                            <td>
+                                <span class="badge {% if registro.status.is_public %}bg-success{% else %}bg-warning{% endif %}">
+                                    {{ registro.status.nome }}
+                                </span>
+                            </td>
+                            <td>{{ registro.data_publicacao|date:"d/m/Y"|default:"-" }}</td>
+                            <td>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <a href="{% url 'repositorio:detalhe' registro.pk %}" class="btn btn-info" title="Ver detalhes">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a href="{% url 'repositorio:editar' registro.pk %}" class="btn btn-warning" title="Editar">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a href="{% url 'repositorio:excluir' registro.pk %}" class="btn btn-danger" title="Excluir">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% if is_paginated %}
+            <nav aria-label="Paginação">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1{% if search_query %}&q={{ search_query }}{% endif %}">Primeira</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}">Anterior</a>
+                    </li>
+                    {% endif %}
+
+                    <li class="page-item active">
+                        <span class="page-link">
+                            Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+                        </span>
+                    </li>
+
+                    {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}">Próxima</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if search_query %}&q={{ search_query }}{% endif %}">Última</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+
+            {% else %}
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i> Nenhum registro encontrado.
+                <a href="{% url 'repositorio:criar' %}" class="alert-link">Criar o primeiro registro</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

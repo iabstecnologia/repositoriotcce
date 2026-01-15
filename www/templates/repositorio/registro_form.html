@@ -1,0 +1,223 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}{% if object %}Editar{% else %}Novo{% endif %} Registro - Repositório TCCE{% endblock %}
+
+{% block hero_title %}{% if object %}Editar Registro{% else %}Novo Registro{% endif %}{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow">
+                <div class="card-body p-4">
+                    <form method="post" enctype="multipart/form-data" novalidate>
+                        {% csrf_token %}
+
+                        {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                        {% endif %}
+
+                        <!-- Informações Básicas -->
+                        <fieldset class="mb-4">
+                            <legend class="h5 border-bottom pb-2">Informações Básicas</legend>
+                            
+                            <div class="mb-3">
+                                <label for="{{ form.titulo.id_for_label }}" class="form-label">
+                                    {{ form.titulo.label }} <span class="text-danger">*</span>
+                                </label>
+                                {{ form.titulo }}
+                                {% if form.titulo.errors %}
+                                <div class="text-danger small">{{ form.titulo.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="{{ form.resumo.id_for_label }}" class="form-label">
+                                    {{ form.resumo.label }}
+                                </label>
+                                {{ form.resumo }}
+                                {% if form.resumo.errors %}
+                                <div class="text-danger small">{{ form.resumo.errors }}</div>
+                                {% endif %}
+                                {% if form.resumo.help_text %}
+                                <div class="form-text">{{ form.resumo.help_text }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.data_publicacao.id_for_label }}" class="form-label">
+                                        {{ form.data_publicacao.label }}
+                                    </label>
+                                    {{ form.data_publicacao }}
+                                    {% if form.data_publicacao.errors %}
+                                    <div class="text-danger small">{{ form.data_publicacao.errors }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.isbn.id_for_label }}" class="form-label">
+                                        {{ form.isbn.label }}
+                                    </label>
+                                    {{ form.isbn }}
+                                    {% if form.isbn.errors %}
+                                    <div class="text-danger small">{{ form.isbn.errors }}</div>
+                                    {% endif %}
+                                    {% if form.isbn.help_text %}
+                                    <div class="form-text">{{ form.isbn.help_text }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <!-- Classificação -->
+                        <fieldset class="mb-4">
+                            <legend class="h5 border-bottom pb-2">Classificação</legend>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.subprojeto.id_for_label }}" class="form-label">
+                                        {{ form.subprojeto.label }} <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.subprojeto }}
+                                    {% if form.subprojeto.errors %}
+                                    <div class="text-danger small">{{ form.subprojeto.errors }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.tipo_documento.id_for_label }}" class="form-label">
+                                        {{ form.tipo_documento.label }} <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.tipo_documento }}
+                                    {% if form.tipo_documento.errors %}
+                                    <div class="text-danger small">{{ form.tipo_documento.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label for="{{ form.area_tematica.id_for_label }}" class="form-label">
+                                        {{ form.area_tematica.label }} <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.area_tematica }}
+                                    {% if form.area_tematica.errors %}
+                                    <div class="text-danger small">{{ form.area_tematica.errors }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label for="{{ form.status.id_for_label }}" class="form-label">
+                                        {{ form.status.label }} <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.status }}
+                                    {% if form.status.errors %}
+                                    <div class="text-danger small">{{ form.status.errors }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label for="{{ form.tipo_publicacao.id_for_label }}" class="form-label">
+                                        {{ form.tipo_publicacao.label }} <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.tipo_publicacao }}
+                                    {% if form.tipo_publicacao.errors %}
+                                    <div class="text-danger small">{{ form.tipo_publicacao.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <!-- Autoria e Tags -->
+                        <fieldset class="mb-4">
+                            <legend class="h5 border-bottom pb-2">Autoria e Palavras-chave</legend>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">{{ form.autores.label }}</label>
+                                <div class="border rounded p-3" style="max-height: 200px; overflow-y: auto;">
+                                    {{ form.autores }}
+                                </div>
+                                {% if form.autores.errors %}
+                                <div class="text-danger small">{{ form.autores.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">{{ form.tags.label }}</label>
+                                <div class="border rounded p-3" style="max-height: 200px; overflow-y: auto;">
+                                    {{ form.tags }}
+                                </div>
+                                {% if form.tags.errors %}
+                                <div class="text-danger small">{{ form.tags.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </fieldset>
+
+                        <!-- Arquivo e Link -->
+                        <fieldset class="mb-4">
+                            <legend class="h5 border-bottom pb-2">Arquivo e Link Externo</legend>
+                            
+                            <div class="mb-3">
+                                <label for="{{ form.arquivo.id_for_label }}" class="form-label">
+                                    {{ form.arquivo.label }}
+                                </label>
+                                {{ form.arquivo }}
+                                {% if form.arquivo.errors %}
+                                <div class="text-danger small">{{ form.arquivo.errors }}</div>
+                                {% endif %}
+                                {% if form.arquivo.help_text %}
+                                <div class="form-text">{{ form.arquivo.help_text }}</div>
+                                {% endif %}
+                                {% if object.arquivo %}
+                                <div class="mt-2">
+                                    <small class="text-muted">Arquivo atual: <a href="{{ object.arquivo.url }}" target="_blank">{{ object.arquivo.name }}</a></small>
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="{{ form.link_externo.id_for_label }}" class="form-label">
+                                    {{ form.link_externo.label }}
+                                </label>
+                                {{ form.link_externo }}
+                                {% if form.link_externo.errors %}
+                                <div class="text-danger small">{{ form.link_externo.errors }}</div>
+                                {% endif %}
+                                {% if form.link_externo.help_text %}
+                                <div class="form-text">{{ form.link_externo.help_text }}</div>
+                                {% endif %}
+                            </div>
+                        </fieldset>
+
+                        <!-- Controle -->
+                        <fieldset class="mb-4">
+                            <legend class="h5 border-bottom pb-2">Controle</legend>
+                            
+                            <div class="form-check">
+                                {{ form.ativo }}
+                                <label class="form-check-label" for="{{ form.ativo.id_for_label }}">
+                                    {{ form.ativo.label }}
+                                </label>
+                            </div>
+                        </fieldset>
+
+                        <!-- Botões -->
+                        <div class="d-flex gap-2 justify-content-end">
+                            <a href="{% url 'repositorio:lista' %}" class="btn btn-secondary">
+                                <i class="bi bi-x-circle"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> {% if object %}Atualizar{% else %}Criar{% endif %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

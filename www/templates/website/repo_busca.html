@@ -465,7 +465,7 @@
 
                     <!-- Botões de Ação -->
                     <div class="col-auto d-flex flex-column flex-md-row gap-2">
-                        {% if registro.arquivo.url %}
+                        {% if registro.arquivo %}
                         <a href="{% url 'core:view_file' registro.pk %}" class="btn btn-sm bg-custom-green text-white rounded-circle d-flex align-items-center justify-content-center view-btn" title="Visualizar" target="_blank">
                             <img src="{% static 'assets/198-300.svg' %}" alt="Visualizar icon" class="view-icon" />
                         </a>
@@ -475,7 +475,7 @@
                         </a>
                         {% endif %}
 
-                        {% if registro.arquivo.url %}
+                        {% if registro.arquivo %}
                         <a href="{% url 'core:registro_download' registro.pk %}" class="btn btn-sm bg-custom-green text-white rounded-circle d-flex align-items-center justify-content-center download-btn" title="Download">
                             <img src="{% static 'assets/198-292.svg' %}" alt="Download icon" class="download-icon" />
                         </a>

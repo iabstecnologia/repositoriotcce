@@ -1,0 +1,150 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}{{ registro.titulo }} - Repositório TCCE{% endblock %}
+
+{% block hero_title %}Detalhes do Registro{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            
+            <!-- Ações -->
+            <div class="mb-3 d-flex gap-2 justify-content-end">
+                <a href="{% url 'repositorio:lista' %}" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Voltar
+                </a>
+                <a href="{% url 'repositorio:editar' registro.pk %}" class="btn btn-warning">
+                    <i class="bi bi-pencil"></i> Editar
+                </a>
+                <a href="{% url 'repositorio:excluir' registro.pk %}" class="btn btn-danger">
+                    <i class="bi bi-trash"></i> Excluir
+                </a>
+            </div>
+
+            <!-- Card Principal -->
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">{{ registro.titulo }}</h3>
+                </div>
+                <div class="card-body">
+                    
+                    <!-- Status e Informações Rápidas -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <p class="mb-1"><strong>Status:</strong> 
+                                <span class="badge {% if registro.status.is_public %}bg-success{% else %}bg-warning{% endif %}">
+                                    {{ registro.status.nome }}
+                                </span>
+                            </p>
+                            <p class="mb-1"><strong>Ativo:</strong> 
+                                {% if registro.ativo %}
+                                <span class="badge bg-success">Sim</span>
+                                {% else %}
+                                <span class="badge bg-secondary">Não</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="col-md-6 text-md-end">
+                            <p class="mb-1"><strong>Data de Publicação:</strong> {{ registro.data_publicacao|date:"d/m/Y"|default:"-" }}</p>
+                            {% if registro.isbn %}
+                            <p class="mb-1"><strong>ISBN:</strong> {{ registro.isbn }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Resumo -->
+                    {% if registro.resumo %}
+                    <div class="mb-4">
+                        <h5 class="border-bottom pb-2">Resumo</h5>
+                        <p class="text-justify">{{ registro.resumo }}</p>
+                    </div>
+                    {% endif %}
+
+                    <!-- Classificação -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h5 class="border-bottom pb-2">Classificação</h5>
+                            <p class="mb-1"><strong>Subprojeto:</strong> {{ registro.subprojeto }}</p>
+                            <p class="mb-1"><strong>Tipo de Documento:</strong> {{ registro.tipo_documento.nome }}</p>
+                            <p class="mb-1"><strong>Área Temática:</strong> {{ registro.area_tematica.nome }}</p>
+                            <p class="mb-1"><strong>Tipo de Publicação:</strong> {{ registro.tipo_publicacao.nome }}</p>
+                        </div>
+
+                        <div class="col-md-6">
+                            <h5 class="border-bottom pb-2">Autores</h5>
+                            {% if registro.autores.all %}
+                            <ul class="list-unstyled">
+                                {% for autor in registro.autores.all %}
+                                <li>
+                                    <i class="bi bi-person-fill"></i> {{ autor.nome }}
+                                    {% if autor.lattes_id %}
+                                    <small class="text-muted">(Lattes: {{ autor.lattes_id }})</small>
+                                    {% endif %}
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            {% else %}
+                            <p class="text-muted">Nenhum autor cadastrado.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Tags -->
+                    <div class="mb-4">
+                        <h5 class="border-bottom pb-2">Palavras-chave</h5>
+                        {% if registro.tags.all %}
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for tag in registro.tags.all %}
+                            <span class="badge bg-info">{{ tag.nome }}</span>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <p class="text-muted">Nenhuma palavra-chave cadastrada.</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Arquivo e Link -->
+                    <div class="mb-4">
+                        <h5 class="border-bottom pb-2">Acesso ao Documento</h5>
+                        {% if registro.arquivo %}
+                        <p>
+                            <i class="bi bi-file-earmark-pdf"></i> 
+                            <strong>Arquivo:</strong> 
+                            <a href="{{ registro.arquivo.url }}" target="_blank" class="btn btn-sm btn-primary">
+                                <i class="bi bi-download"></i> Baixar Arquivo
+                            </a>
+                        </p>
+                        {% endif %}
+                        {% if registro.link_externo %}
+                        <p>
+                            <i class="bi bi-link-45deg"></i> 
+                            <strong>Link Externo:</strong> 
+                            <a href="{{ registro.link_externo }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-box-arrow-up-right"></i> Acessar Link
+                            </a>
+                        </p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Auditoria -->
+                    <div class="border-top pt-3">
+                        <h6 class="text-muted">Informações de Auditoria</h6>
+                        <div class="row small text-muted">
+                            <div class="col-md-6">
+                                <p class="mb-1"><strong>Criado por:</strong> {{ registro.usuario_criacao.get_full_name|default:registro.usuario_criacao.email }}</p>
+                                <p class="mb-1"><strong>Data de Criação:</strong> {{ registro.date_create|date:"d/m/Y H:i" }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p class="mb-1"><strong>Última Atualização por:</strong> {{ registro.usuario_ultima_atualizacao.get_full_name|default:registro.usuario_ultima_atualizacao.email }}</p>
+                                <p class="mb-1"><strong>Data da Última Atualização:</strong> {{ registro.date_update|date:"d/m/Y H:i" }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

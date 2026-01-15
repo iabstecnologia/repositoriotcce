@@ -7,7 +7,11 @@ urlpatterns = [
     # Painel administrativo do Django
     path('admin/', admin.site.urls),
 
-    path('', include('apps.core.urls'))
+    # URLs do core (website público)
+    path('', include('apps.core.urls')),
+    
+    # URLs do repositório (gestão de registros)
+    path('gestao/', include('apps.repositorio.urls')),
 ]
 
 # Configuração para servir arquivos de mídia e estáticos em desenvolvimento
