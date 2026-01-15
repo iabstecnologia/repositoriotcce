@@ -27,10 +27,8 @@
 {% endblock hero_title %}
 
 {% block hero_content %}
-    <div class="text-white font-open-sans fw-semibold mb-5 scrollable-content-sm overflow-auto">
+    <div class="text-white mb-5 col-lg-8 col-md-10 col-12 mx-auto">
         
-
-
         O Repositório digital é uma plataforma dedicada à disponibilização de produção intelectual, científica e técnica desenvolvidas no âmbito dos projetos
         contemplados pelos <strong>Termos de Compromisso de Compensação Espeleológica - TCCEs</strong>.<br/><br/>
         Tem como objetivo promover a <strong>visibilidade, acessibilidade e difusão</strong> de dados e resultados de projetos. Além disso, funciona como uma valiosa fonte
@@ -39,7 +37,7 @@
     </div>
 
     <div>
-        <a class="btn bg-custom-green text-white font-open-sans fw-bold rounded-3 px-4 py-2 text-lg-nowrap" href="{% url 'core:repositorio' %}">
+        <a class="btn bg-custom-green text-white rounded-3 px-4 py-2 text-lg-nowrap" href="{% url 'core:repositorio' %}">
             REPOSITÓRIO TCCEs
         </a>
     </div>
@@ -55,8 +53,8 @@
                 <div class="row">
                     <div class="col-lg-6 mb-4 mb-lg-0 d-flex flex-column justify-content-between">
                         <div>
-                            <h2 class="text-custom-dark font-open-sans fw-medium fs-2 fs-md-1 mb-4">Sobre os TCCEs</h2>
-                            <p class="text-custom-dark font-open-sans fs-6">
+                            <h2 class="text-custom-dark mb-4">Sobre os TCCEs</h2>
+                            <p class="text-custom-dark">
                                 O <strong>Termo de Compromisso de Compensação Espeleológica (TCCE)</strong> é um documento celebrado entre o 
                                 Instituto Chico Mendes de Conservação da Biodiversidade (<strong>ICMBio</strong>) e empresas mineradoras. Ele 
                                 visa garantir a execução da compensação pelos impactos negativos irreversíveis a cavidades naturais subterrâneas
@@ -71,7 +69,7 @@
                         </div>
 
                         <div>
-                            <a class="btn btn-tcces-saibamais text-white text-wrap font-open-sans fw-bold rounded-3 px-4 py-2 mt-3" href="{% url 'core:tcce' %}">
+                            <a class="btn btn-tcces-saibamais text-white text-wrap rounded-3 px-4 py-2 mt-3" href="{% url 'core:tcce' %}">
                                 SAIBA MAIS SOBRE OS TCCEs
                             </a>
                         </div>
