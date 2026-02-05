@@ -105,6 +105,12 @@
 /* Estilos de Tag (Badges) */
 .badge {
     cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.badge:active {
+    transform: scale(0.95);
 }
 
 .text-bg-ciencia {
@@ -114,6 +120,8 @@
 
 .text-bg-ciencia:hover {
     background-color: #8c553d;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .text-bg-projeto {
@@ -123,7 +131,8 @@
 
 .text-bg-projeto:hover {
     background-color: #434e57;
-    color: #ffffff;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .text-bg-ano {
@@ -133,7 +142,8 @@
 
 .text-bg-ano:hover {
     background-color: #254d24;
-    color: #ffffff;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .text-bg-publicacao {
@@ -143,7 +153,8 @@
 
 .text-bg-publicacao:hover {
     background-color: #4b7835;
-    color: #ffffff;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Botão de fechar dentro da área avançada */
@@ -164,6 +175,46 @@
 .advanced-close-btn:hover {
     color: #000;
     opacity: 0.85;
+}
+
+/* Estilos para a seção de detalhes expansível */
+.details-section {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 300ms ease, opacity 300ms ease, padding 300ms ease;
+    opacity: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.details-section.show {
+    max-height: 500px;
+    opacity: 1;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.detail-item:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    font-weight: 600;
+    color: #55616C;
+    min-width: 120px;
+}
+
+.detail-value {
+    color: #345934;
+    text-align: right;
+    word-break: break-word;
 }
 
 /* Ajustes de layout para mobile */
@@ -465,6 +516,10 @@
 
                     <!-- Botões de Ação -->
                     <div class="col-auto d-flex flex-column flex-md-row gap-2">
+                        <button class="btn btn-sm bg-custom-green text-white rounded-2 d-flex align-items-center justify-content-center toggle-details-btn" title="Ver Detalhes" data-registro-id="{{ registro.pk }}" style="padding: 0.375rem 0.75rem; font-size: 0.875rem; white-space: nowrap;">
+                            Ver Detalhes
+                        </button>
+
                         {% if registro.arquivo %}
                         <a href="{% url 'core:view_file' registro.pk %}" class="btn btn-sm bg-custom-green text-white rounded-circle d-flex align-items-center justify-content-center view-btn" title="Visualizar" target="_blank">
                             <img src="{% static 'assets/198-300.svg' %}" alt="Visualizar icon" class="view-icon" />
@@ -486,6 +541,32 @@
                         {% endif %}
 
                     </div>
+                </div>
+
+                <!-- Seção de Detalhes Expansível -->
+                <div class="details-section p-4 bg-light" data-registro-id="{{ registro.pk }}">
+                    <div class="detail-item">
+                        <span class="detail-label">Status:</span>
+                        <span class="detail-value">{{ registro.status }}</span>
+                    </div>
+                    {% if registro.descricao %}
+                    <div class="detail-item">
+                        <span class="detail-label">Descrição:</span>
+                        <span class="detail-value">{{ registro.descricao }}</span>
+                    </div>
+                    {% endif %}
+                    {% if registro.subprojeto %}
+                    <div class="detail-item">
+                        <span class="detail-label">Sub-projeto:</span>
+                        <span class="detail-value">{{ registro.subprojeto.nome }}</span>
+                    </div>
+                    {% endif %}
+                    {% if registro.data_criacao %}
+                    <div class="detail-item">
+                        <span class="detail-label">Data Criação:</span>
+                        <span class="detail-value">{{ registro.data_criacao|date:"d/m/Y" }}</span>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
             {% empty %}
@@ -556,10 +637,104 @@
         }
     }
 
-    
-
-    // Mantém o estado da ordenação no dropdown após a recarga da página
+    /**
+     * Implementa filtros clicáveis nas badges
+     * Ao clicar em uma badge, preenche o campo correspondente no formulário e submete
+     * 
+     * Comportamento:
+     * - Substitui filtros anteriores do mesmo tipo (comportamento "radio")
+     * - Mantém a busca texto (campo 'q')
+     * - Adiciona feedback visual (escala e sombra)
+     */
     document.addEventListener('DOMContentLoaded', function() {
+        // ===== Funcionalidade de Expansão/Colapse de Detalhes =====
+        const toggleDetailsBtns = document.querySelectorAll('.toggle-details-btn');
+        
+        toggleDetailsBtns.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const registroId = this.getAttribute('data-registro-id');
+                const detailsSection = document.querySelector(`.details-section[data-registro-id="${registroId}"]`);
+                
+                if (detailsSection) {
+                    detailsSection.classList.toggle('show');
+                    
+                    // Altera o texto do botão
+                    if (detailsSection.classList.contains('show')) {
+                        this.textContent = 'Ocultar Detalhes';
+                    } else {
+                        this.textContent = 'Ver Detalhes';
+                    }
+                }
+            });
+        });
+
+        // ===== Mapeamento de classes das badges para campos e valores do formulário =====
+        const badgeFieldMap = {
+            'text-bg-publicacao': { field: 'tipo_documento', isSelect: true },
+            'text-bg-ano': { field: 'ano', isSelect: false },
+            'text-bg-projeto': { field: 'subprojeto', isSelect: true },
+            'text-bg-ciencia': { field: 'area_tematica', isSelect: true }
+        };
+
+        // Seleciona todas as badges dentro dos resultados (não nas categorias)
+        const resultBadges = document.querySelectorAll('.card-item-hoverable .badge');
+
+        resultBadges.forEach(badge => {
+            // Adiciona listener para clique
+            badge.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const badgeText = this.textContent.trim();
+                let fieldName = null;
+                let fieldConfig = null;
+
+                // Identifica qual campo será filtrado baseado na classe da badge
+                for (const [badgeClass, config] of Object.entries(badgeFieldMap)) {
+                    if (this.classList.contains(badgeClass)) {
+                        fieldName = config.field;
+                        fieldConfig = config;
+                        break;
+                    }
+                }
+
+                if (!fieldName || !fieldConfig) return;
+
+                const form = document.getElementById('searchForm');
+                const field = form.querySelector(`[name="${fieldName}"]`);
+
+                if (!field) return;
+
+                // Preenche o campo baseado no tipo (SELECT ou INPUT)
+                if (fieldConfig.isSelect) {
+                    // Para SELECT, procura pela option que corresponde ao texto
+                    const targetOption = Array.from(field.options).find(opt => 
+                        opt.textContent.trim() === badgeText
+                    );
+                    if (targetOption) {
+                        field.value = targetOption.value;
+                    }
+                } else {
+                    // Para INPUT, preenche diretamente
+                    field.value = badgeText;
+                }
+
+                // Mantém a busca texto se existir
+                const searchInput = form.querySelector('input[name="q"]');
+                if (!searchInput.value) {
+                    // Somente limpa se não houver valor anterior
+                    // (garante que mantemos a busca)
+                }
+
+                // Submete o formulário
+                form.submit();
+            });
+        });
+
+        // Mantém o estado da ordenação no dropdown após a recarga da página
         const sortParam = new URLSearchParams(window.location.search).get('ordenar_por') || '-data_publicacao';
         const currentSortLabel = document.getElementById('currentSortLabel');
         const activeOption = document.querySelector(`.sort-option[data-sort-by="${sortParam}"]`);
