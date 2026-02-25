@@ -41,7 +41,7 @@ class RegistroForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': 'Ex: 978-3-16-148410-0'
             }),
-            'arquivo': forms.FileInput(attrs={
+            'arquivo': forms.ClearableFileInput(attrs={
                 'class': 'form-control'
             }),
             'link_externo': forms.URLInput(attrs={
@@ -98,3 +98,21 @@ class RegistroForm(forms.ModelForm):
             )
 
         return cleaned_data
+
+    def save(self, commit=True):
+        """Remove arquivo antigo do storage quando o usuário limpar ou substituir o anexo."""
+        arquivo_anterior = None
+
+        if self.instance.pk:
+            arquivo_anterior = Registro.objects.filter(pk=self.instance.pk).values_list('arquivo', flat=True).first()
+
+        instance = super().save(commit=commit)
+
+        if arquivo_anterior:
+            novo_arquivo = instance.arquivo.name if instance.arquivo else ''
+            if arquivo_anterior != novo_arquivo:
+                storage = instance._meta.get_field('arquivo').storage
+                if storage.exists(arquivo_anterior):
+                    storage.delete(arquivo_anterior)
+
+        return instance
