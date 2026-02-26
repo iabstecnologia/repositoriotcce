@@ -87,7 +87,7 @@ class RepositorioView(ListView):
         if status_id:
             queryset = queryset.filter(status__id=status_id)
         if tipo_publicacao_id:
-            queryset = queryset = queryset.filter(tipo_publicacao__id=tipo_publicacao_id)
+            queryset = queryset.filter(tipo_publicacao__id=tipo_publicacao_id)
 
         # 3. Filtro por Ano
         if ano:
