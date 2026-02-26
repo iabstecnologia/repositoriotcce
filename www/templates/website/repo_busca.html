@@ -359,12 +359,16 @@
                             {{ form.ano }}
                         </div>
                         <!-- Filtro de Ordenação -->
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label for="{{ form.ordenar_por.id_for_label }}" class="form-label small mb-1">Ordenar</label>
                             {{ form.ordenar_por }}
                         </div>
-                        <!-- Campos explícitos do formulário (ModelChoiceFields) -->
                         <div class="col-md-2">
+                            <label for="{{ form.projeto.id_for_label }}" class="form-label small mb-1">{{ form.projeto.label }}</label>
+                            {{ form.projeto }}
+                        </div>
+                        <!-- Campos explícitos do formulário (ModelChoiceFields) -->
+                        <div class="col-md-3">
                             <label for="{{ form.subprojeto.id_for_label }}" class="form-label small mb-1">{{ form.subprojeto.label }}</label>
                             {{ form.subprojeto }}
                         </div>
@@ -372,11 +376,11 @@
                             <label for="{{ form.autor.id_for_label }}" class="form-label small mb-1">{{ form.autor.label }}</label>
                             {{ form.autor }}
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <label for="{{ form.tag.id_for_label }}" class="form-label small mb-1">{{ form.tag.label }}</label>
                             {{ form.tag }}
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <label for="{{ form.tipo_documento.id_for_label }}" class="form-label small mb-1">{{ form.tipo_documento.label }}</label>
                             {{ form.tipo_documento }}
                         </div>
@@ -385,15 +389,9 @@
                             <label for="{{ form.area_tematica.id_for_label }}" class="form-label small mb-1">{{ form.area_tematica.label }}</label>
                             {{ form.area_tematica }}
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label for="{{ form.status.id_for_label }}" class="form-label small mb-1">{{ form.status.label }}</label>
                             {{ form.status }}
-                        </div>
-
-                        <!-- Campo TipoPublicacao (Col span 12) -->
-                        <div class="col-md-3">
-                            <label for="{{ form.tipo_publicacao.id_for_label }}" class="form-label small mb-1">{{ form.tipo_publicacao.label }}</label>
-                            {{ form.tipo_publicacao }}
                         </div>
 
                         <div class="col-12 mt-3 text-center">

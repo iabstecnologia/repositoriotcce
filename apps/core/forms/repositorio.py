@@ -54,12 +54,6 @@ class RepositorioFilterForm(forms.Form):
         empty_label="Status (Todos)",
         widget=forms.Select(attrs={'class': 'form-select'})
     )
-    tipo_publicacao = forms.ModelChoiceField(
-        queryset=TipoPublicacao.objects.all(),
-        required=False,
-        empty_label="Veículo de Publicação (Todos)",
-        widget=forms.Select(attrs={'class': 'form-select'})
-    )
 
     # Filtro por Ano de Publicação (Usaremos apenas o ano)
     ano = forms.IntegerField(
