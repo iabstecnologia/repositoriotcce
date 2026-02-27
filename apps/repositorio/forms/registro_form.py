@@ -8,6 +8,18 @@ from apps.repositorio.models.repositorio import (
 
 class RegistroForm(forms.ModelForm):
     """Formulário para criação e edição de Registros."""
+
+    data_publicacao = forms.DateField(
+        required=False,
+        input_formats=['%Y-%m-%d', '%d/%m/%Y'],
+        widget=forms.DateInput(
+            format='%Y-%m-%d',
+            attrs={
+                'class': 'form-control',
+                'type': 'date'
+            }
+        )
+    )
     
     class Meta:
         model = Registro
@@ -28,10 +40,6 @@ class RegistroForm(forms.ModelForm):
             'area_tematica': forms.Select(attrs={'class': 'form-select'}),
             'status': forms.Select(attrs={'class': 'form-select'}),
             'tipo_publicacao': forms.Select(attrs={'class': 'form-select'}),
-            'data_publicacao': forms.DateInput(attrs={
-                'class': 'form-control',
-                'type': 'date'
-            }),
             'isbn': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Ex: 978-3-16-148410-0'
