@@ -87,6 +87,14 @@
                                 {% endfor %}
                             </select>
                         </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Situação</label>
+                            <select name="ativo" class="form-select">
+                                <option value="" {% if not request.GET.ativo %}selected{% endif %}>Todos</option>
+                                <option value="1" {% if request.GET.ativo == '1' %}selected{% endif %}>Ativos</option>
+                                <option value="0" {% if request.GET.ativo == '0' %}selected{% endif %}>Inativos</option>
+                            </select>
+                        </div>
                         <div class="col-12">
                             <button type="submit" class="btn btn-primary">Aplicar Filtros</button>
                             <a href="{% url 'repositorio:lista' %}" class="btn btn-secondary">Limpar Filtros</a>
