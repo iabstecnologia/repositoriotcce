@@ -64,6 +64,10 @@ class RegistroListView(LoginRequiredMixin, ListView):
         context['status_list'] = Status.objects.filter(ativo=True)
         context['tipos_documento'] = TipoDocumento.objects.filter(ativo=True)
         context['subprojetos'] = Subprojeto.objects.filter(ativo=True)
+
+        query_params = self.request.GET.copy()
+        query_params.pop('page', None)
+        context['query_params'] = query_params.urlencode()
         
         return context
 

@@ -28,20 +28,7 @@
 
     <!-- Barra de ações -->
     <div class="row mb-4">
-        <div class="col-md-8">
-            <form method="get" class="d-flex gap-2">
-                <input type="text" name="q" class="form-control" placeholder="Buscar por título ou resumo..." value="{{ search_query }}">
-                <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-search"></i> Buscar
-                </button>
-                {% if search_query %}
-                <a href="{% url 'repositorio:lista' %}" class="btn btn-secondary">
-                    <i class="bi bi-x-circle"></i> Limpar
-                </a>
-                {% endif %}
-            </form>
-        </div>
-        <div class="col-md-4 text-end">
+        <div class="col-12 text-end">
             <a href="{% url 'repositorio:criar' %}" class="btn btn-success">
                 <i class="bi bi-plus-circle"></i> Novo Registro
             </a>
@@ -54,7 +41,11 @@
             <div class="card">
                 <div class="card-body">
                     <form method="get" class="row g-3">
-                        <div class="col-md-4">
+                        <div class="col-md-12">
+                            <label class="form-label">Buscar</label>
+                            <input type="text" name="q" class="form-control" placeholder="Buscar por título ou resumo..." value="{{ search_query }}">
+                        </div>
+                        <div class="col-md-3">
                             <label class="form-label">Status</label>
                             <select name="status" class="form-select">
                                 <option value="">Todos</option>
@@ -96,7 +87,9 @@
                             </select>
                         </div>
                         <div class="col-12">
-                            <button type="submit" class="btn btn-primary">Aplicar Filtros</button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-search"></i> Buscar e Aplicar Filtros
+                            </button>
                             <a href="{% url 'repositorio:lista' %}" class="btn btn-secondary">Limpar Filtros</a>
                         </div>
                     </form>
