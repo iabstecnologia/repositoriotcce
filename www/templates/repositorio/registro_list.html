@@ -28,20 +28,7 @@
 
     <!-- Barra de ações -->
     <div class="row mb-4">
-        <div class="col-md-8">
-            <form method="get" class="d-flex gap-2">
-                <input type="text" name="q" class="form-control" placeholder="Buscar por título ou resumo..." value="{{ search_query }}">
-                <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-search"></i> Buscar
-                </button>
-                {% if search_query %}
-                <a href="{% url 'repositorio:lista' %}" class="btn btn-secondary">
-                    <i class="bi bi-x-circle"></i> Limpar
-                </a>
-                {% endif %}
-            </form>
-        </div>
-        <div class="col-md-4 text-end">
+        <div class="col-12 text-end">
             <a href="{% url 'repositorio:criar' %}" class="btn btn-success">
                 <i class="bi bi-plus-circle"></i> Novo Registro
             </a>
@@ -54,7 +41,11 @@
             <div class="card">
                 <div class="card-body">
                     <form method="get" class="row g-3">
-                        <div class="col-md-4">
+                        <div class="col-md-12">
+                            <label class="form-label">Buscar</label>
+                            <input type="text" name="q" class="form-control" placeholder="Buscar por título ou resumo..." value="{{ search_query }}">
+                        </div>
+                        <div class="col-md-3">
                             <label class="form-label">Status</label>
                             <select name="status" class="form-select">
                                 <option value="">Todos</option>
@@ -65,7 +56,7 @@
                                 {% endfor %}
                             </select>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label class="form-label">Tipo de Documento</label>
                             <select name="tipo_documento" class="form-select">
                                 <option value="">Todos</option>
@@ -76,7 +67,7 @@
                                 {% endfor %}
                             </select>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label class="form-label">Subprojeto</label>
                             <select name="subprojeto" class="form-select">
                                 <option value="">Todos</option>
@@ -87,8 +78,18 @@
                                 {% endfor %}
                             </select>
                         </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Situação</label>
+                            <select name="ativo" class="form-select">
+                                <option value="" {% if not request.GET.ativo %}selected{% endif %}>Todos</option>
+                                <option value="1" {% if request.GET.ativo == '1' %}selected{% endif %}>Ativos</option>
+                                <option value="0" {% if request.GET.ativo == '0' %}selected{% endif %}>Inativos</option>
+                            </select>
+                        </div>
                         <div class="col-12">
-                            <button type="submit" class="btn btn-primary">Aplicar Filtros</button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-search"></i> Buscar e Aplicar Filtros
+                            </button>
                             <a href="{% url 'repositorio:lista' %}" class="btn btn-secondary">Limpar Filtros</a>
                         </div>
                     </form>
@@ -154,10 +155,10 @@
                 <ul class="pagination justify-content-center">
                     {% if page_obj.has_previous %}
                     <li class="page-item">
-                        <a class="page-link" href="?page=1{% if search_query %}&q={{ search_query }}{% endif %}">Primeira</a>
+                        <a class="page-link" href="?page=1{% if query_params %}&{{ query_params }}{% endif %}">Primeira</a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}">Anterior</a>
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if query_params %}&{{ query_params }}{% endif %}">Anterior</a>
                     </li>
                     {% endif %}
 
@@ -169,10 +170,10 @@
 
                     {% if page_obj.has_next %}
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}">Próxima</a>
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if query_params %}&{{ query_params }}{% endif %}">Próxima</a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if search_query %}&q={{ search_query }}{% endif %}">Última</a>
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if query_params %}&{{ query_params }}{% endif %}">Última</a>
                     </li>
                     {% endif %}
                 </ul>

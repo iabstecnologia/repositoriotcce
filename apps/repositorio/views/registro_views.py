@@ -45,6 +45,13 @@ class RegistroListView(LoginRequiredMixin, ListView):
         if subprojeto_id:
             queryset = queryset.filter(subprojeto_id=subprojeto_id)
 
+        # Filtro por situação ativa/inativa
+        ativo = self.request.GET.get('ativo')
+        if ativo == '1':
+            queryset = queryset.filter(ativo=True)
+        elif ativo == '0':
+            queryset = queryset.filter(ativo=False)
+
         return queryset.order_by('-date_create')
 
     def get_context_data(self, **kwargs):
@@ -57,6 +64,10 @@ class RegistroListView(LoginRequiredMixin, ListView):
         context['status_list'] = Status.objects.filter(ativo=True)
         context['tipos_documento'] = TipoDocumento.objects.filter(ativo=True)
         context['subprojetos'] = Subprojeto.objects.filter(ativo=True)
+
+        query_params = self.request.GET.copy()
+        query_params.pop('page', None)
+        context['query_params'] = query_params.urlencode()
         
         return context
 

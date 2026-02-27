@@ -40,9 +40,8 @@ class RepositorioView(ListView):
         categoria = self.request.GET.get('categoria')
         area_tematica_id = self.request.GET.get('area_tematica')
         status_id = self.request.GET.get('status')
-        tipo_publicacao_id = self.request.GET.get('tipo_publicacao')
         ano = self.request.GET.get('ano')
-        ordenar_por = self.request.GET.get('ordenar_por', 'data_publicacao')
+        ordenar_por = self.request.GET.get('ordenar_por', '-data_publicacao')
 
         # --- LÓGICA DE FILTRAGEM ---
 
@@ -86,8 +85,6 @@ class RepositorioView(ListView):
             queryset = queryset.filter(area_tematica__id=area_tematica_id)
         if status_id:
             queryset = queryset.filter(status__id=status_id)
-        if tipo_publicacao_id:
-            queryset = queryset = queryset.filter(tipo_publicacao__id=tipo_publicacao_id)
 
         # 3. Filtro por Ano
         if ano:

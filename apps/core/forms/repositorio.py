@@ -1,5 +1,5 @@
 from django import forms
-from apps.repositorio.models import Subprojeto, Autor, Tag, TipoDocumento, AreaTematica, Status, TipoPublicacao
+from apps.repositorio.models import Subprojeto, Autor, TipoDocumento, AreaTematica, Status
 from datetime import datetime
 
 
@@ -29,12 +29,6 @@ class RepositorioFilterForm(forms.Form):
         empty_label="Autor (Todos)",
         widget=forms.Select(attrs={'class': 'form-select'})
     )
-    tag = forms.ModelChoiceField(
-        queryset=Tag.objects.all(),
-        required=False,
-        empty_label="Tag (Todas)",
-        widget=forms.Select(attrs={'class': 'form-select'})
-    )
     tipo_documento = forms.ModelChoiceField(
         queryset=TipoDocumento.objects.all(),
         required=False,
@@ -52,12 +46,6 @@ class RepositorioFilterForm(forms.Form):
         queryset=Status.objects.filter(is_public=True),
         required=False,
         empty_label="Status (Todos)",
-        widget=forms.Select(attrs={'class': 'form-select'})
-    )
-    tipo_publicacao = forms.ModelChoiceField(
-        queryset=TipoPublicacao.objects.all(),
-        required=False,
-        empty_label="Veículo de Publicação (Todos)",
         widget=forms.Select(attrs={'class': 'form-select'})
     )
 

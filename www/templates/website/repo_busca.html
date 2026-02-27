@@ -240,6 +240,71 @@
         padding-bottom: 80px !important; 
     }
 }
+
+/* Estilos de Botões de Ação no Card */
+.share-btn, .view-btn, .download-btn {
+    position: relative;
+    z-index: 3;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    transition: filter 0.2s ease-in-out;
+}
+
+.view-btn:hover,
+.share-btn:hover,
+.download-btn:hover {
+    background-color: #2a5229;
+}
+
+.view-icon, .share-icon, .download-icon {
+    width: 50%;
+    height: auto;
+}
+
+/* Estilos de Tag (Badges) */
+.badge {
+    cursor: pointer;
+}
+
+.text-bg-ciencia {
+    background-color: #A7674C;
+    color: #ffffff;
+}
+
+.text-bg-ciencia:hover {
+    background-color: #8c553d;
+}
+
+.text-bg-projeto {
+    background-color: #55616C;
+    color: #ffffff;
+}
+
+.text-bg-projeto:hover {
+    background-color: #434e57;
+    color: #ffffff;
+}
+
+.text-bg-ano {
+    background-color: #346933;
+    color: #ffffff;
+}
+
+.text-bg-ano:hover {
+    background-color: #254d24;
+    color: #ffffff;
+}
+
+.text-bg-publicacao {
+    background-color: #5C9541;
+    color: #ffffff;
+}
+
+.text-bg-publicacao:hover {
+    background-color: #4b7835;
+    color: #ffffff;
+}
 </style>
 {% endblock extra_css %}
 
@@ -287,48 +352,44 @@
                         <div class="col-md-8 col-md-offset-2"></div>
                     </div>
                     <h5 class="mb-3 text-custom-dark">Filtros Avançados</h5>
-                    <div class="row g-2">
+                    <div class="row g-3 align-items-end">
                         <!-- Filtro por Ano -->
-                        <div class="col-md-2">
+                        <div class="col-12 col-md-3">
                             <label for="{{ form.ano.id_for_label }}" class="form-label small mb-1">{{ form.ano.label }}</label>
                             {{ form.ano }}
                         </div>
                         <!-- Filtro de Ordenação -->
-                        <div class="col-md-3">
+                        <div class="col-12 col-md-3">
                             <label for="{{ form.ordenar_por.id_for_label }}" class="form-label small mb-1">Ordenar</label>
                             {{ form.ordenar_por }}
                         </div>
+                        {% if form.projeto %}
+                        <div class="col-12 col-md-3">
+                            <label for="{{ form.projeto.id_for_label }}" class="form-label small mb-1">{{ form.projeto.label }}</label>
+                            {{ form.projeto }}
+                        </div>
+                        {% endif %}
                         <!-- Campos explícitos do formulário (ModelChoiceFields) -->
-                        <div class="col-md-2">
+                        <div class="col-12 col-md-3">
                             <label for="{{ form.subprojeto.id_for_label }}" class="form-label small mb-1">{{ form.subprojeto.label }}</label>
                             {{ form.subprojeto }}
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-12 col-md-3">
                             <label for="{{ form.autor.id_for_label }}" class="form-label small mb-1">{{ form.autor.label }}</label>
                             {{ form.autor }}
                         </div>
-                        <div class="col-md-2">
-                            <label for="{{ form.tag.id_for_label }}" class="form-label small mb-1">{{ form.tag.label }}</label>
-                            {{ form.tag }}
-                        </div>
-                        <div class="col-md-3">
+                        <div class="col-12 col-md-4">
                             <label for="{{ form.tipo_documento.id_for_label }}" class="form-label small mb-1">{{ form.tipo_documento.label }}</label>
                             {{ form.tipo_documento }}
                         </div>
 
-                        <div class="col-md-3">
+                        <div class="col-12 col-md-4">
                             <label for="{{ form.area_tematica.id_for_label }}" class="form-label small mb-1">{{ form.area_tematica.label }}</label>
                             {{ form.area_tematica }}
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-12 col-md-4">
                             <label for="{{ form.status.id_for_label }}" class="form-label small mb-1">{{ form.status.label }}</label>
                             {{ form.status }}
-                        </div>
-
-                        <!-- Campo TipoPublicacao (Col span 12) -->
-                        <div class="col-md-3">
-                            <label for="{{ form.tipo_publicacao.id_for_label }}" class="form-label small mb-1">{{ form.tipo_publicacao.label }}</label>
-                            {{ form.tipo_publicacao }}
                         </div>
 
                         <div class="col-12 mt-3 text-center">
