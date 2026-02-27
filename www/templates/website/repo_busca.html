@@ -551,10 +551,6 @@
                         <a href="{% url 'core:registro_download' registro.pk %}" class="btn btn-sm bg-custom-green text-white rounded-circle d-flex align-items-center justify-content-center download-btn" title="Download">
                             <img src="{% static 'assets/198-292.svg' %}" alt="Download icon" class="download-icon" />
                         </a>
-                        {% elif registro.link_externo %}
-                        <a href="{{ registro.link_externo }}" target="_blank" class="btn btn-sm bg-custom-green text-white rounded-circle d-flex align-items-center justify-content-center download-btn" title="Acessar Link">
-                            <img src="{% static 'assets/198-292.svg' %}" alt="Download icon" class="download-icon" />
-                        </a>
                         {% endif %}
 
                     </div>
