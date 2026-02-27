@@ -3,6 +3,10 @@ from apps.repositorio.views.registro_views import (
 	RegistroListView, RegistroDetailView, RegistroCreateView,
 	RegistroUpdateView, RegistroDeleteView
 )
+from apps.repositorio.views.galeria_views import (
+	FotoGaleriaListView, FotoGaleriaCreateView,
+	FotoGaleriaUpdateView, FotoGaleriaDeleteView
+)
 
 app_name = 'repositorio'
 
@@ -21,4 +25,10 @@ urlpatterns = [
 
 	# Excluir registro
 	path('<int:pk>/excluir/', RegistroDeleteView.as_view(), name='excluir'),
+
+	# Galeria
+	path('galeria/', FotoGaleriaListView.as_view(), name='galeria_lista'),
+	path('galeria/nova/', FotoGaleriaCreateView.as_view(), name='galeria_criar'),
+	path('galeria/<int:pk>/editar/', FotoGaleriaUpdateView.as_view(), name='galeria_editar'),
+	path('galeria/<int:pk>/excluir/', FotoGaleriaDeleteView.as_view(), name='galeria_excluir'),
 ]

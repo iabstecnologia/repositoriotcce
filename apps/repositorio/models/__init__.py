@@ -7,5 +7,6 @@ from .repositorio import (
     AreaTematica,
     Status,
     TipoPublicacao,
-    Registro
+    Registro,
+    FotoGaleria
 )

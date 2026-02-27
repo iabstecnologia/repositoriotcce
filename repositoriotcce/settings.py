@@ -147,37 +147,44 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "www/static/"),
 ]
 
-# Configura para usar S3 para arquivos ESTÁTICOS (apenas para o comando collectstatic)
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
-
 # -----------------------------------------------------------------------------------------
-# CONFIGURAÇÃO DE ARQUIVOS DE MÍDEA (MEDIA - Uploads de Usuários/Documentos) AWS S3 Config
+# CONFIGURAÇÃO DE ARQUIVOS DE MÍDEA (MEDIA - Uploads de Usuários/Documentos)
 # -----------------------------------------------------------------------------------------
 
-AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
-AWS_S3_FILE_OVERWRITE = True
-AWS_LOCATION = env('AWS_LOCATION')
+# Tenta ler as configurações AWS (opcionais para desenvolvimento)
+AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID', default=None)
+AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY', default=None)
+AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME', default=None)
+AWS_FILE_PATH_ROOT = env('AWS_FILE_PATH_ROOT', default='')
 
-# URL base do S3
-AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+# Se as credenciais AWS estiverem configuradas, usa S3
+if AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY and AWS_STORAGE_BUCKET_NAME:
+    # Configurações do S3
+    AWS_S3_FILE_OVERWRITE = True
+    AWS_LOCATION = env('AWS_LOCATION')
+    
+    # URL base do S3
+    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+    
+    # URL de Mídia (aponta para o S3)
+    MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/"
+    
+    # Define configurações de cache, cabeçalhos, etc.
+    AWS_S3_OBJECT_PARAMETERS = {
+        'CacheControl': 'max-age=86400',
+    }
+    
+    # Configura o S3 como backend de armazenamento
+    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
+    DEFAULT_FILE_STORAGE = 'repositoriotcce.storage_backends.MediaStorage'
+else:
+    # Configuração local para desenvolvimento (quando AWS não está configurado)
+    MEDIA_URL = '/media/'
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
-# URL de Mídia (aponta para o S3)
-MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/"
-# Root de Mídia (Apenas para fallback ou referência, se necessário)
+# Root de Mídia (usado para armazenamento local)
 MEDIA_ROOT = os.path.join(BASE_DIR, 'www/media')
-
-# Configura o S3 como backend de armazenamento padrão para arquivos de MÍDIA
-# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-DEFAULT_FILE_STORAGE = 'repositoriotcce.storage_backends.MediaStorage'
-
-AWS_FILE_PATH_ROOT = env('AWS_FILE_PATH_ROOT')
-
-# Define configurações de cache, cabeçalhos, etc.
-AWS_S3_OBJECT_PARAMETERS = {
-    'CacheControl': 'max-age=86400',
-}
 
 # --------------------------------------------------------------------------
 # CONFIGURAÇÕES DE SEGURANÇA (Geralmente em produção)

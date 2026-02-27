@@ -1,0 +1,51 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Excluir Imagem - Repositorio TCCE{% endblock %}
+
+{% block hero_title %}Confirmar Exclusao{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">
+                        <i class="bi bi-exclamation-triangle"></i> Confirmar Exclusao
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <strong>Atencao!</strong> Esta acao nao pode ser desfeita.
+                    </div>
+
+                    <p class="lead">Voce tem certeza que deseja excluir a seguinte imagem?</p>
+
+                    <div class="card mb-4">
+                        <div class="card-body bg-light">
+                            <h5 class="card-title">{{ foto.titulo }}</h5>
+                            {% if foto.imagem %}
+                            <img src="{{ foto.imagem.url }}" alt="{{ foto.titulo }}" style="max-width: 240px; height: auto;" class="rounded-3 shadow-sm">
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-flex gap-2 justify-content-end">
+                            <a href="{% url 'repositorio:galeria_lista' %}" class="btn btn-secondary">
+                                <i class="bi bi-x-circle"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="bi bi-trash"></i> Sim, Excluir
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
