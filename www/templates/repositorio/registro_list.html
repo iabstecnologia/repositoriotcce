@@ -68,6 +68,17 @@
                             </select>
                         </div>
                         <div class="col-md-3">
+                            <label class="form-label">Projeto</label>
+                            <select name="projeto" class="form-select">
+                                <option value="">Todos</option>
+                                {% for projeto in projetos %}
+                                <option value="{{ projeto.id }}" {% if request.GET.projeto == projeto.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ projeto.nome }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
                             <label class="form-label">Subprojeto</label>
                             <select name="subprojeto" class="form-select">
                                 <option value="">Todos</option>
@@ -189,4 +200,73 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.querySelector('form[method="get"]');
+        if (!form) return;
+
+        const projetoSelect = form.querySelector('[name="projeto"]');
+        const subprojetoSelect = form.querySelector('[name="subprojeto"]');
+
+        if (!projetoSelect || !subprojetoSelect) return;
+
+        const preencherSubprojetos = (subprojetos) => {
+            subprojetoSelect.innerHTML = '';
+
+            const emptyOption = document.createElement('option');
+            emptyOption.value = '';
+            emptyOption.textContent = 'Todos';
+            subprojetoSelect.appendChild(emptyOption);
+
+            subprojetos.forEach((subprojeto) => {
+                const option = document.createElement('option');
+                option.value = String(subprojeto.id);
+                option.textContent = subprojeto.nome;
+                subprojetoSelect.appendChild(option);
+            });
+
+            subprojetoSelect.disabled = false;
+        };
+
+        const carregarSubprojetos = async (projetoId) => {
+            subprojetoSelect.disabled = true;
+            subprojetoSelect.innerHTML = '';
+
+            const loadingOption = document.createElement('option');
+            loadingOption.value = '';
+            loadingOption.textContent = 'Carregando subprojetos...';
+            subprojetoSelect.appendChild(loadingOption);
+
+            try {
+                const url = projetoId
+                    ? `{% url 'repositorio:subprojetos_por_projeto' %}?projeto_id=${encodeURIComponent(projetoId)}`
+                    : `{% url 'repositorio:subprojetos_por_projeto' %}`;
+
+                const response = await fetch(url, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+
+                if (!response.ok) {
+                    preencherSubprojetos([]);
+                    return;
+                }
+
+                const data = await response.json();
+                preencherSubprojetos(data.subprojetos || []);
+            } catch (error) {
+                preencherSubprojetos([]);
+            }
+        };
+
+        projetoSelect.addEventListener('change', function () {
+            subprojetoSelect.value = '';
+            carregarSubprojetos(this.value);
+        });
+    });
+</script>
 {% endblock %}

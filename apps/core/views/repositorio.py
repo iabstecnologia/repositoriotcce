@@ -7,6 +7,8 @@ from apps.core.forms import RepositorioFilterForm
 from django.shortcuts import get_object_or_404
 from django.http import FileResponse, Http404, HttpResponseRedirect
 import os
+from apps.repositorio.models.repositorio import Subprojeto
+from django.http import JsonResponse
 
 
 class RepositorioView(ListView):
@@ -33,6 +35,7 @@ class RepositorioView(ListView):
 
         # Obtém os parâmetros de busca da URL
         query = self.request.GET.get('q')
+        projeto_id = self.request.GET.get('projeto')
         subprojeto_id = self.request.GET.get('subprojeto')
         autor_id = self.request.GET.get('autor')
         tag_id = self.request.GET.get('tag')
@@ -56,6 +59,8 @@ class RepositorioView(ListView):
             ).distinct()  # Necessário devido à busca M2M (autores, tags)
 
         # 2. Filtros de Seleção (FKs e M2M)
+        if projeto_id:
+            queryset = queryset.filter(subprojeto__projeto_id=projeto_id)
         if subprojeto_id:
             queryset = queryset.filter(subprojeto__id=subprojeto_id)
         if autor_id:
@@ -130,6 +135,20 @@ class RepositorioView(ListView):
         context['category_mapping'] = {k: v.id for k, v in category_mapping.items() if v}
 
         return context
+
+
+def subprojetos_por_projeto(request):
+    projeto_id = request.GET.get('projeto_id')
+
+    subprojetos = Subprojeto.objects.filter(ativo=True)
+    if projeto_id:
+        subprojetos = subprojetos.filter(projeto_id=projeto_id)
+
+    data = [
+        {'id': subprojeto.id, 'nome': subprojeto.nome}
+        for subprojeto in subprojetos.order_by('nome')
+    ]
+    return JsonResponse({'subprojetos': data})
 
 # Função para Download (Mantida)
 def download_registro(request, pk):

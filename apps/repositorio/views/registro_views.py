@@ -4,8 +4,10 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 
-from apps.repositorio.models.repositorio import Registro
+from apps.repositorio.models.repositorio import Registro, Subprojeto
 from apps.repositorio.forms.registro_form import RegistroForm
 
 
@@ -40,6 +42,11 @@ class RegistroListView(LoginRequiredMixin, ListView):
         if tipo_doc_id:
             queryset = queryset.filter(tipo_documento_id=tipo_doc_id)
 
+        # Filtro por projeto
+        projeto_id = self.request.GET.get('projeto')
+        if projeto_id:
+            queryset = queryset.filter(subprojeto__projeto_id=projeto_id)
+
         # Filtro por subprojeto
         subprojeto_id = self.request.GET.get('subprojeto')
         if subprojeto_id:
@@ -60,10 +67,16 @@ class RegistroListView(LoginRequiredMixin, ListView):
         context['search_query'] = self.request.GET.get('q', '')
         
         # Para os filtros nos dropdowns
-        from apps.repositorio.models.repositorio import Status, TipoDocumento, Subprojeto
+        from apps.repositorio.models.repositorio import Status, TipoDocumento, Projeto, Subprojeto
         context['status_list'] = Status.objects.filter(ativo=True)
         context['tipos_documento'] = TipoDocumento.objects.filter(ativo=True)
-        context['subprojetos'] = Subprojeto.objects.filter(ativo=True)
+        context['projetos'] = Projeto.objects.filter(ativo=True)
+
+        projeto_id = self.request.GET.get('projeto')
+        subprojetos = Subprojeto.objects.filter(ativo=True)
+        if projeto_id:
+            subprojetos = subprojetos.filter(projeto_id=projeto_id)
+        context['subprojetos'] = subprojetos
 
         query_params = self.request.GET.copy()
         query_params.pop('page', None)
@@ -139,3 +152,18 @@ class RegistroDeleteView(LoginRequiredMixin, DeleteView):
         """Exibe mensagem de sucesso ao deletar."""
         messages.success(self.request, 'Registro excluído com sucesso!')
         return super().delete(request, *args, **kwargs)
+
+
+@login_required(login_url='/admin/login/')
+def subprojetos_por_projeto_admin(request):
+    projeto_id = request.GET.get('projeto_id')
+
+    subprojetos = Subprojeto.objects.filter(ativo=True)
+    if projeto_id:
+        subprojetos = subprojetos.filter(projeto_id=projeto_id)
+
+    data = [
+        {'id': subprojeto.id, 'nome': subprojeto.nome}
+        for subprojeto in subprojetos.order_by('nome')
+    ]
+    return JsonResponse({'subprojetos': data})

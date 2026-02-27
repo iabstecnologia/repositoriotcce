@@ -1,7 +1,7 @@
 from django.urls import path
 from apps.repositorio.views.registro_views import (
 	RegistroListView, RegistroDetailView, RegistroCreateView,
-	RegistroUpdateView, RegistroDeleteView
+	RegistroUpdateView, RegistroDeleteView, subprojetos_por_projeto_admin
 )
 from apps.repositorio.views.galeria_views import (
 	FotoGaleriaListView, FotoGaleriaCreateView,
@@ -25,6 +25,9 @@ urlpatterns = [
 
 	# Excluir registro
 	path('<int:pk>/excluir/', RegistroDeleteView.as_view(), name='excluir'),
+
+	# Endpoint JSON para carregar subprojetos por projeto (gestão)
+	path('api/subprojetos/', subprojetos_por_projeto_admin, name='subprojetos_por_projeto'),
 
 	# Galeria
 	path('galeria/', FotoGaleriaListView.as_view(), name='galeria_lista'),

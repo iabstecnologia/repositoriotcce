@@ -1,5 +1,5 @@
 from django import forms
-from apps.repositorio.models import Subprojeto, Autor, TipoDocumento, AreaTematica, Status
+from apps.repositorio.models import Projeto, Subprojeto, Autor, TipoDocumento, AreaTematica, Status
 from datetime import datetime
 
 
@@ -17,6 +17,12 @@ class RepositorioFilterForm(forms.Form):
     )
 
     # Filtros de Seleção (Chaves Estrangeiras e M2M)
+    projeto = forms.ModelChoiceField(
+        queryset=Projeto.objects.all(),
+        required=False,
+        empty_label="Projeto (Todos)",
+        widget=forms.Select(attrs={'class': 'form-select'})
+    )
     subprojeto = forms.ModelChoiceField(
         queryset=Subprojeto.objects.all(),
         required=False,
@@ -69,3 +75,15 @@ class RepositorioFilterForm(forms.Form):
         initial='-data_publicacao',
         widget=forms.Select(attrs={'class': 'form-select'})
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        projeto_id = None
+        if self.is_bound:
+            projeto_id = self.data.get('projeto')
+        elif self.initial:
+            projeto_id = self.initial.get('projeto')
+
+        if projeto_id:
+            self.fields['subprojeto'].queryset = Subprojeto.objects.filter(projeto_id=projeto_id)

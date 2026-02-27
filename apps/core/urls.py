@@ -20,4 +20,7 @@ urlpatterns = [
     
     # View de Visualização (Abre arquivo localmente)
     path('view/<int:pk>/', view_file, name='view_file'),
+
+    # Endpoint JSON para carregar subprojetos por projeto (filtro dinâmico)
+    path('api/subprojetos/', subprojetos_por_projeto, name='subprojetos_por_projeto'),
 ]

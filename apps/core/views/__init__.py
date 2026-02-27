@@ -7,5 +7,6 @@ from .website import (
 from .repositorio import (
     RepositorioView,
     download_registro,
-    view_file
+    view_file,
+    subprojetos_por_projeto,
 )
