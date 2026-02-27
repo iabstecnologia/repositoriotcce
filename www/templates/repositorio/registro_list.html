@@ -228,6 +228,14 @@
                 subprojetoSelect.appendChild(option);
             });
 
+            if (!subprojetos.length) {
+                const noDataOption = document.createElement('option');
+                noDataOption.value = '';
+                noDataOption.textContent = 'Nenhum subprojeto encontrado';
+                noDataOption.disabled = true;
+                subprojetoSelect.appendChild(noDataOption);
+            }
+
             subprojetoSelect.disabled = false;
         };
 
