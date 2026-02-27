@@ -29,6 +29,17 @@ def item_file_path(instance, filename):
     return f"repositorio/{projeto_slug}/{subprojeto_slug}/{mes_str}/{dia_str}/{filename}"
 
 
+def gallery_image_path(instance, filename):
+    """
+    Define o caminho de upload das imagens da galeria.
+    """
+    hoje = timezone.now()
+    mes_str = hoje.strftime('%m')
+    dia_str = hoje.strftime('%d')
+    titulo_slug = slugify(instance.titulo) if instance.titulo else 'foto'
+    return f"galeria/{mes_str}/{dia_str}/{titulo_slug}-{filename}"
+
+
 # Modelos Auxiliares (Metadados e Estrutura)
 class Projeto(models.Model):
     """Representa o projeto guarda-chuva (ex: TCCE I/2018)."""
@@ -228,3 +239,37 @@ class Registro(models.Model):
             raise ValidationError("O registro deve ter um Arquivo para upload OU um Link Externo.")
 
         super().clean()
+
+
+class FotoGaleria(models.Model):
+    """Modelo para imagens da galeria do site."""
+
+    titulo = models.CharField(max_length=200, verbose_name="Titulo")
+    descricao = models.TextField(blank=True, null=True, verbose_name="Descricao")
+    imagem = models.ImageField(upload_to=gallery_image_path, verbose_name="Imagem")
+    ordem = models.PositiveIntegerField(default=0, verbose_name="Ordem")
+    ativo = models.BooleanField(default=True, verbose_name="Ativo")
+
+    date_create = models.DateTimeField(auto_now_add=True, verbose_name="Data de Criacao")
+    date_update = models.DateTimeField(auto_now=True, verbose_name="Data da ultima atualizacao")
+
+    usuario_criacao = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+        related_name="fotos_galeria_criadas",
+        verbose_name="Usuario de Criacao"
+    )
+    usuario_ultima_atualizacao = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,
+        related_name="fotos_galeria_atualizadas",
+        verbose_name="Usuario da Ultima Atualizacao"
+    )
+
+    class Meta:
+        verbose_name = "Foto da Galeria"
+        verbose_name_plural = "Fotos da Galeria"
+        ordering = ['ordem', '-date_create']
+
+    def __str__(self):
+        return self.titulo

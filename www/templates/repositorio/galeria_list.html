@@ -1,0 +1,143 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Gestao da Galeria - Repositorio TCCE{% endblock %}
+
+{% block hero_title %}Gestao da Galeria{% endblock %}
+
+{% block hero_content %}
+<p class="lead text-white">Gerencie as imagens exibidas na galeria</p>
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    {% if messages %}
+    <div class="row mb-4">
+        <div class="col-12">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <form method="get" class="d-flex gap-2">
+                <input type="text" name="q" class="form-control" placeholder="Buscar por titulo ou descricao..." value="{{ search_query }}">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-search"></i> Buscar
+                </button>
+                {% if search_query %}
+                <a href="{% url 'repositorio:galeria_lista' %}" class="btn btn-secondary">
+                    <i class="bi bi-x-circle"></i> Limpar
+                </a>
+                {% endif %}
+            </form>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{% url 'repositorio:galeria_criar' %}" class="btn btn-success">
+                <i class="bi bi-plus-circle"></i> Nova Imagem
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            {% if fotos %}
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 120px;">Preview</th>
+                            <th>Titulo</th>
+                            <th>Ordem</th>
+                            <th>Ativo</th>
+                            <th>Atualizado</th>
+                            <th style="width: 140px;">Acoes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for foto in fotos %}
+                        <tr>
+                            <td>
+                                {% if foto.imagem %}
+                                <img src="{{ foto.imagem.url }}" alt="{{ foto.titulo }}" style="width: 100px; height: 60px; object-fit: cover;" class="rounded-3 shadow-sm">
+                                {% else %}
+                                <span class="text-muted">Sem imagem</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <strong>{{ foto.titulo }}</strong>
+                                {% if not foto.ativo %}
+                                <span class="badge bg-secondary">Inativo</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ foto.ordem }}</td>
+                            <td>
+                                {% if foto.ativo %}
+                                <span class="badge bg-success">Sim</span>
+                                {% else %}
+                                <span class="badge bg-secondary">Nao</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ foto.date_update|date:"d/m/Y H:i" }}</td>
+                            <td>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <a href="{% url 'repositorio:galeria_editar' foto.pk %}" class="btn btn-warning" title="Editar">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a href="{% url 'repositorio:galeria_excluir' foto.pk %}" class="btn btn-danger" title="Excluir">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% if is_paginated %}
+            <nav aria-label="Paginacao">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1{% if search_query %}&q={{ search_query }}{% endif %}">Primeira</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}">Anterior</a>
+                    </li>
+                    {% endif %}
+
+                    <li class="page-item active">
+                        <span class="page-link">
+                            Pagina {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+                        </span>
+                    </li>
+
+                    {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}">Proxima</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if search_query %}&q={{ search_query }}{% endif %}">Ultima</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+
+            {% else %}
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle"></i> Nenhuma imagem encontrada.
+                <a href="{% url 'repositorio:galeria_criar' %}" class="alert-link">Criar a primeira imagem</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
