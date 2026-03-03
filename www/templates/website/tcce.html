@@ -111,6 +111,38 @@
 /* Reduz o tamanho da fonte dos números do contador */
 .counter-value {
     font-size: 2.5rem !important; /* Reduz de display-4 (~3.5rem) para 2.5rem */
+    transition: all 0.3s ease; /* Transição suave ao mudar de valor */
+}
+
+/* Efeito de animação ao mudar de aba */
+.counter-value.animating {
+    animation: pulse 0.5s ease-in-out;
+}
+
+/* Keyframes para efeito de pulsação */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Respeitar preferência de movimento reduzido */
+@media (prefers-reduced-motion: reduce) {
+    .counter-value {
+        transition: none;
+    }
+    .counter-value.animating {
+        animation: none;
+    }
 }
 </style>
 {% endblock extra_css %}
@@ -221,48 +253,48 @@
                         <div class="col">
                             <div class="d-flex flex-column align-items-center h-100 p-2">
                                 <img src="{% static 'assets/11-1149.svg' %}" alt="Ícone Produções Acadêmicas" class="icon-stat mb-3" />
-                                <div class="counter-value display-4" data-target="81">0</div>
+                                <div class="counter-value display-4" data-target="{{ tcce1.producoes_academicas|default:0 }}">0</div>
                                 <p class="text-muted mt-auto stat-text-footer">Produções Acadêmicas</p>
                             </div>
                         </div>
 
                         <div class="col">
                             <div class="d-flex flex-column align-items-center h-100 p-2">
-                                <img src="{% static 'assets/11-1288.svg' %}" alt="Ícone Produções Acadêmicas Publicadas" class="icon-stat mb-3" />
-                                <div class="counter-value display-4" data-target="44">0</div>
-                                <p class="text-muted mt-auto stat-text-footer">Produções Acadêmicas Publicadas</p>
+                                <img src="{% static 'assets/11-1288.svg' %}" alt="Ícone Produções Publicadas" class="icon-stat mb-3" />
+                                <div class="counter-value display-4" data-target="{{ tcce1.producoes_publicadas|default:0 }}">0</div>
+                                <p class="text-muted mt-auto stat-text-footer">Produções Publicadas</p>
                             </div>
                         </div>
 
                         <div class="col">
                             <div class="d-flex flex-column align-items-center h-100 p-2">
-                                <img src="{% static 'assets/11-1294.svg' %}" alt="Ícone Espécies Novas" class="icon-stat mb-3" />
-                                <div class="counter-value display-4" data-target="16">0</div>
-                                <p class="text-muted mt-auto stat-text-footer">Espécies Novas</p>
+                                <img src="{% static 'assets/11-1294.svg' %}" alt="Ícone Artigos Científicos" class="icon-stat mb-3" />
+                                <div class="counter-value display-4" data-target="{{ tcce1.artigos_cientificos|default:0 }}">0</div>
+                                <p class="text-muted mt-auto stat-text-footer">Artigos Científicos</p>
                             </div>
                         </div>
 
                         <div class="col">
                             <div class="d-flex flex-column align-items-center h-100 p-2">
-                                <img src="{% static 'assets/11-1304.svg' %}" alt="Ícone Kilometragem Percorrida" class="icon-stat mb-3" />
-                                <div class="counter-value display-4" data-target="117050" data-format="km">0</div>
-                                <p class="text-muted mt-auto stat-text-footer">Estimativa de Kilometragem Percorrida (km)</p>
+                                <img src="{% static 'assets/11-1304.svg' %}" alt="Ícone Autores Únicos" class="icon-stat mb-3" />
+                                <div class="counter-value display-4" data-target="{{ tcce1.autores_unicos|default:0 }}">0</div>
+                                <p class="text-muted mt-auto stat-text-footer">Autores Únicos</p>
                             </div>
                         </div>
 
                         <div class="col">
                             <div class="d-flex flex-column align-items-center h-100 p-2">
-                                <img src="{% static 'assets/11-1149.svg' %}" alt="Ícone Saídas de Campo Programadas" class="icon-stat mb-3" />
-                                <div class="counter-value display-4" data-target="73">0</div>
-                                <p class="text-muted mt-auto stat-text-footer">Saídas de Campo Programadas</p>
+                                <img src="{% static 'assets/11-1149.svg' %}" alt="Ícone Subprojetos Ativos" class="icon-stat mb-3" />
+                                <div class="counter-value display-4" data-target="{{ tcce1.subprojetos_ativos|default:0 }}">0</div>
+                                <p class="text-muted mt-auto stat-text-footer">Subprojetos Ativos</p>
                             </div>
                         </div>
 
                         <div class="col">
                             <div class="d-flex flex-column align-items-center h-100 p-2">
-                                <img src="{% static 'assets/11-1288.svg' %}" alt="Ícone Saídas de Campo Realizadas" class="icon-stat mb-3" />
-                                <div class="counter-value display-4" data-target="104">0</div>
-                                <p class="text-muted mt-auto stat-text-footer">Saídas de Campo Realizadas</p>
+                                <img src="{% static 'assets/11-1288.svg' %}" alt="Ícone Relatórios Técnicos" class="icon-stat mb-3" />
+                                <div class="counter-value display-4" data-target="{{ tcce1.relatorios_tecnicos|default:0 }}">0</div>
+                                <p class="text-muted mt-auto stat-text-footer">Relatórios Técnicos</p>
                             </div>
                         </div>
 
@@ -311,48 +343,48 @@
                         <div class="col">
                             <div class="d-flex flex-column align-items-center h-100 p-2">
                                 <img src="{% static 'assets/11-1149.svg' %}" alt="Ícone Produções Acadêmicas" class="icon-stat mb-3" />
-                                <div class="counter-value display-4" data-target="81">0</div>
+                                <div class="counter-value display-4" data-target="{{ tcce2.producoes_academicas|default:0 }}">0</div>
                                 <p class="text-muted mt-auto stat-text-footer">Produções Acadêmicas</p>
                             </div>
                         </div>
 
                         <div class="col">
                             <div class="d-flex flex-column align-items-center h-100 p-2">
-                                <img src="{% static 'assets/11-1288.svg' %}" alt="Ícone Produções Acadêmicas Publicadas" class="icon-stat mb-3" />
-                                <div class="counter-value display-4" data-target="44">0</div>
-                                <p class="text-muted mt-auto stat-text-footer">Produções Acadêmicas Publicadas</p>
+                                <img src="{% static 'assets/11-1288.svg' %}" alt="Ícone Produções Publicadas" class="icon-stat mb-3" />
+                                <div class="counter-value display-4" data-target="{{ tcce2.producoes_publicadas|default:0 }}">0</div>
+                                <p class="text-muted mt-auto stat-text-footer">Produções Publicadas</p>
                             </div>
                         </div>
 
                         <div class="col">
                             <div class="d-flex flex-column align-items-center h-100 p-2">
-                                <img src="{% static 'assets/11-1294.svg' %}" alt="Ícone Espécies Novas" class="icon-stat mb-3" />
-                                <div class="counter-value display-4" data-target="16">0</div>
-                                <p class="text-muted mt-auto stat-text-footer">Espécies Novas</p>
+                                <img src="{% static 'assets/11-1294.svg' %}" alt="Ícone Artigos Científicos" class="icon-stat mb-3" />
+                                <div class="counter-value display-4" data-target="{{ tcce2.artigos_cientificos|default:0 }}">0</div>
+                                <p class="text-muted mt-auto stat-text-footer">Artigos Científicos</p>
                             </div>
                         </div>
 
                         <div class="col">
                             <div class="d-flex flex-column align-items-center h-100 p-2">
-                                <img src="{% static 'assets/11-1304.svg' %}" alt="Ícone Kilometragem Percorrida" class="icon-stat mb-3" />
-                                <div class="counter-value display-4" data-target="117050" data-format="km">0</div>
-                                <p class="text-muted mt-auto stat-text-footer">Estimativa de Kilometragem Percorrida (km)</p>
+                                <img src="{% static 'assets/11-1304.svg' %}" alt="Ícone Autores Únicos" class="icon-stat mb-3" />
+                                <div class="counter-value display-4" data-target="{{ tcce2.autores_unicos|default:0 }}">0</div>
+                                <p class="text-muted mt-auto stat-text-footer">Autores Únicos</p>
                             </div>
                         </div>
 
                         <div class="col">
                             <div class="d-flex flex-column align-items-center h-100 p-2">
-                                <img src="{% static 'assets/11-1149.svg' %}" alt="Ícone Saídas de Campo Programadas" class="icon-stat mb-3" />
-                                <div class="counter-value display-4" data-target="73">0</div>
-                                <p class="text-muted mt-auto stat-text-footer">Saídas de Campo Programadas</p>
+                                <img src="{% static 'assets/11-1149.svg' %}" alt="Ícone Subprojetos Ativos" class="icon-stat mb-3" />
+                                <div class="counter-value display-4" data-target="{{ tcce2.subprojetos_ativos|default:0 }}">0</div>
+                                <p class="text-muted mt-auto stat-text-footer">Subprojetos Ativos</p>
                             </div>
                         </div>
 
                         <div class="col">
                             <div class="d-flex flex-column align-items-center h-100 p-2">
-                                <img src="{% static 'assets/11-1288.svg' %}" alt="Ícone Saídas de Campo Realizadas" class="icon-stat mb-3" />
-                                <div class="counter-value display-4" data-target="104">0</div>
-                                <p class="text-muted mt-auto stat-text-footer">Saídas de Campo Realizadas</p>
+                                <img src="{% static 'assets/11-1288.svg' %}" alt="Ícone Relatórios Técnicos" class="icon-stat mb-3" />
+                                <div class="counter-value display-4" data-target="{{ tcce2.relatorios_tecnicos|default:0 }}">0</div>
+                                <p class="text-muted mt-auto stat-text-footer">Relatórios Técnicos</p>
                             </div>
                         </div>
 
@@ -376,7 +408,7 @@
                                     </div>
                                     <div class="col-lg-8">
                                         <p class="text-custom-light-gray text-uppercase text-header-pretitle">COMPENSAÇÃO ESPELEOLÓGICA</p>
-                                        <h2 class="text-custom-medium-gray text-header-title">TCCE ICMBIO/Vale nº 2/2020</h2>
+                                        <h2 class="text-custom-medium-gray text-header-title">TCCE ICMBIO/Vale nº 1/2022</h2>
                                         <p class="text-custom-dark font-montserrat text-body-paragraph">
                                             O Termo de Compromisso de Compensação Espeleológica n° 01/2022 celebrado entre o Instituto ChicoMendes de Conservação da 
                                             Biodiversidade – ICMBio e a Vale S.A tem como objetivo consolidar obrigações entre as partes para conservação e 
@@ -401,48 +433,48 @@
                         <div class="col">
                             <div class="d-flex flex-column align-items-center h-100 p-2">
                                 <img src="{% static 'assets/11-1149.svg' %}" alt="Ícone Produções Acadêmicas" class="icon-stat mb-3" />
-                                <div class="counter-value display-4" data-target="81">0</div>
+                                <div class="counter-value display-4" data-target="{{ tcce3.producoes_academicas|default:0 }}">0</div>
                                 <p class="text-muted mt-auto stat-text-footer">Produções Acadêmicas</p>
                             </div>
                         </div>
 
                         <div class="col">
                             <div class="d-flex flex-column align-items-center h-100 p-2">
-                                <img src="{% static 'assets/11-1288.svg' %}" alt="Ícone Produções Acadêmicas Publicadas" class="icon-stat mb-3" />
-                                <div class="counter-value display-4" data-target="44">0</div>
-                                <p class="text-muted mt-auto stat-text-footer">Produções Acadêmicas Publicadas</p>
+                                <img src="{% static 'assets/11-1288.svg' %}" alt="Ícone Produções Publicadas" class="icon-stat mb-3" />
+                                <div class="counter-value display-4" data-target="{{ tcce3.producoes_publicadas|default:0 }}">0</div>
+                                <p class="text-muted mt-auto stat-text-footer">Produções Publicadas</p>
                             </div>
                         </div>
 
                         <div class="col">
                             <div class="d-flex flex-column align-items-center h-100 p-2">
-                                <img src="{% static 'assets/11-1294.svg' %}" alt="Ícone Espécies Novas" class="icon-stat mb-3" />
-                                <div class="counter-value display-4" data-target="16">0</div>
-                                <p class="text-muted mt-auto stat-text-footer">Espécies Novas</p>
+                                <img src="{% static 'assets/11-1294.svg' %}" alt="Ícone Artigos Científicos" class="icon-stat mb-3" />
+                                <div class="counter-value display-4" data-target="{{ tcce3.artigos_cientificos|default:0 }}">0</div>
+                                <p class="text-muted mt-auto stat-text-footer">Artigos Científicos</p>
                             </div>
                         </div>
 
                         <div class="col">
                             <div class="d-flex flex-column align-items-center h-100 p-2">
-                                <img src="{% static 'assets/11-1304.svg' %}" alt="Ícone Kilometragem Percorrida" class="icon-stat mb-3" />
-                                <div class="counter-value display-4" data-target="117050" data-format="km">0</div>
-                                <p class="text-muted mt-auto stat-text-footer">Estimativa de Kilometragem Percorrida (km)</p>
+                                <img src="{% static 'assets/11-1304.svg' %}" alt="Ícone Autores Únicos" class="icon-stat mb-3" />
+                                <div class="counter-value display-4" data-target="{{ tcce3.autores_unicos|default:0 }}">0</div>
+                                <p class="text-muted mt-auto stat-text-footer">Autores Únicos</p>
                             </div>
                         </div>
 
                         <div class="col">
                             <div class="d-flex flex-column align-items-center h-100 p-2">
-                                <img src="{% static 'assets/11-1149.svg' %}" alt="Ícone Saídas de Campo Programadas" class="icon-stat mb-3" />
-                                <div class="counter-value display-4" data-target="73">0</div>
-                                <p class="text-muted mt-auto stat-text-footer">Saídas de Campo Programadas</p>
+                                <img src="{% static 'assets/11-1149.svg' %}" alt="Ícone Subprojetos Ativos" class="icon-stat mb-3" />
+                                <div class="counter-value display-4" data-target="{{ tcce3.subprojetos_ativos|default:0 }}">0</div>
+                                <p class="text-muted mt-auto stat-text-footer">Subprojetos Ativos</p>
                             </div>
                         </div>
 
                         <div class="col">
                             <div class="d-flex flex-column align-items-center h-100 p-2">
-                                <img src="{% static 'assets/11-1288.svg' %}" alt="Ícone Saídas de Campo Realizadas" class="icon-stat mb-3" />
-                                <div class="counter-value display-4" data-target="104">0</div>
-                                <p class="text-muted mt-auto stat-text-footer">Saídas de Campo Realizadas</p>
+                                <img src="{% static 'assets/11-1288.svg' %}" alt="Ícone Relatórios Técnicos" class="icon-stat mb-3" />
+                                <div class="counter-value display-4" data-target="{{ tcce3.relatorios_tecnicos|default:0 }}">0</div>
+                                <p class="text-muted mt-auto stat-text-footer">Relatórios Técnicos</p>
                             </div>
                         </div>
 
@@ -455,5 +487,66 @@
 {% endblock content %}
 
 {% block extra_js %}
+<script>
+    /**
+     * Anima os contadores de estatísticas quando uma aba é ativada.
+     * Detecta o evento de ativação da aba e anima os números de 0 até o valor final.
+     */
+    document.addEventListener('DOMContentLoaded', function() {
+        // Rastrear quais contadores já foram animados
+        const animatedCounters = new Set();
 
+        // Função para animar um contador individual
+        function animateCounter(element) {
+            const target = parseInt(element.getAttribute('data-target'));
+            const duration = 1.5; // Duração em segundos
+            const steps = 60; // Número de steps da animação
+            const stepDuration = (duration * 1000) / steps;
+            let currentStep = 0;
+
+            // Evitar animar novamente se já foi animado
+            const counterId = element.closest('.col')?.textContent || element;
+            if (animatedCounters.has(counterId)) {
+                return;
+            }
+
+            const interval = setInterval(() => {
+                currentStep++;
+                const progress = currentStep / steps;
+                const currentValue = Math.floor(target * progress);
+                
+                element.textContent = currentValue.toLocaleString('pt-BR');
+
+                if (currentStep >= steps) {
+                    element.textContent = target.toLocaleString('pt-BR');
+                    animatedCounters.add(counterId);
+                    clearInterval(interval);
+                }
+            }, stepDuration);
+        }
+
+        // Função para animar todos os contadores visíveis em uma aba
+        function animateCountersInTab(tabId) {
+            const tab = document.getElementById(tabId);
+            if (tab) {
+                const counters = tab.querySelectorAll('.counter-value');
+                counters.forEach(counter => {
+                    animateCounter(counter);
+                });
+            }
+        }
+
+        // Ouvir eventos de mudança de aba
+        const tabButtons = document.querySelectorAll('#tcceTabs .nav-link-custom');
+        tabButtons.forEach(button => {
+            button.addEventListener('shown.bs.tab', function(event) {
+                const tabId = this.getAttribute('data-bs-target').substring(1); // Remove '#'
+                animateCountersInTab(tabId);
+            });
+        });
+
+        // Animar a aba inicial (tcce1) quando a página carrega
+        animateCountersInTab('tcce1');
+    });
+</script>
 {% endblock extra_js %}
