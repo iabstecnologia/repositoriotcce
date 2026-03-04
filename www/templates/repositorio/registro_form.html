@@ -106,16 +106,7 @@
                                     {% if form.tipo_documento.errors %}
                                     <div class="text-danger small">{{ form.tipo_documento.errors }}</div>
                                     {% endif %}
-
-                                    <label for="{{ form.novo_tipo_documento.id_for_label }}" class="form-label mt-2">
-                                        {{ form.novo_tipo_documento.label }}
-                                    </label>
-                                    {{ form.novo_tipo_documento }}
-                                    {% if form.novo_tipo_documento.errors %}
-                                    <div class="text-danger small">{{ form.novo_tipo_documento.errors }}</div>
-                                    {% endif %}
-                                    <div class="form-text">Preencha apenas se o tipo ainda não existir.</div>
-                                </div>
+                                    </div>
                             </div>
 
                             <div class="row">
@@ -126,14 +117,6 @@
                                     {{ form.area_tematica }}
                                     {% if form.area_tematica.errors %}
                                     <div class="text-danger small">{{ form.area_tematica.errors }}</div>
-                                    {% endif %}
-
-                                    <label for="{{ form.nova_area_tematica.id_for_label }}" class="form-label mt-2">
-                                        {{ form.nova_area_tematica.label }}
-                                    </label>
-                                    {{ form.nova_area_tematica }}
-                                    {% if form.nova_area_tematica.errors %}
-                                    <div class="text-danger small">{{ form.nova_area_tematica.errors }}</div>
                                     {% endif %}
                                 </div>
 
@@ -154,15 +137,7 @@
                                     {{ form.tipo_publicacao }}
                                     {% if form.tipo_publicacao.errors %}
                                     <div class="text-danger small">{{ form.tipo_publicacao.errors }}</div>
-                                    {% endif %}
-
-                                    <label for="{{ form.novo_tipo_publicacao.id_for_label }}" class="form-label mt-2">
-                                        {{ form.novo_tipo_publicacao.label }}
-                                    </label>
-                                    {{ form.novo_tipo_publicacao }}
-                                    {% if form.novo_tipo_publicacao.errors %}
-                                    <div class="text-danger small">{{ form.novo_tipo_publicacao.errors }}</div>
-                                    {% endif %}
+                                    {% endif %}                                    
                                 </div>
                             </div>
                         </fieldset>

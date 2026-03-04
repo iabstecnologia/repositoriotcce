@@ -40,39 +40,6 @@ class RegistroForm(forms.ModelForm):
         )
     )
 
-    novo_tipo_documento = forms.CharField(
-        required=False,
-        label='Novo Tipo de Documento',
-        widget=forms.TextInput(
-            attrs={
-                'class': 'form-control',
-                'placeholder': 'Cadastrar novo tipo de documento'
-            }
-        )
-    )
-
-    nova_area_tematica = forms.CharField(
-        required=False,
-        label='Nova Área Temática',
-        widget=forms.TextInput(
-            attrs={
-                'class': 'form-control',
-                'placeholder': 'Cadastrar nova área temática'
-            }
-        )
-    )
-
-    novo_tipo_publicacao = forms.CharField(
-        required=False,
-        label='Novo Tipo de Publicação',
-        widget=forms.TextInput(
-            attrs={
-                'class': 'form-control',
-                'placeholder': 'Cadastrar novo tipo de publicação'
-            }
-        )
-    )
-
     novos_autores = forms.CharField(required=False, widget=forms.HiddenInput())
     novas_tags = forms.CharField(required=False, widget=forms.HiddenInput())
     
@@ -165,51 +132,6 @@ class RegistroForm(forms.ModelForm):
                 normalized.append(item_normalized)
         return normalized
 
-    def _resolve_tipo_documento(self):
-        tipo_documento = self.cleaned_data.get('tipo_documento')
-        novo_tipo_documento = self._normalize_text(self.cleaned_data.get('novo_tipo_documento'))
-
-        if tipo_documento:
-            return tipo_documento
-
-        if novo_tipo_documento:
-            existente = TipoDocumento.objects.filter(nome__iexact=novo_tipo_documento).first()
-            if existente:
-                return existente
-            return TipoDocumento.objects.create(nome=novo_tipo_documento, ativo=True)
-
-        return None
-
-    def _resolve_area_tematica(self):
-        area_tematica = self.cleaned_data.get('area_tematica')
-        nova_area_tematica = self._normalize_text(self.cleaned_data.get('nova_area_tematica'))
-
-        if area_tematica:
-            return area_tematica
-
-        if nova_area_tematica:
-            existente = AreaTematica.objects.filter(nome__iexact=nova_area_tematica).first()
-            if existente:
-                return existente
-            return AreaTematica.objects.create(nome=nova_area_tematica, ativo=True)
-
-        return None
-
-    def _resolve_tipo_publicacao(self):
-        tipo_publicacao = self.cleaned_data.get('tipo_publicacao')
-        novo_tipo_publicacao = self._normalize_text(self.cleaned_data.get('novo_tipo_publicacao'))
-
-        if tipo_publicacao:
-            return tipo_publicacao
-
-        if novo_tipo_publicacao:
-            existente = TipoPublicacao.objects.filter(nome__iexact=novo_tipo_publicacao).first()
-            if existente:
-                return existente
-            return TipoPublicacao.objects.create(nome=novo_tipo_publicacao, ativo=True)
-
-        return None
-
     def _resolve_subprojeto(self):
         subprojeto = self.cleaned_data.get('subprojeto')
         novo_subprojeto = self._normalize_text(self.cleaned_data.get('novo_subprojeto'))
@@ -251,15 +173,6 @@ class RegistroForm(forms.ModelForm):
         if self._normalize_text(cleaned_data.get('novo_subprojeto')) and not cleaned_data.get('novo_projeto_subprojeto'):
             self.add_error('novo_projeto_subprojeto', 'Selecione o projeto para cadastrar o novo subprojeto.')
 
-        if not cleaned_data.get('tipo_documento') and not self._normalize_text(cleaned_data.get('novo_tipo_documento')):
-            self.add_error('tipo_documento', 'Selecione um tipo de documento ou cadastre um novo.')
-
-        if not cleaned_data.get('area_tematica') and not self._normalize_text(cleaned_data.get('nova_area_tematica')):
-            self.add_error('area_tematica', 'Selecione uma área temática ou cadastre uma nova.')
-
-        if not cleaned_data.get('tipo_publicacao') and not self._normalize_text(cleaned_data.get('novo_tipo_publicacao')):
-            self.add_error('tipo_publicacao', 'Selecione um tipo de publicação ou cadastre um novo.')
-
         autores_existentes = cleaned_data.get('autores')
         novos_autores = self._parse_hidden_items('novos_autores')
         if not autores_existentes and not novos_autores:
@@ -282,9 +195,6 @@ class RegistroForm(forms.ModelForm):
         with transaction.atomic():
             instance = super().save(commit=False)
             instance.subprojeto = self._resolve_subprojeto()
-            instance.tipo_documento = self._resolve_tipo_documento()
-            instance.area_tematica = self._resolve_area_tematica()
-            instance.tipo_publicacao = self._resolve_tipo_publicacao()
 
             if commit:
                 instance.save()
