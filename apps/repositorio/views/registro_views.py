@@ -111,11 +111,14 @@ class RegistroCreateView(LoginRequiredMixin, CreateView):
         """Atribui o usuário logado aos campos de auditoria."""
         form.instance.usuario_criacao = self.request.user
         form.instance.usuario_ultima_atualizacao = self.request.user
+        list(messages.get_messages(self.request))
+        response = super().form_valid(form)
         messages.success(self.request, 'Registro criado com sucesso!')
-        return super().form_valid(form)
+        return response
 
     def form_invalid(self, form):
         """Exibe mensagem de erro."""
+        list(messages.get_messages(self.request))
         messages.error(self.request, 'Erro ao criar registro. Verifique os campos.')
         return super().form_invalid(form)
 
@@ -131,11 +134,14 @@ class RegistroUpdateView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         """Atualiza o usuário da última atualização."""
         form.instance.usuario_ultima_atualizacao = self.request.user
+        list(messages.get_messages(self.request))
+        response = super().form_valid(form)
         messages.success(self.request, 'Registro atualizado com sucesso!')
-        return super().form_valid(form)
+        return response
 
     def form_invalid(self, form):
         """Exibe mensagem de erro."""
+        list(messages.get_messages(self.request))
         messages.error(self.request, 'Erro ao atualizar registro. Verifique os campos.')
         return super().form_invalid(form)
 

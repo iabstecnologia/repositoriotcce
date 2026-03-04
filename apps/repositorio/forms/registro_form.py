@@ -160,6 +160,7 @@ class RegistroForm(forms.ModelForm):
         cleaned_data = super().clean()
         arquivo = cleaned_data.get('arquivo')
         link_externo = cleaned_data.get('link_externo')
+        novo_subprojeto = self._normalize_text(cleaned_data.get('novo_subprojeto'))
 
         # Validação: deve ter arquivo OU link externo
         if not arquivo and not link_externo:
@@ -167,10 +168,10 @@ class RegistroForm(forms.ModelForm):
                 'Você deve fornecer um arquivo para upload OU um link externo.'
             )
 
-        if not cleaned_data.get('subprojeto') and not self._normalize_text(cleaned_data.get('novo_subprojeto')):
+        if not cleaned_data.get('subprojeto') and not novo_subprojeto:
             self.add_error('subprojeto', 'Selecione um subprojeto existente ou informe um novo subprojeto.')
 
-        if self._normalize_text(cleaned_data.get('novo_subprojeto')) and not cleaned_data.get('novo_projeto_subprojeto'):
+        if novo_subprojeto and not cleaned_data.get('novo_projeto_subprojeto'):
             self.add_error('novo_projeto_subprojeto', 'Selecione o projeto para cadastrar o novo subprojeto.')
 
         autores_existentes = cleaned_data.get('autores')
