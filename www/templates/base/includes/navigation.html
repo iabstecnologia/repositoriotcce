@@ -39,6 +39,14 @@
                 <li class="nav-item mt-3 mt-lg-0">
                     <a class="btn bg-custom-green text-white rounded-3 px-4 py-2 text-lg-nowrap {% if request.resolver_match.url_name == 'repositorio' %}border-2{% endif %}" href="{% url 'core:repositorio' %}" style="{% if request.resolver_match.url_name == 'repositorio' %}border-color: #55616C;{% endif %}">REPOSITÓRIO TCCEs</a>
                 </li>
+                {% if request.user.is_authenticated %}
+                <li class="nav-item mt-3 mt-lg-0">
+                    <form method="post" action="{% url 'logout' %}" class="m-0">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-secondary rounded-3 px-4 py-2 text-lg-nowrap">Sair</button>
+                    </form>
+                </li>
+                {% endif %}
             </ul>
         </div>
     </div>
