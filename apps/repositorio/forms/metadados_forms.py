@@ -101,3 +101,17 @@ class TagForm(forms.ModelForm):
             'nome': 'Palavra-chave',
             'ativo': 'Ativo',
         }
+
+
+class ProjetoForm(forms.ModelForm):
+    class Meta:
+        model = Projeto
+        fields = ['nome', 'ativo']
+        widgets = {
+            'nome': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nome do projeto'}),
+            'ativo': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+        labels = {
+            'nome': 'Projeto',
+            'ativo': 'Ativo',
+        }

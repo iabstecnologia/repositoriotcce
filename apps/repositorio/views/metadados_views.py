@@ -7,6 +7,7 @@ from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 from apps.repositorio.forms.metadados_forms import (
     AreaTematicaForm,
     AutorForm,
+    ProjetoForm,
     SubprojetoForm,
     TagForm,
     TipoDocumentoForm,
@@ -400,5 +401,53 @@ class TagDeleteView(BaseMetadataDeleteView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['entity_name'] = 'Palavra-chave'
+        context['item_name'] = self.object.nome
+        return context
+
+
+class ProjetoListView(BaseMetadataListView):
+    model = Projeto
+    template_name = 'repositorio/projeto_list.html'
+    context_object_name = 'projetos'
+
+
+class ProjetoCreateView(BaseMetadataCreateView):
+    model = Projeto
+    form_class = ProjetoForm
+    template_name = 'repositorio/metadado_form.html'
+    success_url = reverse_lazy('repositorio:projeto_lista')
+    success_message = 'Projeto criado com sucesso!'
+    error_message = 'Erro ao criar projeto. Verifique os campos.'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['entity_name'] = 'Projeto'
+        return context
+
+
+class ProjetoUpdateView(BaseMetadataUpdateView):
+    model = Projeto
+    form_class = ProjetoForm
+    template_name = 'repositorio/metadado_form.html'
+    success_url = reverse_lazy('repositorio:projeto_lista')
+    success_message = 'Projeto atualizado com sucesso!'
+    error_message = 'Erro ao atualizar projeto. Verifique os campos.'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['entity_name'] = 'Projeto'
+        return context
+
+
+class ProjetoDeleteView(BaseMetadataDeleteView):
+    model = Projeto
+    template_name = 'repositorio/metadado_confirm_delete.html'
+    success_url = reverse_lazy('repositorio:projeto_lista')
+    context_object_name = 'item'
+    success_message = 'Projeto excluído com sucesso!'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['entity_name'] = 'Projeto'
         context['item_name'] = self.object.nome
         return context

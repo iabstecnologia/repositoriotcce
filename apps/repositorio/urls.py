@@ -13,7 +13,8 @@ from apps.repositorio.views.metadados_views import (
 	AreaTematicaListView, AreaTematicaCreateView, AreaTematicaUpdateView, AreaTematicaDeleteView,
 	TipoPublicacaoListView, TipoPublicacaoCreateView, TipoPublicacaoUpdateView, TipoPublicacaoDeleteView,
 	AutorListView, AutorCreateView, AutorUpdateView, AutorDeleteView,
-	TagListView, TagCreateView, TagUpdateView, TagDeleteView
+	TagListView, TagCreateView, TagUpdateView, TagDeleteView,
+	ProjetoListView, ProjetoCreateView, ProjetoUpdateView, ProjetoDeleteView
 )
 
 app_name = 'repositorio'
@@ -38,6 +39,11 @@ urlpatterns = [
 	path('api/subprojetos/', subprojetos_por_projeto_admin, name='subprojetos_por_projeto'),
 
 	# Gestão de metadados
+	path('projetos/', ProjetoListView.as_view(), name='projeto_lista'),
+	path('projetos/novo/', ProjetoCreateView.as_view(), name='projeto_criar'),
+	path('projetos/<int:pk>/editar/', ProjetoUpdateView.as_view(), name='projeto_editar'),
+	path('projetos/<int:pk>/excluir/', ProjetoDeleteView.as_view(), name='projeto_excluir'),
+
 	path('subprojetos/', SubprojetoListView.as_view(), name='subprojeto_lista'),
 	path('subprojetos/novo/', SubprojetoCreateView.as_view(), name='subprojeto_criar'),
 	path('subprojetos/<int:pk>/editar/', SubprojetoUpdateView.as_view(), name='subprojeto_editar'),
