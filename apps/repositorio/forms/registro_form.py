@@ -202,24 +202,35 @@ class RegistroForm(forms.ModelForm):
 
             if commit:
                 instance.save()
-                self.save_m2m()
-
-                autores_ids = [autor.id for autor in self.cleaned_data.get('autores', [])]
                 novos_autores = self._parse_hidden_items('novos_autores')
-                autores_existentes = {
-                    autor.nome_normalizado: autor
-                    for autor in Autor.objects.annotate(nome_normalizado=Lower('nome')).filter(
-                        nome_normalizado__in=[nome.lower() for nome in novos_autores]
-                    )
-                }
-                for nome_autor in novos_autores:
-                    chave_autor = nome_autor.lower()
-                    autor = autores_existentes.get(chave_autor)
-                    if not autor:
-                        autor = Autor.objects.create(nome=nome_autor, ativo=True)
-                        autores_existentes[chave_autor] = autor
-                    if autor.id not in autores_ids:
-                        autores_ids.append(autor.id)
+                if novos_autores:
+                    autores_existentes = Autor.objects.filter(nome__in=novos_autores)
+                    autores_por_nome = {autor.nome: autor for autor in autores_existentes}
+
+                    for nome_autor in novos_autores:
+                        autor = autores_por_nome.get(nome_autor)
+                        if not autor:
+                            autor = Autor.objects.create(nome=nome_autor, ativo=True)
+                            autores_por_nome[nome_autor] = autor
+                        if autor.id not in autores_ids:
+                            autores_ids.append(autor.id)
+
+                if autores_ids:
+                    instance.autores.set(autores_ids)
+
+                tags_ids = [tag.id for tag in self.cleaned_data.get('tags', [])]
+                novas_tags = self._parse_hidden_items('novas_tags')
+                if novas_tags:
+                    tags_existentes = Tag.objects.filter(nome__in=novas_tags)
+                    tags_por_nome = {tag.nome: tag for tag in tags_existentes}
+
+                    for nome_tag in novas_tags:
+                        tag = tags_por_nome.get(nome_tag)
+                        if not tag:
+                            tag = Tag.objects.create(nome=nome_tag, ativo=True)
+                            tags_por_nome[nome_tag] = tag
+                        if tag.id not in tags_ids:
+                            tags_ids.append(tag.id)
 
                 if autores_ids:
                     instance.autores.set(autores_ids)
