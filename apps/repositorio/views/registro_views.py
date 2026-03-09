@@ -134,14 +134,16 @@ class RegistroCreateView(LoginRequiredMixin, CreateView):
         """Atribui o usuário logado aos campos de auditoria."""
         form.instance.usuario_criacao = self.request.user
         form.instance.usuario_ultima_atualizacao = self.request.user
-        list(messages.get_messages(self.request))
+        # Limpa mensagens pendentes de forma explícita, se necessário
+        storage = messages.get_messages(self.request)
+        storage.used = True
+
         response = super().form_valid(form)
         messages.success(self.request, 'Registro criado com sucesso!')
         return response
 
     def form_invalid(self, form):
         """Exibe mensagem de erro."""
-        list(messages.get_messages(self.request))
         messages.error(self.request, _mensagem_campos_invalidos(form, 'criar'))
         return super().form_invalid(form)
 
