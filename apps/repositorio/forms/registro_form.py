@@ -1,6 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.db import transaction
+from django.db.models.functions import Lower
 from apps.repositorio.models.repositorio import (
     Registro, Projeto, Subprojeto, Autor, Tag, TipoDocumento,
     AreaTematica, Status, TipoPublicacao
@@ -141,9 +142,11 @@ class RegistroForm(forms.ModelForm):
             return subprojeto
 
         if novo_subprojeto and novo_projeto_subprojeto:
-            existente = Subprojeto.objects.filter(
+            existente = Subprojeto.objects.annotate(
+                nome_normalizado=Lower('nome')
+            ).filter(
                 projeto=novo_projeto_subprojeto,
-                nome__iexact=novo_subprojeto
+                nome_normalizado=novo_subprojeto.lower()
             ).first()
             if existente:
                 return existente
@@ -202,10 +205,19 @@ class RegistroForm(forms.ModelForm):
                 self.save_m2m()
 
                 autores_ids = [autor.id for autor in self.cleaned_data.get('autores', [])]
-                for nome_autor in self._parse_hidden_items('novos_autores'):
-                    autor = Autor.objects.filter(nome__iexact=nome_autor).first()
+                novos_autores = self._parse_hidden_items('novos_autores')
+                autores_existentes = {
+                    autor.nome_normalizado: autor
+                    for autor in Autor.objects.annotate(nome_normalizado=Lower('nome')).filter(
+                        nome_normalizado__in=[nome.lower() for nome in novos_autores]
+                    )
+                }
+                for nome_autor in novos_autores:
+                    chave_autor = nome_autor.lower()
+                    autor = autores_existentes.get(chave_autor)
                     if not autor:
                         autor = Autor.objects.create(nome=nome_autor, ativo=True)
+                        autores_existentes[chave_autor] = autor
                     if autor.id not in autores_ids:
                         autores_ids.append(autor.id)
 
@@ -213,10 +225,19 @@ class RegistroForm(forms.ModelForm):
                     instance.autores.set(autores_ids)
 
                 tags_ids = [tag.id for tag in self.cleaned_data.get('tags', [])]
-                for nome_tag in self._parse_hidden_items('novas_tags'):
-                    tag = Tag.objects.filter(nome__iexact=nome_tag).first()
+                novas_tags = self._parse_hidden_items('novas_tags')
+                tags_existentes = {
+                    tag.nome_normalizado: tag
+                    for tag in Tag.objects.annotate(nome_normalizado=Lower('nome')).filter(
+                        nome_normalizado__in=[nome.lower() for nome in novas_tags]
+                    )
+                }
+                for nome_tag in novas_tags:
+                    chave_tag = nome_tag.lower()
+                    tag = tags_existentes.get(chave_tag)
                     if not tag:
                         tag = Tag.objects.create(nome=nome_tag, ativo=True)
+                        tags_existentes[chave_tag] = tag
                     if tag.id not in tags_ids:
                         tags_ids.append(tag.id)
 
