@@ -495,34 +495,53 @@
     document.addEventListener('DOMContentLoaded', function() {
         // Rastrear quais contadores já foram animados
         const animatedCounters = new Set();
+        // Rastrear contadores com animação em andamento
+        const animatingCounters = new Set();
 
         // Função para animar um contador individual
         function animateCounter(element) {
-            const target = parseInt(element.getAttribute('data-target'));
-            const duration = 1.5; // Duração em segundos
-            const steps = 60; // Número de steps da animação
-            const stepDuration = (duration * 1000) / steps;
-            let currentStep = 0;
+            const target = Number.parseInt(element.getAttribute('data-target'), 10);
+            if (Number.isNaN(target)) {
+                element.textContent = '0';
+                return;
+            }
+            const durationMs = 1500; // Duração em milissegundos
 
-            // Evitar animar novamente se já foi animado
-            const counterId = element.closest('.col')?.textContent || element;
-            if (animatedCounters.has(counterId)) {
+            // Evitar animar novamente se já foi animado (ID estável por aba + posição)
+            const tabPane = element.closest('.tab-pane');
+            const tabId = tabPane?.id || 'tab';
+            const indexInTab = tabPane
+                ? Array.from(tabPane.querySelectorAll('.counter-value')).indexOf(element)
+                : 0;
+            const counterId = `${tabId}:${indexInTab}`;
+            if (animatedCounters.has(counterId) || animatingCounters.has(counterId)) {
                 return;
             }
 
-            const interval = setInterval(() => {
-                currentStep++;
-                const progress = currentStep / steps;
+            animatingCounters.add(counterId);
+            element.classList.add('animating');
+
+            const startTime = performance.now();
+
+            function tick(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / durationMs, 1);
                 const currentValue = Math.floor(target * progress);
-                
+
                 element.textContent = currentValue.toLocaleString('pt-BR');
 
-                if (currentStep >= steps) {
-                    element.textContent = target.toLocaleString('pt-BR');
-                    animatedCounters.add(counterId);
-                    clearInterval(interval);
+                if (progress < 1) {
+                    requestAnimationFrame(tick);
+                    return;
                 }
-            }, stepDuration);
+
+                element.textContent = target.toLocaleString('pt-BR');
+                animatedCounters.add(counterId);
+                animatingCounters.delete(counterId);
+                element.classList.remove('animating');
+            }
+
+            requestAnimationFrame(tick);
         }
 
         // Função para animar todos os contadores visíveis em uma aba
@@ -539,7 +558,7 @@
         // Ouvir eventos de mudança de aba
         const tabButtons = document.querySelectorAll('#tcceTabs .nav-link-custom');
         tabButtons.forEach(button => {
-            button.addEventListener('shown.bs.tab', function(event) {
+            button.addEventListener('shown.bs.tab', function() {
                 const tabId = this.getAttribute('data-bs-target').substring(1); // Remove '#'
                 animateCountersInTab(tabId);
             });
