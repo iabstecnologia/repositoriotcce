@@ -34,19 +34,6 @@
                                 {% endif %}
                             </div>
 
-                            <div class="mb-3">
-                                <label for="{{ form.resumo.id_for_label }}" class="form-label">
-                                    {{ form.resumo.label }}
-                                </label>
-                                {{ form.resumo }}
-                                {% if form.resumo.errors %}
-                                <div class="text-danger small">{{ form.resumo.errors }}</div>
-                                {% endif %}
-                                {% if form.resumo.help_text %}
-                                <div class="form-text">{{ form.resumo.help_text }}</div>
-                                {% endif %}
-                            </div>
-
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="{{ form.data_publicacao.id_for_label }}" class="form-label">
@@ -86,6 +73,29 @@
                                     {% if form.subprojeto.errors %}
                                     <div class="text-danger small">{{ form.subprojeto.errors }}</div>
                                     {% endif %}
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.novo_projeto_subprojeto.id_for_label }}" class="form-label">
+                                        {{ form.novo_projeto_subprojeto.label }}
+                                    </label>
+                                    {{ form.novo_projeto_subprojeto }}
+                                    {% if form.novo_projeto_subprojeto.errors %}
+                                    <div class="text-danger small">{{ form.novo_projeto_subprojeto.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.novo_subprojeto.id_for_label }}" class="form-label">
+                                        {{ form.novo_subprojeto.label }}
+                                    </label>
+                                    {{ form.novo_subprojeto }}
+                                    {% if form.novo_subprojeto.errors %}
+                                    <div class="text-danger small">{{ form.novo_subprojeto.errors }}</div>
+                                    {% endif %}
+                                    <div class="form-text">Preencha apenas se o subprojeto ainda não existir.</div>
                                 </div>
 
                                 <div class="col-md-6 mb-3">
@@ -138,22 +148,34 @@
                             
                             <div class="mb-3">
                                 <label class="form-label">{{ form.autores.label }}</label>
-                                <div class="border rounded p-3" style="max-height: 200px; overflow-y: auto;">
-                                    {{ form.autores }}
-                                </div>
+                                {{ form.autores }}
                                 {% if form.autores.errors %}
                                 <div class="text-danger small">{{ form.autores.errors }}</div>
                                 {% endif %}
+
+                                {{ form.novos_autores }}
+                                <div class="input-group mt-2">
+                                    <input type="text" id="novo-autor-input" class="form-control" placeholder="Digite um novo autor">
+                                    <button type="button" id="btn-add-autor" class="btn btn-outline-secondary">Adicionar</button>
+                                </div>
+                                <div class="form-text">Os autores adicionados aqui serão cadastrados ao salvar.</div>
+                                <div id="novos-autores-lista" class="d-flex flex-wrap gap-2 mt-2"></div>
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label">{{ form.tags.label }}</label>
-                                <div class="border rounded p-3" style="max-height: 200px; overflow-y: auto;">
-                                    {{ form.tags }}
-                                </div>
+                                {{ form.tags }}
                                 {% if form.tags.errors %}
                                 <div class="text-danger small">{{ form.tags.errors }}</div>
                                 {% endif %}
+
+                                {{ form.novas_tags }}
+                                <div class="input-group mt-2">
+                                    <input type="text" id="nova-tag-input" class="form-control" placeholder="Digite uma nova palavra-chave">
+                                    <button type="button" id="btn-add-tag" class="btn btn-outline-secondary">Adicionar</button>
+                                </div>
+                                <div class="form-text">As palavras-chave adicionadas aqui serão cadastradas ao salvar.</div>
+                                <div id="novas-tags-lista" class="d-flex flex-wrap gap-2 mt-2"></div>
                             </div>
                         </fieldset>
 
@@ -224,4 +246,121 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    (function () {
+        function normalizar(valor) {
+            return (valor || '').replace(/\s+/g, ' ').trim();
+        }
+
+        function adicionarNoSeletor(selectElement, valorTexto) {
+            const alvo = valorTexto.toLowerCase();
+            for (const option of selectElement.options) {
+                if (normalizar(option.text).toLowerCase() === alvo) {
+                    option.selected = true;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function criarComponenteInline(config) {
+            const hiddenInput = document.getElementById(config.hiddenId);
+            const input = document.getElementById(config.inputId);
+            const button = document.getElementById(config.buttonId);
+            const list = document.getElementById(config.listId);
+            const select = document.getElementById(config.selectId);
+
+            if (!hiddenInput || !input || !button || !list || !select) {
+                return;
+            }
+
+            const itens = [];
+
+            function sincronizarHidden() {
+                hiddenInput.value = itens.join('|');
+            }
+
+            function render() {
+                list.innerHTML = '';
+                itens.forEach(function (item, index) {
+                    const badge = document.createElement('span');
+                    badge.className = 'badge text-bg-light border';
+                    badge.textContent = item;
+
+                    const removeBtn = document.createElement('button');
+                    removeBtn.type = 'button';
+                    removeBtn.className = 'btn-close ms-2';
+                    removeBtn.style.fontSize = '0.6rem';
+                    removeBtn.addEventListener('click', function () {
+                        itens.splice(index, 1);
+                        sincronizarHidden();
+                        render();
+                    });
+
+                    badge.appendChild(removeBtn);
+                    list.appendChild(badge);
+                });
+            }
+
+            function adicionarItem() {
+                const valor = normalizar(input.value);
+                if (!valor) {
+                    return;
+                }
+
+                const jaExisteSelecionavel = adicionarNoSeletor(select, valor);
+                if (!jaExisteSelecionavel) {
+                    const jaExistePendente = itens.some(function (item) {
+                        return item.toLowerCase() === valor.toLowerCase();
+                    });
+
+                    if (!jaExistePendente) {
+                        itens.push(valor);
+                    }
+                }
+
+                input.value = '';
+                sincronizarHidden();
+                render();
+            }
+
+            button.addEventListener('click', adicionarItem);
+            input.addEventListener('keydown', function (event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    adicionarItem();
+                }
+            });
+
+            const valoresIniciais = (hiddenInput.value || '').split('|').map(normalizar).filter(Boolean);
+            valoresIniciais.forEach(function (valor) {
+                if (!adicionarNoSeletor(select, valor)) {
+                    itens.push(valor);
+                }
+            });
+
+            sincronizarHidden();
+            render();
+        }
+
+        criarComponenteInline({
+            hiddenId: 'id_novos_autores',
+            inputId: 'novo-autor-input',
+            buttonId: 'btn-add-autor',
+            listId: 'novos-autores-lista',
+            selectId: 'id_autores'
+        });
+
+        criarComponenteInline({
+            hiddenId: 'id_novas_tags',
+            inputId: 'nova-tag-input',
+            buttonId: 'btn-add-tag',
+            listId: 'novas-tags-lista',
+            selectId: 'id_tags'
+        });
+    })();
+</script>
 {% endblock %}

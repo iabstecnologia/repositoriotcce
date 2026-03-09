@@ -19,9 +19,36 @@
                 <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'tcce' %}fw-bold{% endif %}" href="{% url 'core:tcce' %}">TCCEs</a></li>
                 <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'contato' %}fw-bold{% endif %}" href="{% url 'core:contato' %}">Contato</a></li>
                 <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'galeria' %}fw-bold{% endif %}" href="{% url 'core:galeria' %}">Galeria</a></li>
+                {% if request.user.is_authenticated %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle {% if request.resolver_match.namespace == 'repositorio' %}fw-bold{% endif %}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Gestão
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{% url 'repositorio:lista' %}">Registros</a></li>
+                        <li><a class="dropdown-item" href="{% url 'repositorio:galeria_lista' %}">Galeria (Gestão)</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{% url 'repositorio:projeto_lista' %}">Projetos</a></li>
+                        <li><a class="dropdown-item" href="{% url 'repositorio:subprojeto_lista' %}">Subprojetos</a></li>
+                        <li><a class="dropdown-item" href="{% url 'repositorio:tipodocumento_lista' %}">Tipos de Documento</a></li>
+                        <li><a class="dropdown-item" href="{% url 'repositorio:areatematica_lista' %}">Áreas Temáticas</a></li>
+                        <li><a class="dropdown-item" href="{% url 'repositorio:tipopublicacao_lista' %}">Tipos de Publicação</a></li>
+                        <li><a class="dropdown-item" href="{% url 'repositorio:autor_lista' %}">Autores</a></li>
+                        <li><a class="dropdown-item" href="{% url 'repositorio:tag_lista' %}">Palavras-chave</a></li>
+                    </ul>
+                </li>
+                {% endif %}
                 <li class="nav-item mt-3 mt-lg-0">
                     <a class="btn bg-custom-green text-white rounded-3 px-4 py-2 text-lg-nowrap {% if request.resolver_match.url_name == 'repositorio' %}border-2{% endif %}" href="{% url 'core:repositorio' %}" style="{% if request.resolver_match.url_name == 'repositorio' %}border-color: #55616C;{% endif %}">REPOSITÓRIO TCCEs</a>
                 </li>
+                {% if request.user.is_authenticated %}
+                <li class="nav-item mt-3 mt-lg-0">
+                    <form method="post" action="{% url 'logout' %}" class="m-0">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-secondary rounded-3 px-4 py-2 text-lg-nowrap">Sair</button>
+                    </form>
+                </li>
+                {% endif %}
             </ul>
         </div>
     </div>

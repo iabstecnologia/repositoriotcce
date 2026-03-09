@@ -1,11 +1,15 @@
 from django.contrib import admin
 from django.urls import path, include
+from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
     # Painel administrativo do Django
     path('admin/', admin.site.urls),
+
+    # Logout de usuário autenticado
+    path('logout/', auth_views.LogoutView.as_view(next_page='core:home'), name='logout'),
 
     # URLs do core (website público)
     path('', include('apps.core.urls')),

@@ -11,6 +11,29 @@ from apps.repositorio.models.repositorio import Registro, Subprojeto
 from apps.repositorio.forms.registro_form import RegistroForm
 
 
+def _mensagem_campos_invalidos(form, acao):
+    campos_com_erro = []
+
+    for field_name in form.errors.keys():
+        if field_name == '__all__':
+            continue
+
+        field = form.fields.get(field_name)
+        label = (field.label if field else field_name) or field_name
+        label = str(label).strip()
+
+        if label and label not in campos_com_erro:
+            campos_com_erro.append(label)
+
+    if form.non_field_errors() and 'Validações gerais' not in campos_com_erro:
+        campos_com_erro.append('Validações gerais')
+
+    if campos_com_erro:
+        return f"Erro ao {acao} registro. Corrija os campos: {', '.join(campos_com_erro)}."
+
+    return f'Erro ao {acao} registro. Verifique os campos.'
+
+
 class RegistroListView(LoginRequiredMixin, ListView):
     """Lista todos os registros com busca e filtros."""
     model = Registro
@@ -111,12 +134,17 @@ class RegistroCreateView(LoginRequiredMixin, CreateView):
         """Atribui o usuário logado aos campos de auditoria."""
         form.instance.usuario_criacao = self.request.user
         form.instance.usuario_ultima_atualizacao = self.request.user
+        # Limpa mensagens pendentes de forma explícita, se necessário
+        storage = messages.get_messages(self.request)
+        storage.used = True
+
+        response = super().form_valid(form)
         messages.success(self.request, 'Registro criado com sucesso!')
-        return super().form_valid(form)
+        return response
 
     def form_invalid(self, form):
         """Exibe mensagem de erro."""
-        messages.error(self.request, 'Erro ao criar registro. Verifique os campos.')
+        messages.error(self.request, _mensagem_campos_invalidos(form, 'criar'))
         return super().form_invalid(form)
 
 
@@ -131,12 +159,15 @@ class RegistroUpdateView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         """Atualiza o usuário da última atualização."""
         form.instance.usuario_ultima_atualizacao = self.request.user
+        list(messages.get_messages(self.request))
+        response = super().form_valid(form)
         messages.success(self.request, 'Registro atualizado com sucesso!')
-        return super().form_valid(form)
+        return response
 
     def form_invalid(self, form):
         """Exibe mensagem de erro."""
-        messages.error(self.request, 'Erro ao atualizar registro. Verifique os campos.')
+        list(messages.get_messages(self.request))
+        messages.error(self.request, _mensagem_campos_invalidos(form, 'atualizar'))
         return super().form_invalid(form)
 
 
