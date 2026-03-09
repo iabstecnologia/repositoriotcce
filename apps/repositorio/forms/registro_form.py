@@ -111,9 +111,9 @@ class RegistroForm(forms.ModelForm):
         self.fields['tipo_publicacao'].queryset = TipoPublicacao.objects.filter(ativo=True)
 
         self.fields['subprojeto'].required = False
-        self.fields['tipo_documento'].required = False
-        self.fields['area_tematica'].required = False
-        self.fields['tipo_publicacao'].required = False
+        self.fields['tipo_documento'].required = True
+        self.fields['area_tematica'].required = True
+        self.fields['tipo_publicacao'].required = True
         self.fields['autores'].required = False
         self.fields['tags'].required = False
 
