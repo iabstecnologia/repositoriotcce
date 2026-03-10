@@ -1,6 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.db import transaction
+from django.db.models.functions import Lower
 from apps.repositorio.models.repositorio import (
     Registro, Projeto, Subprojeto, Autor, Tag, TipoDocumento,
     AreaTematica, Status, TipoPublicacao
@@ -36,39 +37,6 @@ class RegistroForm(forms.ModelForm):
             attrs={
                 'class': 'form-control',
                 'placeholder': 'Cadastrar novo subprojeto'
-            }
-        )
-    )
-
-    novo_tipo_documento = forms.CharField(
-        required=False,
-        label='Novo Tipo de Documento',
-        widget=forms.TextInput(
-            attrs={
-                'class': 'form-control',
-                'placeholder': 'Cadastrar novo tipo de documento'
-            }
-        )
-    )
-
-    nova_area_tematica = forms.CharField(
-        required=False,
-        label='Nova Área Temática',
-        widget=forms.TextInput(
-            attrs={
-                'class': 'form-control',
-                'placeholder': 'Cadastrar nova área temática'
-            }
-        )
-    )
-
-    novo_tipo_publicacao = forms.CharField(
-        required=False,
-        label='Novo Tipo de Publicação',
-        widget=forms.TextInput(
-            attrs={
-                'class': 'form-control',
-                'placeholder': 'Cadastrar novo tipo de publicação'
             }
         )
     )
@@ -144,9 +112,9 @@ class RegistroForm(forms.ModelForm):
         self.fields['tipo_publicacao'].queryset = TipoPublicacao.objects.filter(ativo=True)
 
         self.fields['subprojeto'].required = False
-        self.fields['tipo_documento'].required = False
-        self.fields['area_tematica'].required = False
-        self.fields['tipo_publicacao'].required = False
+        self.fields['tipo_documento'].required = True
+        self.fields['area_tematica'].required = True
+        self.fields['tipo_publicacao'].required = True
         self.fields['autores'].required = False
         self.fields['tags'].required = False
 
@@ -165,51 +133,6 @@ class RegistroForm(forms.ModelForm):
                 normalized.append(item_normalized)
         return normalized
 
-    def _resolve_tipo_documento(self):
-        tipo_documento = self.cleaned_data.get('tipo_documento')
-        novo_tipo_documento = self._normalize_text(self.cleaned_data.get('novo_tipo_documento'))
-
-        if tipo_documento:
-            return tipo_documento
-
-        if novo_tipo_documento:
-            existente = TipoDocumento.objects.filter(nome__iexact=novo_tipo_documento).first()
-            if existente:
-                return existente
-            return TipoDocumento.objects.create(nome=novo_tipo_documento, ativo=True)
-
-        return None
-
-    def _resolve_area_tematica(self):
-        area_tematica = self.cleaned_data.get('area_tematica')
-        nova_area_tematica = self._normalize_text(self.cleaned_data.get('nova_area_tematica'))
-
-        if area_tematica:
-            return area_tematica
-
-        if nova_area_tematica:
-            existente = AreaTematica.objects.filter(nome__iexact=nova_area_tematica).first()
-            if existente:
-                return existente
-            return AreaTematica.objects.create(nome=nova_area_tematica, ativo=True)
-
-        return None
-
-    def _resolve_tipo_publicacao(self):
-        tipo_publicacao = self.cleaned_data.get('tipo_publicacao')
-        novo_tipo_publicacao = self._normalize_text(self.cleaned_data.get('novo_tipo_publicacao'))
-
-        if tipo_publicacao:
-            return tipo_publicacao
-
-        if novo_tipo_publicacao:
-            existente = TipoPublicacao.objects.filter(nome__iexact=novo_tipo_publicacao).first()
-            if existente:
-                return existente
-            return TipoPublicacao.objects.create(nome=novo_tipo_publicacao, ativo=True)
-
-        return None
-
     def _resolve_subprojeto(self):
         subprojeto = self.cleaned_data.get('subprojeto')
         novo_subprojeto = self._normalize_text(self.cleaned_data.get('novo_subprojeto'))
@@ -219,9 +142,11 @@ class RegistroForm(forms.ModelForm):
             return subprojeto
 
         if novo_subprojeto and novo_projeto_subprojeto:
-            existente = Subprojeto.objects.filter(
+            existente = Subprojeto.objects.annotate(
+                nome_normalizado=Lower('nome')
+            ).filter(
                 projeto=novo_projeto_subprojeto,
-                nome__iexact=novo_subprojeto
+                nome_normalizado=novo_subprojeto.lower()
             ).first()
             if existente:
                 return existente
@@ -238,6 +163,7 @@ class RegistroForm(forms.ModelForm):
         cleaned_data = super().clean()
         arquivo = cleaned_data.get('arquivo')
         link_externo = cleaned_data.get('link_externo')
+        novo_subprojeto = self._normalize_text(cleaned_data.get('novo_subprojeto'))
 
         # Validação: deve ter arquivo OU link externo
         if not arquivo and not link_externo:
@@ -245,20 +171,11 @@ class RegistroForm(forms.ModelForm):
                 'Você deve fornecer um arquivo para upload OU um link externo.'
             )
 
-        if not cleaned_data.get('subprojeto') and not self._normalize_text(cleaned_data.get('novo_subprojeto')):
+        if not cleaned_data.get('subprojeto') and not novo_subprojeto:
             self.add_error('subprojeto', 'Selecione um subprojeto existente ou informe um novo subprojeto.')
 
-        if self._normalize_text(cleaned_data.get('novo_subprojeto')) and not cleaned_data.get('novo_projeto_subprojeto'):
+        if novo_subprojeto and not cleaned_data.get('novo_projeto_subprojeto'):
             self.add_error('novo_projeto_subprojeto', 'Selecione o projeto para cadastrar o novo subprojeto.')
-
-        if not cleaned_data.get('tipo_documento') and not self._normalize_text(cleaned_data.get('novo_tipo_documento')):
-            self.add_error('tipo_documento', 'Selecione um tipo de documento ou cadastre um novo.')
-
-        if not cleaned_data.get('area_tematica') and not self._normalize_text(cleaned_data.get('nova_area_tematica')):
-            self.add_error('area_tematica', 'Selecione uma área temática ou cadastre uma nova.')
-
-        if not cleaned_data.get('tipo_publicacao') and not self._normalize_text(cleaned_data.get('novo_tipo_publicacao')):
-            self.add_error('tipo_publicacao', 'Selecione um tipo de publicação ou cadastre um novo.')
 
         autores_existentes = cleaned_data.get('autores')
         novos_autores = self._parse_hidden_items('novos_autores')
@@ -282,30 +199,56 @@ class RegistroForm(forms.ModelForm):
         with transaction.atomic():
             instance = super().save(commit=False)
             instance.subprojeto = self._resolve_subprojeto()
-            instance.tipo_documento = self._resolve_tipo_documento()
-            instance.area_tematica = self._resolve_area_tematica()
-            instance.tipo_publicacao = self._resolve_tipo_publicacao()
 
             if commit:
                 instance.save()
-                self.save_m2m()
+                novos_autores = self._parse_hidden_items('novos_autores')
+                if novos_autores:
+                    autores_existentes = Autor.objects.filter(nome__in=novos_autores)
+                    autores_por_nome = {autor.nome: autor for autor in autores_existentes}
 
-                autores_ids = [autor.id for autor in self.cleaned_data.get('autores', [])]
-                for nome_autor in self._parse_hidden_items('novos_autores'):
-                    autor = Autor.objects.filter(nome__iexact=nome_autor).first()
-                    if not autor:
-                        autor = Autor.objects.create(nome=nome_autor, ativo=True)
-                    if autor.id not in autores_ids:
-                        autores_ids.append(autor.id)
+                    for nome_autor in novos_autores:
+                        autor = autores_por_nome.get(nome_autor)
+                        if not autor:
+                            autor = Autor.objects.create(nome=nome_autor, ativo=True)
+                            autores_por_nome[nome_autor] = autor
+                        if autor.id not in autores_ids:
+                            autores_ids.append(autor.id)
 
                 if autores_ids:
                     instance.autores.set(autores_ids)
 
                 tags_ids = [tag.id for tag in self.cleaned_data.get('tags', [])]
-                for nome_tag in self._parse_hidden_items('novas_tags'):
-                    tag = Tag.objects.filter(nome__iexact=nome_tag).first()
+                novas_tags = self._parse_hidden_items('novas_tags')
+                if novas_tags:
+                    tags_existentes = Tag.objects.filter(nome__in=novas_tags)
+                    tags_por_nome = {tag.nome: tag for tag in tags_existentes}
+
+                    for nome_tag in novas_tags:
+                        tag = tags_por_nome.get(nome_tag)
+                        if not tag:
+                            tag = Tag.objects.create(nome=nome_tag, ativo=True)
+                            tags_por_nome[nome_tag] = tag
+                        if tag.id not in tags_ids:
+                            tags_ids.append(tag.id)
+
+                if autores_ids:
+                    instance.autores.set(autores_ids)
+
+                tags_ids = [tag.id for tag in self.cleaned_data.get('tags', [])]
+                novas_tags = self._parse_hidden_items('novas_tags')
+                tags_existentes = {
+                    tag.nome_normalizado: tag
+                    for tag in Tag.objects.annotate(nome_normalizado=Lower('nome')).filter(
+                        nome_normalizado__in=[nome.lower() for nome in novas_tags]
+                    )
+                }
+                for nome_tag in novas_tags:
+                    chave_tag = nome_tag.lower()
+                    tag = tags_existentes.get(chave_tag)
                     if not tag:
                         tag = Tag.objects.create(nome=nome_tag, ativo=True)
+                        tags_existentes[chave_tag] = tag
                     if tag.id not in tags_ids:
                         tags_ids.append(tag.id)
 

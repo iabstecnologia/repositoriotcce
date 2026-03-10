@@ -1,0 +1,37 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Gestão de Tipos de Publicação{% endblock %}
+
+{% block hero_title %}Tipos de Publicação{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    {% if messages %}
+    <div class="row mb-4"><div class="col-12">{% for message in messages %}<div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">{{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>{% endfor %}</div></div>
+    {% endif %}
+
+    <div class="row mb-4"><div class="col-12 text-end"><a href="{% url 'repositorio:tipopublicacao_criar' %}" class="btn btn-success">Novo Tipo de Publicação</a></div></div>
+
+    <div class="card mb-4"><div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-6"><label class="form-label">Buscar</label><input type="text" name="q" class="form-control" value="{{ search_query }}" placeholder="Nome"></div>
+            <div class="col-md-6"><label class="form-label">Situação</label><select name="ativo" class="form-select"><option value="" {% if not request.GET.ativo %}selected{% endif %}>Todos</option><option value="1" {% if request.GET.ativo == '1' %}selected{% endif %}>Ativos</option><option value="0" {% if request.GET.ativo == '0' %}selected{% endif %}>Inativos</option></select></div>
+            <div class="col-12"><button type="submit" class="btn btn-primary">Filtrar</button> <a href="{% url 'repositorio:tipopublicacao_lista' %}" class="btn btn-secondary">Limpar</a></div>
+        </form>
+    </div></div>
+
+    {% if tipos_publicacao %}
+    <div class="table-responsive"><table class="table table-hover table-bordered"><thead class="table-light"><tr><th>Nome</th><th>Situação</th><th style="width: 140px;">Ações</th></tr></thead><tbody>
+        {% for item in tipos_publicacao %}
+        <tr><td>{{ item.nome }}</td><td>{% if item.ativo %}<span class="badge bg-success">Ativo</span>{% else %}<span class="badge bg-secondary">Inativo</span>{% endif %}</td><td><div class="btn-group btn-group-sm"><a href="{% url 'repositorio:tipopublicacao_editar' item.pk %}" class="btn btn-warning"><i class="bi bi-pencil"></i></a><a href="{% url 'repositorio:tipopublicacao_excluir' item.pk %}" class="btn btn-danger"><i class="bi bi-trash"></i></a></div></td></tr>
+        {% endfor %}
+    </tbody></table></div>
+    {% else %}
+    <div class="alert alert-info">Nenhum tipo de publicação encontrado.</div>
+    {% endif %}
+
+    {% if is_paginated %}
+    <nav class="mt-3"><ul class="pagination justify-content-center">{% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if query_params %}&{{ query_params }}{% endif %}">Anterior</a></li>{% endif %}<li class="page-item active"><span class="page-link">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span></li>{% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}{% if query_params %}&{{ query_params }}{% endif %}">Próxima</a></li>{% endif %}</ul></nav>
+    {% endif %}
+</div>
+{% endblock %}
