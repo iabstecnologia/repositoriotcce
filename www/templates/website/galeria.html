@@ -56,6 +56,8 @@
     #thumbnails-list {
         overflow-x: auto;
         white-space: nowrap;
+        justify-content: center;
+        gap: 0.75rem;
     }
     @media (max-width: 768px) {
         .description-overlay {
@@ -90,7 +92,7 @@
 <div class="divider mt-1"></div>
 
 <!-- Gallery Section -->
-<div class="container position-relative z-1 mt-neg-150">
+<div class="container position-relative z-1 mt-neg-150 mb-5">
     <div class="row justify-content-center">
         <div class="col-lg-10">
             <!-- Container Principal da Galeria (Simulando o card) -->
@@ -132,7 +134,7 @@
 
                 <!-- MINIATURAS (THUMBNAILS) -->
                 <div id="thumbnails-wrapper" class="mt-4">
-                    <div id="thumbnails-list" class="d-flex flex-row p-1 justify-content-between">
+                    <div id="thumbnails-list" class="d-flex flex-row p-1 justify-content-center">
                         <!-- Miniaturas serão injetadas aqui pelo JavaScript -->
                     </div>
                 </div>
