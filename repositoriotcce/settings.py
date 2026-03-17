@@ -158,7 +158,7 @@ AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME', default=None)
 AWS_FILE_PATH_ROOT = env('AWS_FILE_PATH_ROOT', default='')
 
 # Se as credenciais AWS estiverem configuradas, usa S3
-if AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY and AWS_STORAGE_BUCKET_NAME:
+if not DEBUG and AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY and AWS_STORAGE_BUCKET_NAME:
     # Configurações do S3
     AWS_S3_FILE_OVERWRITE = True
     AWS_LOCATION = env('AWS_LOCATION')
