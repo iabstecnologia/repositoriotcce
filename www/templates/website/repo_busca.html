@@ -606,7 +606,7 @@
                         <p class="mb-0 text-custom-dark text-muted" style="font-size: 10px">
                             <b>AUTOR(ES):</b> <br>
                             {% for autor in registro.autores.all %}{{ autor.nome }}{% if not forloop.last %}; {% endif %}{% endfor %}
-                            <span class="d-block text-end mt-1">{{ registro.data_publicacao|date:"d/m/Y"|default:"" }}</span>
+                            <span class="d-block text-center text-md-end mt-1">{{ registro.data_publicacao|date:"d/m/Y"|default:"" }}</span>
                         </p>
 
                         <!-- Tags e Classificações -->
@@ -619,7 +619,7 @@
                     </div>
 
                     <!-- Botões de Ação -->
-                    <div class="col-auto d-flex flex-column flex-md-row gap-2">
+                    <div class="col-auto d-flex flex-column flex-md-row gap-2 mt-3 mt-md-0 ms-md-3 ps-md-2">
                         {% if registro.arquivo %}
                         <a href="{% url 'core:view_file' registro.pk %}" class="btn btn-sm bg-custom-green text-white rounded-circle d-flex align-items-center justify-content-center view-btn" title="Visualizar" target="_blank">
                             <img src="{% static 'assets/198-300.svg' %}" alt="Visualizar icon" class="view-icon" />
