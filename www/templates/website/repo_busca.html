@@ -463,8 +463,20 @@
                             {{ form.status }}
                         </div>
 
-                        <div class="col-12 mt-3 text-center">
-                            <button type="submit" class="btn bg-custom-green text-white w-100">Aplicar Filtros</button>
+                        <div class="col-12 mt-3">
+                            <div class="row g-2">
+                                <div class="col-12 col-md-7">
+                                    <button type="submit" class="btn bg-custom-green text-white w-100">Aplicar Filtros</button>
+                                </div>
+                                <div class="col-12 col-md-5">
+                                    <a href="{% url 'core:repositorio' %}{% if form.q.value %}?q={{ form.q.value|urlencode }}{% endif %}"
+                                       class="btn btn-outline-secondary w-100"
+                                       id="clearFiltersBtn"
+                                       aria-label="Limpar filtros avançados">
+                                        Limpar filtros
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -750,6 +762,20 @@
         const searchForm = document.getElementById('searchForm');
         const projetoSelect = searchForm ? searchForm.querySelector('[name="projeto"]') : null;
         const subprojetoSelect = searchForm ? searchForm.querySelector('[name="subprojeto"]') : null;
+        const clearFiltersBtn = document.getElementById('clearFiltersBtn');
+
+        if (clearFiltersBtn) {
+            const params = new URLSearchParams(window.location.search);
+            const advancedFields = ['ano', 'ordenar_por', 'projeto', 'subprojeto', 'autor', 'tipo_documento', 'area_tematica', 'status'];
+            const hasAdvancedFilters = advancedFields.some((field) => {
+                const value = params.get(field);
+                return value && value.trim() !== '';
+            });
+
+            if (!hasAdvancedFilters) {
+                clearFiltersBtn.classList.add('d-none');
+            }
+        }
 
         const preencherSubprojetos = (subprojetos) => {
             if (!subprojetoSelect) return;
