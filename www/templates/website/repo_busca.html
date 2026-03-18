@@ -520,8 +520,9 @@
                     <!-- Metadados -->
                     <div class="col ps-3">
                         <h5 class="mb-1 text-custom-dark h6">{{ registro.titulo }}</h5>
-                        <p class="mb-0 text-custom-dark small">
-                            {% for autor in registro.autores.all %}{{ autor.nome }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                        <p class="mb-0 text-custom-dark text-muted" style="font-size: 10px">
+                            <b>AUTOR(ES):</b> <br>
+                            {% for autor in registro.autores.all %}{{ autor.nome }}{% if not forloop.last %}; {% endif %}{% endfor %}
                             <br/>
                             {{ registro.data_publicacao|date:"d/m/Y"|default:"" }}
                         </p>
