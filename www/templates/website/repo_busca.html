@@ -88,13 +88,25 @@
     width: 2rem;
     height: 2rem;
     padding: 0;
-    transition: filter 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
+}
+
+.share-btn:hover {
+    background-color: #2a5229;
 }
 
 .view-btn:hover,
-.share-btn:hover,
 .download-btn:hover {
-    background-color: #2a5229;
+    background-color: #346933 !important;
+    transform: scale(1.15);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 3;
+}
+
+.view-btn:focus,
+.download-btn:focus {
+    box-shadow: 0 0 0 0.25rem rgba(52, 105, 51, 0.25);
+    outline: none;
 }
 
 .view-icon, .share-icon, .download-icon {
