@@ -4,6 +4,7 @@ from django.core.validators import URLValidator
 from django.utils.text import slugify
 from datetime import date
 from django.utils import timezone
+from stdnum import isbn
 
 # Importa o modelo User customizado do projeto (apps.accounts.User)
 from django.contrib.auth import get_user_model
@@ -215,6 +216,11 @@ class Registro(models.Model):
         verbose_name = "Registro / Documento"
         verbose_name_plural = "Registros / Documentos"
         ordering = ['-data_publicacao', 'titulo']
+
+    def validate_isbn(value):
+        # Remove hifens e espaços antes de validar
+        if not isbn.is_valid(value):
+            raise ValidationError(f"'{value}' não é um ISBN-10 ou ISBN-13 válido.")
 
     def __str__(self):
         return self.titulo
