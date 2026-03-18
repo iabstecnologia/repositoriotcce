@@ -850,9 +850,16 @@
         const badgeFieldMap = {
             'text-bg-publicacao': { field: 'tipo_documento', isSelect: true },
             'text-bg-ano': { field: 'ano', isSelect: false },
-            'text-bg-projeto': { field: 'subprojeto', isSelect: true },
+            'text-bg-projeto': { field: 'projeto', isSelect: true },
             'text-bg-ciencia': { field: 'area_tematica', isSelect: true }
         };
+
+        const normalizeText = (value) => String(value || '')
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase()
+            .trim()
+            .replace(/\s+/g, ' ');
 
         // Seleciona todas as badges dentro dos resultados (não nas categorias)
         const resultBadges = document.querySelectorAll('.card-item-hoverable .badge');
@@ -885,10 +892,23 @@
 
                 // Preenche o campo baseado no tipo (SELECT ou INPUT)
                 if (fieldConfig.isSelect) {
-                    // Para SELECT, procura pela option que corresponde ao texto
-                    const targetOption = Array.from(field.options).find(opt => 
-                        opt.textContent.trim() === badgeText
+                    const normalizedBadge = normalizeText(badgeText);
+                    const options = Array.from(field.options || []);
+                    // Para SELECT, tenta igualdade normalizada e depois fallback parcial.
+                    let targetOption = options.find((opt) =>
+                        normalizeText(opt.textContent) === normalizedBadge
                     );
+
+                    if (!targetOption) {
+                        targetOption = options.find((opt) => {
+                            const optionText = normalizeText(opt.textContent);
+                            return optionText && (
+                                optionText.includes(normalizedBadge) ||
+                                normalizedBadge.includes(optionText)
+                            );
+                        });
+                    }
+
                     if (targetOption) {
                         field.value = targetOption.value;
                     }
