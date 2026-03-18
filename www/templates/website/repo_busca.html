@@ -399,42 +399,54 @@
                         <div class="col-md-8 col-md-offset-2"></div>
                     </div>
                     <h5 class="mb-3 text-custom-dark">Filtros Avançados</h5>
-                    <div class="row g-3 align-items-end">
-                        <!-- Filtro por Ano -->
-                        <div class="col-12 col-md-3">
+                    <div class="row g-3">
+                        {% if form.projeto %}
+                        <div class="col-12 col-sm-4 col-md-3 col-lg-2">
                             <label for="{{ form.ano.id_for_label }}" class="form-label small mb-1">{{ form.ano.label }}</label>
                             {{ form.ano }}
                         </div>
-                        <!-- Filtro de Ordenação -->
-                        <div class="col-12 col-md-3">
+                        <div class="col-12 col-sm-8 col-md-5 col-lg-3">
                             <label for="{{ form.ordenar_por.id_for_label }}" class="form-label small mb-1">Ordenar</label>
                             {{ form.ordenar_por }}
                         </div>
-                        {% if form.projeto %}
-                        <div class="col-12 col-md-3">
+                        <div class="col-12 col-sm-6 col-md-6 col-lg-4">
                             <label for="{{ form.projeto.id_for_label }}" class="form-label small mb-1">{{ form.projeto.label }}</label>
                             {{ form.projeto }}
                         </div>
-                        {% endif %}
-                        <!-- Campos explícitos do formulário (ModelChoiceFields) -->
-                        <div class="col-12 col-md-3">
+                        <div class="col-12 col-sm-6 col-md-6 col-lg-3">
                             <label for="{{ form.subprojeto.id_for_label }}" class="form-label small mb-1">{{ form.subprojeto.label }}</label>
                             {{ form.subprojeto }}
                         </div>
-                        <div class="col-12 col-md-3">
+                        {% else %}
+                        <div class="col-12 col-sm-4 col-md-3 col-lg-2">
+                            <label for="{{ form.ano.id_for_label }}" class="form-label small mb-1">{{ form.ano.label }}</label>
+                            {{ form.ano }}
+                        </div>
+                        <div class="col-12 col-sm-8 col-md-5 col-lg-4">
+                            <label for="{{ form.ordenar_por.id_for_label }}" class="form-label small mb-1">Ordenar</label>
+                            {{ form.ordenar_por }}
+                        </div>
+                        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                            <label for="{{ form.subprojeto.id_for_label }}" class="form-label small mb-1">{{ form.subprojeto.label }}</label>
+                            {{ form.subprojeto }}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="row g-3 mt-0">
+                        <div class="col-12 col-sm-6 col-md-6 col-lg-4">
                             <label for="{{ form.autor.id_for_label }}" class="form-label small mb-1">{{ form.autor.label }}</label>
                             {{ form.autor }}
                         </div>
-                        <div class="col-12 col-md-4">
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                             <label for="{{ form.tipo_documento.id_for_label }}" class="form-label small mb-1">{{ form.tipo_documento.label }}</label>
                             {{ form.tipo_documento }}
                         </div>
-
-                        <div class="col-12 col-md-4">
+                        <div class="col-12 col-sm-8 col-md-6 col-lg-3">
                             <label for="{{ form.area_tematica.id_for_label }}" class="form-label small mb-1">{{ form.area_tematica.label }}</label>
                             {{ form.area_tematica }}
                         </div>
-                        <div class="col-12 col-md-4">
+                        <div class="col-12 col-sm-4 col-md-2 col-lg-2">
                             <label for="{{ form.status.id_for_label }}" class="form-label small mb-1">{{ form.status.label }}</label>
                             {{ form.status }}
                         </div>
