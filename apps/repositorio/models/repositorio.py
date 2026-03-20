@@ -4,7 +4,7 @@ from django.core.validators import URLValidator
 from django.utils.text import slugify
 from datetime import date
 from django.utils import timezone
-from stdnum import isbn
+
 
 # Importa o modelo User customizado do projeto (apps.accounts.User)
 from django.contrib.auth import get_user_model
