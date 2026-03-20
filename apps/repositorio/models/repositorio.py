@@ -4,6 +4,7 @@ from django.core.validators import URLValidator
 from django.utils.text import slugify
 from datetime import date
 from django.utils import timezone
+from stdnum import isbn
 
 # Importa o modelo User customizado do projeto (apps.accounts.User)
 from django.contrib.auth import get_user_model
@@ -216,8 +217,17 @@ class Registro(models.Model):
         verbose_name_plural = "Registros / Documentos"
         ordering = ['-data_publicacao', 'titulo']
 
+    def validate_isbn(value):
+        # Remove hifens e espaços antes de validar
+        if not isbn.is_valid(value):
+            raise ValidationError(f"'{value}' não é um ISBN-10 ou ISBN-13 válido.")
+
     def __str__(self):
         return self.titulo
+
+    def _is_video_type(self):
+        """Verifica se o tipo de documento é um vídeo."""
+        return 'vídeo' in self.tipo_documento.nome.lower()
 
     def clean(self):
         """Validação personalizada para garantir a integridade dos dados."""
@@ -230,13 +240,21 @@ class Registro(models.Model):
         if self.data_publicacao and self.data_publicacao > date.today():
             raise ValidationError("A data de publicação não pode ser futura.")
 
-        # 3. Validação de Link/Arquivo (Deve ter um OU outro)
+        # 3. Validação de Link/Arquivo - vídeos sempre requerem APENAS link
         has_file = bool(self.arquivo)
         has_link = bool(self.link_externo)
+        is_video = self._is_video_type()
 
-        # Exigir pelo menos um, mas não necessariamente proibir ambos
-        if not has_file and not has_link:
-            raise ValidationError("O registro deve ter um Arquivo para upload OU um Link Externo.")
+        if is_video:
+            # Vídeos devem usar APENAS link, sem arquivo de upload
+            if has_file:
+                raise ValidationError("Vídeos devem ser cadastrados apenas com links, não com arquivos de upload.")
+            if not has_link:
+                raise ValidationError("Vídeos requerem um link externo.")
+        else:
+            # Outros tipos: exigir arquivo OU link
+            if not has_file and not has_link:
+                raise ValidationError("O registro deve ter um Arquivo para upload OU um Link Externo.")
 
         super().clean()
 

@@ -2,7 +2,6 @@ import os
 import environ
 from pathlib import Path
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # --------------------------------------------------------------------------
@@ -12,10 +11,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Instancia o environ e lê o arquivo .env, se existir, na raiz do projeto (repositoriotcce/)
 env = environ.Env(
     # Define as variáveis de ambiente e seus tipos/defaults
-    DEBUG=(bool, False),
+    DEBUG=(bool, True),
     SECRET_KEY=(str, 'insecure-default-key-for-development'),
     AWS_LOCATION=(str, 'media'),
-    SECURE_SSL_REDIRECT=(bool, True)
+    SECURE_SSL_REDIRECT=(bool, False)
 )
 
 # Define o caminho para o arquivo .env (DEVE estar na raiz: repositoriotcce/.env)
@@ -108,10 +107,10 @@ ASGI_APPLICATION = 'repositoriotcce.asgi.application'
 # --------------------------------------------------------------------------
 # Lê a URL de conexão do PostgreSQL (ou SQLite padrão se não for definido)
 DATABASES = {
-    'default': env.db(
-        'DATABASE_URL',
-        default='sqlite:///db.sqlite3'
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',  # Garante que o caminho seja sempre o mesmo
+    }
 }
 
 # --------------------------------------------------------------------------
