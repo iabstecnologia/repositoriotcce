@@ -31,6 +31,7 @@ if os.path.exists(env_file):
 SECRET_KEY = env('SECRET_KEY')
 DEBUG = env('DEBUG')
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['*'] if DEBUG else [])
+# ALLOWED_HOSTS = ['192.168.3.92']
 SECURE_SSL_REDIRECT = env('SECURE_SSL_REDIRECT')
 
 # --------------------------------------------------------------------------
