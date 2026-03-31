@@ -606,7 +606,7 @@
                         <p class="mb-0 text-custom-dark text-muted" style="font-size: 10px">
                             <b>AUTOR(ES):</b> <br>
                             {% for autor in registro.autores.all %}{{ autor.nome }}{% if not forloop.last %}; {% endif %}{% endfor %}
-                            <span class="d-block text-center text-md-end mt-1">{{ registro.data_publicacao|date:"d/m/Y"|default:"" }}</span>
+                            <span class="d-block text-center text-md-end mt-1">{{ registro.data_publicacao|date:"m/Y"|default:"" }}</span>
                         </p>
 
                         <!-- Tags e Classificações -->

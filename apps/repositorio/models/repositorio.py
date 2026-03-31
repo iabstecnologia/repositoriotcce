@@ -4,7 +4,7 @@ from django.core.validators import URLValidator
 from django.utils.text import slugify
 from datetime import date
 from django.utils import timezone
-
+from apps.repositorio.validators import validate_isbn
 
 # Importa o modelo User customizado do projeto (apps.accounts.User)
 from django.contrib.auth import get_user_model
@@ -27,7 +27,7 @@ def item_file_path(instance, filename):
     dia_str = hoje.strftime('%d')  # Número do dia com zero à esquerda (ex: 26)
     # ----------------------------------------------------
 
-    return f"repositorio/{projeto_slug}/{subprojeto_slug}/{mes_str}/{dia_str}/{filename}"
+    return f"repositorio/{projeto_slug}/{subprojeto_slug}/{filename}"
 
 
 def gallery_image_path(instance, filename):
@@ -184,7 +184,7 @@ class Registro(models.Model):
     titulo = models.CharField(max_length=2000, verbose_name="Título")
     resumo = models.TextField(verbose_name="Resumo / Abstract", blank=True, null=True)
     data_publicacao = models.DateField(null=True, blank=True, verbose_name="Data da Publicação")
-    isbn = models.CharField(max_length=20, blank=True, null=True, unique=True, verbose_name="ISBN (International Standard Book Number)")
+    isbn = models.CharField(max_length=20, validators=[validate_isbn], blank=True, null=True, unique=True, verbose_name="ISBN (International Standard Book Number)", help_text="Insira o ISBN-10 ou ISBN-13")
 
     # Arquivo (upload para S3 em produção)
     arquivo = models.FileField(upload_to=item_file_path, null=True, blank=True, verbose_name="Arquivo")
