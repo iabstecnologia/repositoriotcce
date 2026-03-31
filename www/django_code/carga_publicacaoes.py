@@ -4182,6 +4182,8 @@ ITENS = [
 
 def run_import():
     registros_criados_count = 0
+    registros_existentes_count = 0
+    registros_duplicados_count = 0
     erros = []
 
     # 1. Obter o usuário padrão (Assumindo que o superusuário 1 é o usuário de auditoria)
@@ -4231,26 +4233,80 @@ def run_import():
                     except ValueError:
                         print(f"AVISO: Formato de data inválido para {item_data['TITULO']}. Usando data nula.")
 
-                # --- B. Criação do Registro Principal ---
+                # 4. Define preenchimento de arquivo/link conforme tipo_publicacao.
+                link_real = (item_data.get("LINK_REAL") or "").strip()
+                tipo_publicacao_nome = (item_data.get("TIPO_PUBLICACAO") or "").upper()
+                is_link_tipo = tipo_publicacao_nome.startswith("LINK")
 
-                registro = Registro.objects.create(
+                arquivo_valor = None
+                link_externo_valor = None
+
+                if is_link_tipo:
+                    link_externo_valor = link_real or None
+                else:
+                    if link_real.startswith("http://") or link_real.startswith("https://"):
+                        link_externo_valor = link_real
+                    elif link_real:
+                        arquivo_valor = link_real if link_real.lower().endswith(".pdf") else f"{link_real}.pdf"
+
+                # --- B. Criação idempotente do Registro Principal ---
+                # Usa uma chave natural para evitar duplicação em reexecuções.
+                chave_qs = Registro.objects.filter(
                     subprojeto=subprojeto[0],
                     tipo_documento=tipo_documento,
-                    area_tematica=area_tematica,
-                    status=status,
-                    tipo_publicacao=tipo_publicacao,
-
                     titulo=item_data["TITULO"],
-                    data_publicacao=data_publicacao,
+                ).order_by("id")
 
-                    # LINK_REAL (usado como nome de arquivo simulado)
-                    arquivo=f'{item_data["LINK_REAL"]}.pdf',
+                registro = chave_qs.first()
+                created = registro is None
 
-                    # Auditoria
-                    usuario_criacao=auditor_user,
-                    usuario_ultima_atualizacao=auditor_user,
-                    ativo=True
-                )
+                if created:
+                    registro = Registro.objects.create(
+                        subprojeto=subprojeto[0],
+                        tipo_documento=tipo_documento,
+                        area_tematica=area_tematica,
+                        status=status,
+                        tipo_publicacao=tipo_publicacao,
+                        titulo=item_data["TITULO"],
+                        data_publicacao=data_publicacao,
+                        arquivo=arquivo_valor,
+                        link_externo=link_externo_valor,
+                        usuario_criacao=auditor_user,
+                        usuario_ultima_atualizacao=auditor_user,
+                        ativo=True,
+                    )
+                else:
+                    duplicados = chave_qs.count() - 1
+                    if duplicados > 0:
+                        registros_duplicados_count += duplicados
+                        print(
+                            f"AVISO: Encontrados {duplicados} duplicados para '{registro.titulo[:50]}...'. "
+                            f"Somente o registro id={registro.id} foi atualizado."
+                        )
+
+                if created:
+                    registros_criados_count += 1
+                else:
+                    registros_existentes_count += 1
+                    # Mantém estes campos sincronizados sem recriar o registro.
+                    registro.area_tematica = area_tematica
+                    registro.status = status
+                    registro.tipo_publicacao = tipo_publicacao
+                    registro.data_publicacao = data_publicacao
+                    registro.arquivo = arquivo_valor
+                    registro.link_externo = link_externo_valor
+                    registro.usuario_ultima_atualizacao = auditor_user
+                    registro.ativo = True
+                    registro.save(update_fields=[
+                        "area_tematica",
+                        "status",
+                        "tipo_publicacao",
+                        "data_publicacao",
+                        "arquivo",
+                        "link_externo",
+                        "usuario_ultima_atualizacao",
+                        "ativo",
+                    ])
 
                 # --- C. Relações Many-to-Many (M2M): Autores e Tags ---
 
@@ -4258,10 +4314,10 @@ def run_import():
                 # Split no formato "Autor A, Autor B, Autor C"
                 autores_list = [a.strip() for a in item_data["AUTOR"].split(',') if a.strip()]
                 for autor_nome in autores_list:
-                    try:
-                        autor = Autor.objects.filter(nome=autor_nome).first()
+                    autor = Autor.objects.filter(nome=autor_nome).first()
+                    if autor:
                         registro.autores.add(autor)
-                    except Autor.DoesNotExist:
+                    else:
                         print(
                             f"AVISO: Autor '{autor_nome}' não encontrado e será ignorado para o registro '{registro.titulo}'")
 
@@ -4279,8 +4335,8 @@ def run_import():
                         print(
                             f"AVISO: Tag '{tag_nome_limpo}' não encontrada e será ignorada para o registro '{registro.titulo}'")
 
-                registros_criados_count += 1
-                print(f"SUCESSO ({i + 1}/{len(ITENS)}): Registro criado: {registro.titulo[:50]}...")
+                status_msg = "criado" if created else "atualizado"
+                print(f"SUCESSO ({i + 1}/{len(ITENS)}): Registro {status_msg}: {registro.titulo[:50]}...")
 
             except ObjectDoesNotExist as e:
                 erros.append(
@@ -4299,7 +4355,10 @@ def run_import():
         print("Transação revertida devido a erros.")
     else:
         print("\n--- RESULTADO FINAL ---")
-        print(f"Importação de {registros_criados_count} Registros concluída com sucesso!")
+        print(f"Registros criados: {registros_criados_count}")
+        print(f"Registros existentes atualizados: {registros_existentes_count}")
+        print(f"Duplicados detectados no banco: {registros_duplicados_count}")
+        print("Importação concluída com sucesso!")
 
 
 if __name__ == "__main__":

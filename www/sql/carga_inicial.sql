@@ -1,4 +1,4 @@
-INSERT INTO repositorio_projeto (id, nome, ativo) VALUES
+INSERT OR IGNORE INTO repositorio_projeto (id, nome, ativo) VALUES
 	(1, 'TCCE 1/2018', 1),
 	(2, 'TCCE 1/2020', 1),
 	(3, 'TCCE 2/2020', 1),
@@ -6,7 +6,7 @@ INSERT INTO repositorio_projeto (id, nome, ativo) VALUES
 
 
 
-INSERT INTO repositorio_subprojeto (id, nome, ativo, projeto_id) VALUES
+INSERT OR IGNORE INTO repositorio_subprojeto (id, nome, ativo, projeto_id) VALUES
 	(1, 'SUBPROJETO 1', 1, 4),
 	(2, 'SUBPROJETO 5', 1, 4),
 	(3, 'SUBPROJETO 6', 1, 4),
@@ -75,10 +75,23 @@ INSERT INTO repositorio_subprojeto (id, nome, ativo, projeto_id) VALUES
 	(66, 'SUBPROJETO 13.4', 1, 2),
 	(67, 'SUBPROJETO 13.5', 1, 2),
 	(68, 'SUBPROJETO 13.6', 1, 2),
-	(69, 'SUBPROJETO 13.7', 1, 2);
+	(69, 'SUBPROJETO 13.7', 1, 2),
+	(70, 'SUBPROJETO 1', 1, 3),
+	(71, 'SUBPROJETO 3', 1, 3),
+	(72, 'SUBPROJETO 5', 1, 3),
+	(73, 'SUBPROJETO 8', 1, 3),
+	(74, 'SUBPROJETO 10', 1, 3),
+	(75, 'SUBPROJETO 13', 1, 3),
+	(76, 'SUBPROJETO 13.1', 1, 3),
+	(77, 'SUBPROJETO 13.2', 1, 3),
+	(78, 'SUBPROJETO 13.3', 1, 3),
+	(79, 'SUBPROJETO 13.4', 1, 3),
+	(80, 'SUBPROJETO 13.5', 1, 3),
+	(81, 'SUBPROJETO 13.6', 1, 3),
+	(82, 'SUBPROJETO 13.7', 1, 3);
 
 
-INSERT INTO repositorio_tipodocumento (id, nome, ativo) VALUES
+INSERT OR IGNORE INTO repositorio_tipodocumento (id, nome, ativo) VALUES
 	(1, 'LIVROS', 1),
 	(2, 'VÍDEOS', 1),
 	(3, 'RELATÓRIO TÉCNICO FINAL', 1),
@@ -90,7 +103,7 @@ INSERT INTO repositorio_tipodocumento (id, nome, ativo) VALUES
 	(9, 'MATERIAL EDUCATIVO (OUTROS)', 1);
 
 
-INSERT INTO repositorio_autor (id, nome, lattes_id, ativo) VALUES
+INSERT OR IGNORE INTO repositorio_autor (id, nome, lattes_id, ativo) VALUES
 	(1, 'ADIVANE MORAIS NOGUEIRA', null, 1),
 	(2, 'AMANDA MAIA DA SILVA', null, 1),
 	(3, 'ADRIÁ BRAUN VIEIRA', null, 1),
@@ -528,30 +541,18 @@ INSERT INTO repositorio_autor (id, nome, lattes_id, ativo) VALUES
 	(435, 'ZENEIDE DAMIÃO DA SILVA', null, 1);
 
 
-INSERT INTO repositorio_tipodocumento (id, nome, ativo) VALUES
-	(1, 'LIVROS', 1),
-	(2, 'VÍDEOS', 1),
-	(3, 'RELATÓRIO TÉCNICO FINAL', 1),
-	(4, 'DOCUMENTOS TÉCNICOS', 1),
-	(5, 'PUBLICAÇÃO CIENTÍFICA (ARTIGOS)', 1),
-	(6, 'PUBLICAÇÃO CIENTÍFICA (TRABALHOS ACADÊMICOS)', 1),
-	(7, 'MATERIAL EDUCATIVO (CARTILHA)', 1),
-	(8, 'MATERIAL EDUCATIVO (PÔSTER/FOLDER)', 1),
-	(9, 'MATERIAL EDUCATIVO (OUTROS)', 1);
-
-
-INSERT INTO repositorio_areatematica (id, nome, ativo) VALUES
+INSERT OR IGNORE INTO repositorio_areatematica (id, nome, ativo) VALUES
 	(1, 'MEIO FÍSICO', 1),
 	(2, 'MEIO BIÓTICO', 1),
 	(3, 'OUTROS', 1);
 
 
-INSERT INTO repositorio_status (id, nome, ativo, is_public) VALUES
+INSERT OR IGNORE INTO repositorio_status (id, nome, ativo, is_public) VALUES
 	(1, 'PUBLICADO', 1, 1),
 	(2, 'PRODUZIDO', 1, 1);
 
 
-INSERT INTO repositorio_tipopublicacao (id, nome, ativo) VALUES
+INSERT OR IGNORE INTO repositorio_tipopublicacao (id, nome, ativo) VALUES
 	(1, 'ARQUIVO PDF', 1),
 	(2, 'OUTRO TIPO DE ARQUIVO', 1),
 	(3, 'LINK WEB PAGE', 1),
@@ -559,7 +560,7 @@ INSERT INTO repositorio_tipopublicacao (id, nome, ativo) VALUES
 	(5, 'LINK VIDEO', 1);
 
 
-INSERT INTO repositorio_tag (id, nome, ativo) VALUES
+INSERT OR IGNORE INTO repositorio_tag (id, nome, ativo) VALUES
 	(1, 'ABRIGO CAVERNÍCOLA', 1),
 	(2, 'ACERVO', 1),
 	(3, 'ÁGUAS SUBTERRÂNEAS', 1),
@@ -1060,7 +1061,82 @@ INSERT INTO repositorio_tag (id, nome, ativo) VALUES
 	(498, 'SEMINÁRIO', 1),
 	(499, 'SENSORES ORBITAIS', 1),
 	(500, 'SENSORIAMENTO REMOTO', 1),
-	(500, 'TAXONÔMIA', 1);
+	(501, 'TAXONÔMIA', 1),
+	(502, 'SERPERTES', 1),
+	(503, 'SERRA DO SINCORÁ', 1),
+	(504, 'SERVIÇOS ECOSSISTÊMICOS', 1),
+	(505, 'SIG', 1),
+	(506, 'SILICICLÁSTICO', 1),
+	(507, 'SIMILARIDADE', 1),
+	(508, 'SISTEMA DE ALERTA DE INUNDAÇÃO', 1),
+	(509, 'SISTEMAS FERRUGINOSOS', 1),
+	(510, 'SOFTWARE', 1),
+	(511, 'SOLO', 1),
+	(512, 'SOLO TROPICAL', 1),
+	(513, 'SRS', 1),
+	(514, 'STENODERMATINAE', 1),
+	(515, 'STYGOBITIC', 1),
+	(516, 'SUBAQUÁTICAS', 1),
+	(517, 'SUBMARINAS', 1),
+	(518, 'SUBTERRÂNEO', 1),
+	(519, 'SUMIDOUROS', 1),
+	(520, 'SUPERFÍCIE DE DESLIZAMENTO', 1),
+	(521, 'SYNOCHETA', 1),
+	(522, 'SÍTIOS ARQUEOLÓGICOS', 1),
+	(523, 'TAFÔNOMIA', 1),
+	(524, 'TATUZINHO-DE-JARDIM', 1),
+	(525, 'TAXONOMIA', 1),
+	(526, 'TAXONOMIA FUNGICA', 1),
+	(527, 'TAXONOMIA INTEGRATIVA', 1),
+	(528, 'TAXONOMIA PLATELMINTOS TROGLÓBIOS', 1),
+	(529, 'TECNOLOGIA', 1),
+	(530, 'TEORES TOTAIS DE METAIS', 1),
+	(531, 'TERRA INDÍGENA', 1),
+	(532, 'THEOBROMA CACAO', 1),
+	(533, 'TOLERÂNCIA', 1),
+	(534, 'TOPOGRAFIA', 1),
+	(535, 'TRADICIONAIS', 1),
+	(536, 'TRANSPORTE DE HILBERT', 1),
+	(537, 'TRAÇADORES', 1),
+	(538, 'TRAÇADORES CORANTES FLUORESCENTES', 1),
+	(539, 'TRICLADIDA', 1),
+	(540, 'TROGLOFAUNA', 1),
+	(541, 'TROGLÓBIO', 1),
+	(542, 'TROGLÓBIOS', 1),
+	(543, 'TUFAS CALCÁREAS', 1),
+	(544, 'TURBIDEZ', 1),
+	(545, 'TÁXONS NOVOS', 1),
+	(546, 'TÉCNICAS DIRETAS E INDIRETAS DE MAPEAMENTO', 1),
+	(547, 'TÉCNICO', 1),
+	(548, 'TÉRMICO', 1),
+	(549, 'UAV', 1),
+	(550, 'UFLA NATURALIST', 1),
+	(551, 'UNIDADE DE CONSERVAÇÃO', 1),
+	(552, 'UNIDADES DE CONSERVAÇÃO', 1),
+	(553, 'USO DA TERRA', 1),
+	(554, 'VALES', 1),
+	(555, 'VALES CEGOS', 1),
+	(556, 'VALES SECOS', 1),
+	(557, 'VANT', 1),
+	(558, 'VARIAÇÃO SAZONAL', 1),
+	(559, 'VARIÁVEIS BIOCLIMÁTICAS', 1),
+	(560, 'VERTEBRADO', 1),
+	(561, 'VICARIÂNCIA', 1),
+	(562, 'VISITANTE', 1),
+	(563, 'VLF-EM', 1),
+	(564, 'VLFEM', 1),
+	(565, 'VOLUME 2', 1),
+	(566, 'VOLUME 3', 1),
+	(567, 'VOLUME 4', 1),
+	(568, 'VOLUME 5', 1),
+	(569, 'VOLUME 6', 1),
+	(570, 'VOLUME 7', 1),
+	(571, 'VULNERABILIDADE INTRÍNSECA', 1),
+	(572, 'WALLACEANA', 1),
+	(573, 'WOODLICE', 1),
+	(574, 'ZONAÇÃO', 1),
+	(575, 'ZOOPLANCTON', 1),
+	(576, 'ZYGOPTERA', 1);
 
 
 
