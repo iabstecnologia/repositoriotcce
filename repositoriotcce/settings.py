@@ -1,37 +1,24 @@
-import os
-import environ
 from pathlib import Path
+from decouple import config, Csv
+import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-# --------------------------------------------------------------------------
-# CONFIGURAÇÕES DO ENV E LEITURA DE VARIÁVEIS
-# --------------------------------------------------------------------------
-
-# Instancia o environ e lê o arquivo .env, se existir, na raiz do projeto (repositoriotcce/)
-env = environ.Env(
-    # Define as variáveis de ambiente e seus tipos/defaults
-    DEBUG=(bool, True),
-    SECRET_KEY=(str, 'insecure-default-key-for-development'),
-    AWS_LOCATION=(str, 'media'),
-    SECURE_SSL_REDIRECT=(bool, False)
-)
-
-# Define o caminho para o arquivo .env (DEVE estar na raiz: repositoriotcce/.env)
-env_file = os.path.join(BASE_DIR, '.env')
-
-# Lê o arquivo .env se ele existir
-if os.path.exists(env_file):
-    env.read_env(str(env_file))
 
 # --------------------------------------------------------------------------
 # CONFIGURAÇÕES
 # --------------------------------------------------------------------------
 
-SECRET_KEY = env('SECRET_KEY')
-DEBUG = env('DEBUG')
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['*'] if DEBUG else [])
-SECURE_SSL_REDIRECT = env('SECURE_SSL_REDIRECT')
+SECRET_KEY = config('SECRET_KEY')
+DEBUG = config('DEBUG', default=False, cast=bool)
+ALLOWED_HOSTS = config(
+    'ALLOWED_HOSTS',
+    cast=Csv()
+)
+SECURE_SSL_REDIRECT = config(
+    'SECURE_SSL_REDIRECT',
+    default=True,
+    cast=bool
+)
 
 # --------------------------------------------------------------------------
 # APLICAÇÕES
@@ -108,8 +95,13 @@ ASGI_APPLICATION = 'repositoriotcce.asgi.application'
 # Lê a URL de conexão do PostgreSQL (ou SQLite padrão se não for definido)
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',  # Garante que o caminho seja sempre o mesmo
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST', default='localhost'),
+        'PORT': config('DB_PORT', default='5432'),
+        'CONN_MAX_AGE': 60,
     }
 }
 
@@ -139,11 +131,9 @@ USE_TZ = True
 # --------------------------------------------------------------------------
 
 STATIC_URL = '/static/'
-# Onde o Django coleta os arquivos estáticos: www/static
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-# Diretórios adicionais para arquivos estáticos: www/static
+STATIC_ROOT = BASE_DIR / 'static'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "www/static/"),
+    BASE_DIR / 'www/static',
 ]
 
 # -----------------------------------------------------------------------------------------
@@ -151,36 +141,14 @@ STATICFILES_DIRS = [
 # -----------------------------------------------------------------------------------------
 
 # Tenta ler as configurações AWS (opcionais para desenvolvimento)
-AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID', default=None)
-AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY', default=None)
-AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME', default=None)
-AWS_FILE_PATH_ROOT = env('AWS_FILE_PATH_ROOT', default='')
+AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID', default='')
+AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY', default='')
+AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME', default='')
 
-# Se as credenciais AWS estiverem configuradas, usa S3
-if not DEBUG and AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY and AWS_STORAGE_BUCKET_NAME:
-    # Configurações do S3
-    AWS_S3_FILE_OVERWRITE = True
-    AWS_LOCATION = env('AWS_LOCATION')
-    
-    # URL base do S3
-    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
-    
-    # URL de Mídia (aponta para o S3)
-    MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/"
-    
-    # Define configurações de cache, cabeçalhos, etc.
-    AWS_S3_OBJECT_PARAMETERS = {
-        'CacheControl': 'max-age=86400',
-    }
-    
-    # Configura o S3 como backend de armazenamento
-    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
-    DEFAULT_FILE_STORAGE = 'repositoriotcce.storage_backends.MediaStorage'
-else:
-    # Configuração local para desenvolvimento (quando AWS não está configurado)
-    MEDIA_URL = '/media/'
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+MEDIA_URL = '/media/'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+WHITENOISE_MAX_AGE = 31536000
 
 # Root de Mídia (usado para armazenamento local)
 MEDIA_ROOT = os.path.join(BASE_DIR, 'www/media')
@@ -189,10 +157,17 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'www/media')
 # CONFIGURAÇÕES DE SEGURANÇA (Geralmente em produção)
 # --------------------------------------------------------------------------
 
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # --------------------------------------------------------------------------
 # Outras Configurações
 # --------------------------------------------------------------------------
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Segurança de Cookies
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_HTTPONLY = True
+CSRF_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_SAMESITE = 'Lax'

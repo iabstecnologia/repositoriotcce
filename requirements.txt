@@ -31,3 +31,5 @@ boto3==1.41.1
 whitenoise==6.11.0
 
 python-stdnum
+
+python-decouple==3.8
