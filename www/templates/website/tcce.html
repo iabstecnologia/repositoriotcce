@@ -119,6 +119,23 @@
     animation: pulse 0.5s ease-in-out;
 }
 
+/* Seção de mapas dos projetos por TCCE */
+.project-map-section {
+    padding: 2rem 0 0;
+}
+
+.project-map-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+}
+
+.project-map-carousel .carousel-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+}
+
 /* Keyframes para efeito de pulsação */
 @keyframes pulse {
     0% {
@@ -142,6 +159,14 @@
     }
     .counter-value.animating {
         animation: none;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .text-header-title {
+        font-size: 32px;
+        margin-top: 0;
+        line-height: 1.15;
     }
 }
 </style>
@@ -245,9 +270,24 @@
                     </div>
                 </div>
 
+                <div class="container project-map-section">
+                    <div class="row justify-content-center">
+                        <div class="col-12">
+                            <h3 class="text-custom-medium-gray text-center project-map-title">Mapa de Projetos</h3>
+                            <div id="tcce1ProjetosCarousel" class="carousel slide project-map-carousel" data-bs-ride="carousel" data-bs-interval="5000" data-bs-pause="false" data-bs-touch="true">
+                                <div class="carousel-inner">
+                                    <div class="carousel-item active">
+                                        <img src="{% static 'assets/tcce/tcce_n_1_2018.JPG' %}" class="img-fluid" alt="Mapa de Projetos do TCCE n 1 de 2018" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
                 <!-- Contador -->
-                <div class="container py-5">
+                <div class="container pt-3 pb-5">
                     <div class="row text-center row-cols-2 row-cols-md-3 row-cols-lg-6 g-4 align-items-stretch">
 
                         <div class="col">
@@ -335,9 +375,24 @@
                     </div>
                 </div>
 
+                <div class="container project-map-section">
+                    <div class="row justify-content-center">
+                        <div class="col-12">
+                            <h3 class="text-custom-medium-gray text-center project-map-title">Mapa de Projetos</h3>
+                            <div id="tcce2ProjetosCarousel" class="carousel slide project-map-carousel" data-bs-ride="carousel" data-bs-interval="5000" data-bs-pause="false" data-bs-touch="true">
+                                <div class="carousel-inner">
+                                    <div class="carousel-item active">
+                                        <img src="{% static 'assets/tcce/tcce_n_2_2020.JPG' %}" class="img-fluid" alt="Mapa de Projetos do TCCE n 2 de 2020" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
                 <!-- Contador -->
-                <div class="container py-5">
+                <div class="container pt-3 pb-5">
                     <div class="row text-center row-cols-2 row-cols-md-3 row-cols-lg-6 g-4 align-items-stretch">
 
                         <div class="col">
@@ -425,9 +480,27 @@
                     </div>
                 </div>
 
+                <div class="container project-map-section">
+                    <div class="row justify-content-center">
+                        <div class="col-12">
+                            <h3 class="text-custom-medium-gray text-center project-map-title">Mapa de Projetos</h3>
+                            <div id="tcce3ProjetosCarousel" class="carousel slide project-map-carousel" data-bs-ride="carousel" data-bs-interval="5000" data-bs-pause="false" data-bs-touch="true">
+                                <div class="carousel-inner">
+                                    <div class="carousel-item active">
+                                        <img src="{% static 'assets/tcce/tcce_n_1_2022.JPG' %}" class="img-fluid" alt="Mapa de Projetos do TCCE n 1 de 2022" />
+                                    </div>
+                                    <div class="carousel-item">
+                                        <img src="{% static 'assets/tcce/tcce_n_1_2022(1).JPG' %}" class="img-fluid" alt="Mapa de Projetos complementar do TCCE n 1 de 2022" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
                 <!-- Contador -->
-                <div class="container py-5">
+                <div class="container pt-3 pb-5">
                     <div class="row text-center row-cols-2 row-cols-md-3 row-cols-lg-6 g-4 align-items-stretch">
 
                         <div class="col">

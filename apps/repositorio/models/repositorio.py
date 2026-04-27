@@ -4,7 +4,7 @@ from django.core.validators import URLValidator
 from django.utils.text import slugify
 from datetime import date
 from django.utils import timezone
-from stdnum import isbn
+from apps.repositorio.validators import validate_isbn
 
 # Importa o modelo User customizado do projeto (apps.accounts.User)
 from django.contrib.auth import get_user_model
@@ -27,7 +27,7 @@ def item_file_path(instance, filename):
     dia_str = hoje.strftime('%d')  # Número do dia com zero à esquerda (ex: 26)
     # ----------------------------------------------------
 
-    return f"repositorio/{projeto_slug}/{subprojeto_slug}/{mes_str}/{dia_str}/{filename}"
+    return f"repositorio/{projeto_slug}/{subprojeto_slug}/{filename}"
 
 
 def gallery_image_path(instance, filename):
@@ -184,7 +184,7 @@ class Registro(models.Model):
     titulo = models.CharField(max_length=2000, verbose_name="Título")
     resumo = models.TextField(verbose_name="Resumo / Abstract", blank=True, null=True)
     data_publicacao = models.DateField(null=True, blank=True, verbose_name="Data da Publicação")
-    isbn = models.CharField(max_length=20, blank=True, null=True, unique=True, verbose_name="ISBN (International Standard Book Number)")
+    isbn = models.CharField(max_length=20, validators=[validate_isbn], blank=True, null=True, unique=True, verbose_name="ISBN (International Standard Book Number)", help_text="Insira o ISBN-10 ou ISBN-13")
 
     # Arquivo (upload para S3 em produção)
     arquivo = models.FileField(upload_to=item_file_path, null=True, blank=True, verbose_name="Arquivo")
@@ -225,6 +225,10 @@ class Registro(models.Model):
     def __str__(self):
         return self.titulo
 
+    def _is_video_type(self):
+        """Verifica se o tipo de documento é um vídeo."""
+        return 'vídeo' in self.tipo_documento.nome.lower()
+
     def clean(self):
         """Validação personalizada para garantir a integridade dos dados."""
 
@@ -236,13 +240,21 @@ class Registro(models.Model):
         if self.data_publicacao and self.data_publicacao > date.today():
             raise ValidationError("A data de publicação não pode ser futura.")
 
-        # 3. Validação de Link/Arquivo (Deve ter um OU outro)
+        # 3. Validação de Link/Arquivo - vídeos sempre requerem APENAS link
         has_file = bool(self.arquivo)
         has_link = bool(self.link_externo)
+        is_video = self._is_video_type()
 
-        # Exigir pelo menos um, mas não necessariamente proibir ambos
-        if not has_file and not has_link:
-            raise ValidationError("O registro deve ter um Arquivo para upload OU um Link Externo.")
+        if is_video:
+            # Vídeos devem usar APENAS link, sem arquivo de upload
+            if has_file:
+                raise ValidationError("Vídeos devem ser cadastrados apenas com links, não com arquivos de upload.")
+            if not has_link:
+                raise ValidationError("Vídeos requerem um link externo.")
+        else:
+            # Outros tipos: exigir arquivo OU link
+            if not has_file and not has_link:
+                raise ValidationError("O registro deve ter um Arquivo para upload OU um Link Externo.")
 
         super().clean()
 

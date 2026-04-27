@@ -90,12 +90,12 @@ class RegistroForm(forms.ModelForm):
             'data_publicacao': 'Data de Publicação',
             'isbn': 'ISBN',
             'arquivo': 'Arquivo (PDF, Imagem, etc.)',
-            'link_externo': 'Link Externo',
+            'link_externo': 'Link Externo / URL do Vídeo',
             'ativo': 'Ativo'
         }
         help_texts = {
-            'arquivo': 'Faça upload do arquivo ou forneça um link externo.',
-            'link_externo': 'Informe a URL se o documento estiver hospedado externamente.',
+            'arquivo': 'Faça upload do arquivo. Nota: Vídeos devem usar apenas links.',
+            'link_externo': 'Informe a URL se o documento estiver hospedado externamente. Para vídeos, este campo é obrigatório.',
             'isbn': 'Apenas se aplicável.'
         }
 
@@ -163,13 +163,23 @@ class RegistroForm(forms.ModelForm):
         cleaned_data = super().clean()
         arquivo = cleaned_data.get('arquivo')
         link_externo = cleaned_data.get('link_externo')
+        tipo_documento = cleaned_data.get('tipo_documento')
         novo_subprojeto = self._normalize_text(cleaned_data.get('novo_subprojeto'))
 
-        # Validação: deve ter arquivo OU link externo
-        if not arquivo and not link_externo:
-            raise ValidationError(
-                'Você deve fornecer um arquivo para upload OU um link externo.'
-            )
+        # Verifica se é um vídeo
+        is_video = tipo_documento and 'vídeo' in tipo_documento.nome.lower()
+
+        # Validação: vídeos requerem APENAS link, outros tipos precisam de arquivo OU link
+        if is_video:
+            if arquivo:
+                self.add_error('arquivo', 'Vídeos devem ser cadastrados apenas com links, não com arquivos de upload.')
+            if not link_externo:
+                self.add_error('link_externo', 'Vídeos requerem um link externo.')
+        else:
+            if not arquivo and not link_externo:
+                raise ValidationError(
+                    'Você deve fornecer um arquivo para upload OU um link externo.'
+                )
 
         if not cleaned_data.get('subprojeto') and not novo_subprojeto:
             self.add_error('subprojeto', 'Selecione um subprojeto existente ou informe um novo subprojeto.')

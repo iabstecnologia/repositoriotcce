@@ -361,6 +361,59 @@
             listId: 'novas-tags-lista',
             selectId: 'id_tags'
         });
+
+        // ===== NOVO: Controle dinâmico de campos arquivo/link para vídeos =====
+        (function () {
+            const tipoDocumentoSelect = document.getElementById('id_tipo_documento');
+            const arquivoField = document.querySelector('input[name="arquivo"]');
+            const arquivoContainer = arquivoField ? arquivoField.closest('.mb-3') : null;
+            const linkExternoField = document.getElementById('id_link_externo');
+            const linkExternoContainer = linkExternoField ? linkExternoField.closest('.mb-3') : null;
+
+            if (!tipoDocumentoSelect) return;
+
+            function ehVideo() {
+                const selectedOption = tipoDocumentoSelect.options[tipoDocumentoSelect.selectedIndex];
+                const tipoNome = selectedOption.text.toLowerCase();
+                return tipoNome.includes('vídeo');
+            }
+
+            function atualizarCampos() {
+                const isVideo = ehVideo();
+
+                if (isVideo) {
+                    // Para vídeos: esconde arquivo, mostra link como obrigatório
+                    if (arquivoContainer) {
+                        arquivoContainer.style.display = 'none';
+                        if (arquivoField) {
+                            arquivoField.required = false;
+                        }
+                    }
+                    if (linkExternoField) {
+                        linkExternoField.required = true;
+                        linkExternoField.closest('.mb-3').querySelector('.form-label').innerHTML =
+                            linkExternoField.closest('.mb-3').querySelector('.form-label').textContent +
+                            ' <span class="text-danger">*</span>';
+                    }
+                } else {
+                    // Para outros tipos: mostra arquivo, link é opcional
+                    if (arquivoContainer) {
+                        arquivoContainer.style.display = 'block';
+                    }
+                    if (linkExternoField) {
+                        linkExternoField.required = false;
+                        const label = linkExternoField.closest('.mb-3').querySelector('.form-label');
+                        if (label) {
+                            label.innerHTML = label.textContent.replace(' *', '');
+                        }
+                    }
+                }
+            }
+
+            tipoDocumentoSelect.addEventListener('change', atualizarCampos);
+            atualizarCampos(); // Executa na carga inicial
+        })();
+        // ===== FIM: Controle dinâmico de campos =====
     })();
 </script>
 {% endblock %}

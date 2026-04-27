@@ -1,6 +1,15 @@
+import environ
 from pathlib import Path
 from decouple import config, Csv
 import os
+
+# --------------------------------------------------------------------------
+# Configuração de ambiente
+# --------------------------------------------------------------------------        
+env = environ.Env(
+    DEBUG=(bool, False)
+)
+environ.Env.read_env()  # Lê o arquivo .env na raiz do projeto
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
