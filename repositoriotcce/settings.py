@@ -8,17 +8,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # CONFIGURAÇÕES
 # --------------------------------------------------------------------------
 
-SECRET_KEY = config('SECRET_KEY')
-DEBUG = config('DEBUG', default=False, cast=bool)
-ALLOWED_HOSTS = config(
-    'ALLOWED_HOSTS',
-    cast=Csv()
-)
-SECURE_SSL_REDIRECT = config(
-    'SECURE_SSL_REDIRECT',
-    default=True,
-    cast=bool
-)
+SECRET_KEY = env('SECRET_KEY')
+DEBUG = env('DEBUG')
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['*'] if DEBUG else [])
+# ALLOWED_HOSTS = ['192.168.3.92']
+SECURE_SSL_REDIRECT = env('SECURE_SSL_REDIRECT')
 
 # --------------------------------------------------------------------------
 # APLICAÇÕES
