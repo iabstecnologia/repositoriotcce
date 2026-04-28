@@ -45,24 +45,11 @@ python manage.py createsuperuser
 ```
 
 ---
-**Desenvolvido por:** João Pedro
-**Data:** """ + "28/04/2026" + """
-"""
+**Desenvolvido por:** João Pedro A. Loiola
 
-with open('INSTRUCOES_DEPLOY.md', 'w', encoding='utf-8') as f:
-    f.write(md_content)
+**Data:** 28/04/2026
 
 
-```
-O teu ficheiro **INSTRUCOES_DEPLOY.md** está pronto. Este documento é o "manual de instruções" que o teu encarregado precisa para entender o que foi feito e como replicar o ambiente no servidor de produção.
 
-Ele inclui os comandos de migração, o reset das sequências (que foi o nosso maior desafio) e a explicação sobre os 454 registos.
 
-O teu ficheiro Markdown está pronto
-[file-tag: code-generated-file-0-1777402541602093491]
 
-### Recomendações ao entregar:
-1.  **Caminhos de Ficheiro:** Certifica-te de que no script `carga_publicacaoes.py` o caminho para o JSON não está "travado" no teu `/home/joaopedro/`. O ideal é usar `os.path.join(BASE_DIR, ...)` como sugeri no script anterior.
-2.  **PDFs:** Lembra-te de confirmar se ele tem acesso à pasta com os ficheiros PDF físicos, caso contrário o sistema mostrará os registos mas não abrirá os documentos.
-
-Com este ficheiro `.md` e os scripts que validámos, o teu trabalho está num nível profissional de entrega. Boa sorte com o deploy!
