@@ -97,26 +97,25 @@ def run_import():
                     else:
                         arquivo_valor = link_real if link_real.lower().endswith(".pdf") else f"{link_real}.pdf"
 
-                    # --- B. Criação/Atualização do Registro ---
-                    registro, created = Registro.objects.update_or_create(
+                    # --- B. Criação Forçada (Permite Duplicados) ---
+                    # Usamos .create() diretamente para ignorar duplicidade de títulos
+                    registro = Registro.objects.create(
                         subprojeto=sub_obj,
                         tipo_documento=tipo_documento,
                         titulo=item_data["TITULO"],
-                        defaults={
-                            'area_tematica': area_tematica,
-                            'status': status,
-                            'tipo_publicacao': tipo_publicacao,
-                            'data_publicacao': data_publicacao,
-                            'arquivo': arquivo_valor,
-                            'link_externo': link_externo_valor,
-                            'usuario_criacao': auditor_user,
-                            'usuario_ultima_atualizacao': auditor_user,
-                            'ativo': True,
-                        }
+                        area_tematica=area_tematica,
+                        status=status,
+                        tipo_publicacao=tipo_publicacao,
+                        data_publicacao=data_publicacao,
+                        arquivo=arquivo_valor,
+                        link_externo=link_externo_valor,
+                        usuario_criacao=auditor_user,
+                        usuario_ultima_atualizacao=auditor_user,
+                        ativo=True
                     )
-
-                    if created: registros_criados_count += 1
-                    else: registros_existentes_count += 1
+                    
+                    # Como estamos usando .create(), ele sempre será um novo registro
+                    registros_criados_count += 1
 
                     # --- C. M2M (Autores e Tags) ---
                     # Autores
