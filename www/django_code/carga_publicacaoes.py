@@ -11,11 +11,11 @@ from django.contrib.auth import get_user_model
 # --------------------------------------------------------------------------------
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-# Ajuste conforme sua estrutura: backend/
-BACKEND_DIR = os.path.abspath(os.path.join(CURRENT_DIR, '..', '..', '..', '..')) 
+# Ajuste conforme sua estrutura
+BASE_DIR = os.path.abspath(os.path.join(CURRENT_DIR, '..', '..')) 
 JSON_FILE_PATH = os.path.join(CURRENT_DIR, 'carga_json.json')
 
-sys.path.insert(0, BACKEND_DIR)
+sys.path.insert(0, BASE_DIR)
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "repositoriotcce.settings")
 
 import django
