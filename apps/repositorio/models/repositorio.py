@@ -187,7 +187,7 @@ class Registro(models.Model):
     isbn = models.CharField(max_length=20, validators=[validate_isbn], blank=True, null=True, unique=True, verbose_name="ISBN (International Standard Book Number)", help_text="Insira o ISBN-10 ou ISBN-13")
 
     # Arquivo (upload para S3 em produção)
-    arquivo = models.FileField(upload_to=item_file_path, null=True, blank=True, verbose_name="Arquivo")
+    arquivo = models.FileField(upload_to=item_file_path, null=True, blank=True, verbose_name="Arquivo", max_length=5000)
 
     # Link externo (ex: URL da revista)
     link_externo = models.URLField(max_length=2000, validators=[URLValidator()], null=True, blank=True, verbose_name="Link Externo/URL")
