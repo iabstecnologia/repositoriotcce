@@ -107,7 +107,8 @@
                         <!-- Imagem Principal -->
                         {% with first_item=gallery_items.0 %}
                         <img id="main-photo"
-                            src="{% if first_item %}{{ first_item.src }}{% else %}{% static 'assets/imagem-caverna-sliede.webp' %}{% endif %}"
+{#                            src="{% if first_item %}{{ first_item.src }}{% else %}{% static 'assets/imagem-caverna-sliede.webp' %}{% endif %}"#}
+                            src="{% if first_item %}{{ first_item.url }}{% else %}{% static 'assets/imagem-caverna-sliede.webp' %}{% endif %}"
                             alt="{% if first_item %}{{ first_item.title }}{% else %}Imagem Principal da Galeria{% endif %}"
                             class="main-image rounded-4"
                             onerror="this.src='https://placehold.co/1200x675/2563eb/FFFFFF?text=Erro+ao+Carregar+Imagem'">
