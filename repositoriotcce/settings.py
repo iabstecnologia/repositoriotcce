@@ -109,7 +109,7 @@ CSRF_COOKIE_SECURE = not DEBUG
 # ARQUIVOS ESTÁTICOS E MÍDIA
 # --------------------------------------------------------------------------
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = BASE_DIR / 'static'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'www/static')]
 
 # Gerenciamento de Mídia Local vs Cloud (S3)
