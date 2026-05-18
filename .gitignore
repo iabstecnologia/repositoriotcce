@@ -40,6 +40,7 @@ Pastas de migração vazias (opcional)
 # Ferramentas e IDEs
 # ----------------------------------------------------------------------
 
+.vscode/
 .DS_Store
 PyCharm
 .idea/
