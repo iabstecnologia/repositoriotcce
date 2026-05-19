@@ -286,60 +286,7 @@
                 </div>
 
 
-                <!-- Contador -->
-                <div class="container pt-3 pb-5">
-                    <div class="row text-center row-cols-2 row-cols-md-3 row-cols-lg-6 g-4 align-items-stretch">
-
-                        <div class="col">
-                            <div class="d-flex flex-column align-items-center h-100 p-2">
-                                <img src="{% static 'assets/11-1149.svg' %}" alt="Ícone Produções Acadêmicas" class="icon-stat mb-3" />
-                                <div class="counter-value display-4" data-target="{{ tcce1.producoes_academicas|default:0 }}">0</div>
-                                <p class="text-muted mt-auto stat-text-footer">Produções Acadêmicas</p>
-                            </div>
-                        </div>
-
-                        <div class="col">
-                            <div class="d-flex flex-column align-items-center h-100 p-2">
-                                <img src="{% static 'assets/11-1288.svg' %}" alt="Ícone Produções Publicadas" class="icon-stat mb-3" />
-                                <div class="counter-value display-4" data-target="{{ tcce1.producoes_publicadas|default:0 }}">0</div>
-                                <p class="text-muted mt-auto stat-text-footer">Produções Publicadas</p>
-                            </div>
-                        </div>
-
-                        <div class="col">
-                            <div class="d-flex flex-column align-items-center h-100 p-2">
-                                <img src="{% static 'assets/11-1294.svg' %}" alt="Ícone Artigos Científicos" class="icon-stat mb-3" />
-                                <div class="counter-value display-4" data-target="{{ tcce1.artigos_cientificos|default:0 }}">0</div>
-                                <p class="text-muted mt-auto stat-text-footer">Artigos Científicos</p>
-                            </div>
-                        </div>
-
-                        <div class="col">
-                            <div class="d-flex flex-column align-items-center h-100 p-2">
-                                <img src="{% static 'assets/11-1304.svg' %}" alt="Ícone Autores Únicos" class="icon-stat mb-3" />
-                                <div class="counter-value display-4" data-target="{{ tcce1.autores_unicos|default:0 }}">0</div>
-                                <p class="text-muted mt-auto stat-text-footer">Autores Únicos</p>
-                            </div>
-                        </div>
-
-                        <div class="col">
-                            <div class="d-flex flex-column align-items-center h-100 p-2">
-                                <img src="{% static 'assets/11-1149.svg' %}" alt="Ícone Subprojetos Ativos" class="icon-stat mb-3" />
-                                <div class="counter-value display-4" data-target="{{ tcce1.subprojetos_ativos|default:0 }}">0</div>
-                                <p class="text-muted mt-auto stat-text-footer">Subprojetos Ativos</p>
-                            </div>
-                        </div>
-
-                        <div class="col">
-                            <div class="d-flex flex-column align-items-center h-100 p-2">
-                                <img src="{% static 'assets/11-1288.svg' %}" alt="Ícone Relatórios Técnicos" class="icon-stat mb-3" />
-                                <div class="counter-value display-4" data-target="{{ tcce1.relatorios_tecnicos|default:0 }}">0</div>
-                                <p class="text-muted mt-auto stat-text-footer">Relatórios Técnicos</p>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
+                {% include 'website/includes/tcce_counters.html' with tcce_data=tcce1 %}
             </div>
             <!-- TCCE Details Section (TCCE nº 2/2020) -->
             <div class="tab-pane fade" id="tcce2" role="tabpanel" aria-labelledby="tcce2-tab">
@@ -391,60 +338,7 @@
                 </div>
 
 
-                <!-- Contador -->
-                <div class="container pt-3 pb-5">
-                    <div class="row text-center row-cols-2 row-cols-md-3 row-cols-lg-6 g-4 align-items-stretch">
-
-                        <div class="col">
-                            <div class="d-flex flex-column align-items-center h-100 p-2">
-                                <img src="{% static 'assets/11-1149.svg' %}" alt="Ícone Produções Acadêmicas" class="icon-stat mb-3" />
-                                <div class="counter-value display-4" data-target="{{ tcce2.producoes_academicas|default:0 }}">0</div>
-                                <p class="text-muted mt-auto stat-text-footer">Produções Acadêmicas</p>
-                            </div>
-                        </div>
-
-                        <div class="col">
-                            <div class="d-flex flex-column align-items-center h-100 p-2">
-                                <img src="{% static 'assets/11-1288.svg' %}" alt="Ícone Produções Publicadas" class="icon-stat mb-3" />
-                                <div class="counter-value display-4" data-target="{{ tcce2.producoes_publicadas|default:0 }}">0</div>
-                                <p class="text-muted mt-auto stat-text-footer">Produções Publicadas</p>
-                            </div>
-                        </div>
-
-                        <div class="col">
-                            <div class="d-flex flex-column align-items-center h-100 p-2">
-                                <img src="{% static 'assets/11-1294.svg' %}" alt="Ícone Artigos Científicos" class="icon-stat mb-3" />
-                                <div class="counter-value display-4" data-target="{{ tcce2.artigos_cientificos|default:0 }}">0</div>
-                                <p class="text-muted mt-auto stat-text-footer">Artigos Científicos</p>
-                            </div>
-                        </div>
-
-                        <div class="col">
-                            <div class="d-flex flex-column align-items-center h-100 p-2">
-                                <img src="{% static 'assets/11-1304.svg' %}" alt="Ícone Autores Únicos" class="icon-stat mb-3" />
-                                <div class="counter-value display-4" data-target="{{ tcce2.autores_unicos|default:0 }}">0</div>
-                                <p class="text-muted mt-auto stat-text-footer">Autores Únicos</p>
-                            </div>
-                        </div>
-
-                        <div class="col">
-                            <div class="d-flex flex-column align-items-center h-100 p-2">
-                                <img src="{% static 'assets/11-1149.svg' %}" alt="Ícone Subprojetos Ativos" class="icon-stat mb-3" />
-                                <div class="counter-value display-4" data-target="{{ tcce2.subprojetos_ativos|default:0 }}">0</div>
-                                <p class="text-muted mt-auto stat-text-footer">Subprojetos Ativos</p>
-                            </div>
-                        </div>
-
-                        <div class="col">
-                            <div class="d-flex flex-column align-items-center h-100 p-2">
-                                <img src="{% static 'assets/11-1288.svg' %}" alt="Ícone Relatórios Técnicos" class="icon-stat mb-3" />
-                                <div class="counter-value display-4" data-target="{{ tcce2.relatorios_tecnicos|default:0 }}">0</div>
-                                <p class="text-muted mt-auto stat-text-footer">Relatórios Técnicos</p>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
+                {% include 'website/includes/tcce_counters.html' with tcce_data=tcce2 %}
             </div>
 
             <!-- TCCE Details Section (TCCE nº 1/2022) -->
@@ -499,60 +393,7 @@
                 </div>
 
 
-                <!-- Contador -->
-                <div class="container pt-3 pb-5">
-                    <div class="row text-center row-cols-2 row-cols-md-3 row-cols-lg-6 g-4 align-items-stretch">
-
-                        <div class="col">
-                            <div class="d-flex flex-column align-items-center h-100 p-2">
-                                <img src="{% static 'assets/11-1149.svg' %}" alt="Ícone Produções Acadêmicas" class="icon-stat mb-3" />
-                                <div class="counter-value display-4" data-target="{{ tcce3.producoes_academicas|default:0 }}">0</div>
-                                <p class="text-muted mt-auto stat-text-footer">Produções Acadêmicas</p>
-                            </div>
-                        </div>
-
-                        <div class="col">
-                            <div class="d-flex flex-column align-items-center h-100 p-2">
-                                <img src="{% static 'assets/11-1288.svg' %}" alt="Ícone Produções Publicadas" class="icon-stat mb-3" />
-                                <div class="counter-value display-4" data-target="{{ tcce3.producoes_publicadas|default:0 }}">0</div>
-                                <p class="text-muted mt-auto stat-text-footer">Produções Publicadas</p>
-                            </div>
-                        </div>
-
-                        <div class="col">
-                            <div class="d-flex flex-column align-items-center h-100 p-2">
-                                <img src="{% static 'assets/11-1294.svg' %}" alt="Ícone Artigos Científicos" class="icon-stat mb-3" />
-                                <div class="counter-value display-4" data-target="{{ tcce3.artigos_cientificos|default:0 }}">0</div>
-                                <p class="text-muted mt-auto stat-text-footer">Artigos Científicos</p>
-                            </div>
-                        </div>
-
-                        <div class="col">
-                            <div class="d-flex flex-column align-items-center h-100 p-2">
-                                <img src="{% static 'assets/11-1304.svg' %}" alt="Ícone Autores Únicos" class="icon-stat mb-3" />
-                                <div class="counter-value display-4" data-target="{{ tcce3.autores_unicos|default:0 }}">0</div>
-                                <p class="text-muted mt-auto stat-text-footer">Autores Únicos</p>
-                            </div>
-                        </div>
-
-                        <div class="col">
-                            <div class="d-flex flex-column align-items-center h-100 p-2">
-                                <img src="{% static 'assets/11-1149.svg' %}" alt="Ícone Subprojetos Ativos" class="icon-stat mb-3" />
-                                <div class="counter-value display-4" data-target="{{ tcce3.subprojetos_ativos|default:0 }}">0</div>
-                                <p class="text-muted mt-auto stat-text-footer">Subprojetos Ativos</p>
-                            </div>
-                        </div>
-
-                        <div class="col">
-                            <div class="d-flex flex-column align-items-center h-100 p-2">
-                                <img src="{% static 'assets/11-1288.svg' %}" alt="Ícone Relatórios Técnicos" class="icon-stat mb-3" />
-                                <div class="counter-value display-4" data-target="{{ tcce3.relatorios_tecnicos|default:0 }}">0</div>
-                                <p class="text-muted mt-auto stat-text-footer">Relatórios Técnicos</p>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
+                {% include 'website/includes/tcce_counters.html' with tcce_data=tcce3 %}
             </div>
         </div>
     </div>

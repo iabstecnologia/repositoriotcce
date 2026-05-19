@@ -68,7 +68,6 @@ class TCCEView(TemplateView):
                 'producoes_publicadas': 0,
                 'artigos_cientificos': 0,
                 'autores_unicos': 0,
-                'subprojetos_ativos': 0,
                 'relatorios_tecnicos': 0,
             }
         
@@ -102,9 +101,6 @@ class TCCEView(TemplateView):
             ativo=True
         ).distinct().count()
         
-        # Subprojetos ativos
-        subprojetos_ativos = projeto.subprojetos.filter(ativo=True).count()
-        
         # Relatórios técnicos (tipo_documento contém 'RELATÓRIO')
         relatorios_tecnicos = registros_queryset.filter(
             tipo_documento__nome__icontains='RELATÓRIO'
@@ -115,7 +111,6 @@ class TCCEView(TemplateView):
             'producoes_publicadas': producoes_publicadas,
             'artigos_cientificos': artigos_cientificos,
             'autores_unicos': autores_unicos,
-            'subprojetos_ativos': subprojetos_ativos,
             'relatorios_tecnicos': relatorios_tecnicos,
         }
 
