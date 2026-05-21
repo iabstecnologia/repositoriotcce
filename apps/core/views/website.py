@@ -103,7 +103,7 @@ class TCCEView(TemplateView):
         
         # Relatórios técnicos (tipo_documento contém 'RELATÓRIO')
         relatorios_tecnicos = registros_queryset.filter(
-            tipo_documento__nome__icontains='RELATÓRIO'
+            tipo_documento__nome__icontains='RELATÓRIO TÉCNICO FINAL'
         ).count()
         
         return {
