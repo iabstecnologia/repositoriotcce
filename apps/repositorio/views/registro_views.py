@@ -11,6 +11,7 @@ import io
 import os
 from django.utils.text import slugify
 import logging
+from django.shortcuts import redirect
 
 logger = logging.getLogger(__name__)
 
@@ -88,6 +89,9 @@ def _apply_filters_to_queryset(query_params):
     return queryset.order_by('-date_create')
 
 
+from django.contrib import messages
+from django.shortcuts import redirect
+
 @login_required(login_url='/admin/login/')
 def download_filtered_registros(request):
     """
@@ -102,12 +106,10 @@ def download_filtered_registros(request):
         queryset = queryset.filter(arquivo__isnull=False).exclude(arquivo='')
         
         if not queryset.exists():
-            # Retorna resposta 404 corretamente (sem FileResponse)
-            return HttpResponse(
-                'Nenhum arquivo encontrado com os filtros aplicados.',
-                status=404,
-                content_type='text/plain; charset=utf-8'
-            )
+            # Quando não houver arquivos:
+            messages.warning(request, 'Nenhum arquivo encontrado com os filtros aplicados.')
+            # Redireciona de volta para a página de listagem preservando os filtros
+            return redirect(f"{reverse_lazy('repositorio:lista')}?{request.GET.urlencode()}")
         
         # Cria arquivo ZIP em memória
         zip_buffer = io.BytesIO()
@@ -119,37 +121,25 @@ def download_filtered_registros(request):
                     continue
                 
                 try:
-                    # Obtém o arquivo do storage
                     arquivo = registro.arquivo
-                    
-                    # Constrói o caminho no ZIP: projeto_slug/subprojeto_slug/nome_arquivo
                     projeto_slug = slugify(registro.subprojeto.projeto.nome or 'sem-projeto')
                     subprojeto_slug = slugify(registro.subprojeto.nome or 'sem-subprojeto')
-                    
-                    # Obtém o nome original do arquivo
                     arquivo_nome = os.path.basename(arquivo.name)
-                    
-                    # Caminho no ZIP
                     zip_path = f"{projeto_slug}/{subprojeto_slug}/{arquivo_nome}"
                     
-                    # Lê o arquivo do storage (funciona com local e S3)
                     with arquivo.open('rb') as f:
                         arquivo_conteudo = f.read()
                         zip_file.writestr(zip_path, arquivo_conteudo)
                         arquivos_adicionados += 1
                     
                 except Exception as e:
-                    # Log do erro, mas continua com os próximos arquivos
                     logger.error(f"Erro ao adicionar arquivo {getattr(registro.arquivo, 'name', 'unknown')}: {str(e)}")
                     continue
         
-        # Se nenhum arquivo foi adicionado com sucesso (todos falharam)
+        # Se nenhum arquivo foi adicionado com sucesso
         if arquivos_adicionados == 0:
-            return HttpResponse(
-                'Nenhum arquivo pôde ser lido com sucesso.',
-                status=500,
-                content_type='text/plain; charset=utf-8'
-            )
+            messages.error(request, 'Nenhum arquivo pôde ser lido com sucesso.')
+            return redirect(f"{reverse_lazy('repositorio:lista')}?{request.GET.urlencode()}")
         
         zip_buffer.seek(0)
         
@@ -165,12 +155,8 @@ def download_filtered_registros(request):
     
     except Exception as e:
         logger.exception(f"Erro no download filtrado: {e}")
-        return HttpResponse(
-            f'Erro ao gerar download: {str(e)}',
-            status=500,
-            content_type='text/plain; charset=utf-8'
-        )
-
+        messages.error(request, f'Erro ao gerar download: {str(e)}')
+        return redirect(f"{reverse_lazy('repositorio:lista')}?{request.GET.urlencode()}")
 
 class RegistroListView(LoginRequiredMixin, ListView):
     """Lista todos os registros com busca e filtros."""
