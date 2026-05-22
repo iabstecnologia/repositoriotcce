@@ -102,13 +102,11 @@ def download_filtered_registros(request):
         # Aplica os mesmos filtros da listagem
         queryset = _apply_filters_to_queryset(request.GET)
         
-        # Filtra apenas registros que possuem arquivo (arquivo não está vazio)
+        # Filtra apenas registros que possuem arquivo
         queryset = queryset.filter(arquivo__isnull=False).exclude(arquivo='')
         
         if not queryset.exists():
-            # Quando não houver arquivos:
             messages.warning(request, 'Nenhum arquivo encontrado com os filtros aplicados.')
-            # Redireciona de volta para a página de listagem preservando os filtros
             return redirect(f"{reverse_lazy('repositorio:lista')}?{request.GET.urlencode()}")
         
         # Cria arquivo ZIP em memória
@@ -143,7 +141,7 @@ def download_filtered_registros(request):
         
         zip_buffer.seek(0)
         
-        # Retorna o ZIP como download
+        # Retorna o ZIP como download (usuário permanece na página)
         response = FileResponse(
             zip_buffer,
             as_attachment=True,
