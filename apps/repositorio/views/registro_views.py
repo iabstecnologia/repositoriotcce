@@ -4,8 +4,16 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
-from django.http import JsonResponse
+from django.http import JsonResponse, FileResponse, HttpResponse
 from django.contrib.auth.decorators import login_required
+import zipfile
+import io
+import os
+from django.utils.text import slugify
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 from apps.repositorio.models.repositorio import Registro, Subprojeto
 from apps.repositorio.forms.registro_form import RegistroForm
@@ -34,6 +42,136 @@ def _mensagem_campos_invalidos(form, acao):
     return f'Erro ao {acao} registro. Verifique os campos.'
 
 
+def _apply_filters_to_queryset(query_params):
+    """
+    Aplica filtros ao queryset baseado nos parâmetros GET.
+    Utilizado tanto pela lista quanto pelo download para garantir consistência.
+    """
+    queryset = Registro.objects.select_related(
+        'subprojeto__projeto', 'tipo_documento', 'area_tematica', 'status'
+    ).prefetch_related('autores', 'tags')
+
+    # Busca por título ou resumo
+    search = query_params.get('q')
+    if search:
+        queryset = queryset.filter(
+            Q(titulo__icontains=search) | Q(resumo__icontains=search)
+        )
+
+    # Filtro por status
+    status_id = query_params.get('status')
+    if status_id:
+        queryset = queryset.filter(status_id=status_id)
+
+    # Filtro por tipo de documento
+    tipo_doc_id = query_params.get('tipo_documento')
+    if tipo_doc_id:
+        queryset = queryset.filter(tipo_documento_id=tipo_doc_id)
+
+    # Filtro por projeto
+    projeto_id = query_params.get('projeto')
+    if projeto_id:
+        queryset = queryset.filter(subprojeto__projeto_id=projeto_id)
+
+    # Filtro por subprojeto
+    subprojeto_id = query_params.get('subprojeto')
+    if subprojeto_id:
+        queryset = queryset.filter(subprojeto_id=subprojeto_id)
+
+    # Filtro por situação ativa/inativa
+    ativo = query_params.get('ativo')
+    if ativo == '1':
+        queryset = queryset.filter(ativo=True)
+    elif ativo == '0':
+        queryset = queryset.filter(ativo=False)
+
+    return queryset.order_by('-date_create')
+
+
+@login_required(login_url='/admin/login/')
+def download_filtered_registros(request):
+    """
+    Download de todos os arquivos filtrados em formato ZIP.
+    Organiza os arquivos em estrutura: projeto_slug/subprojeto_slug/arquivo
+    """
+    try:
+        # Aplica os mesmos filtros da listagem
+        queryset = _apply_filters_to_queryset(request.GET)
+        
+        # Filtra apenas registros que possuem arquivo (arquivo não está vazio)
+        queryset = queryset.filter(arquivo__isnull=False).exclude(arquivo='')
+        
+        if not queryset.exists():
+            # Retorna resposta 404 corretamente (sem FileResponse)
+            return HttpResponse(
+                'Nenhum arquivo encontrado com os filtros aplicados.',
+                status=404,
+                content_type='text/plain; charset=utf-8'
+            )
+        
+        # Cria arquivo ZIP em memória
+        zip_buffer = io.BytesIO()
+        arquivos_adicionados = 0
+        
+        with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
+            for registro in queryset:
+                if not registro.arquivo:
+                    continue
+                
+                try:
+                    # Obtém o arquivo do storage
+                    arquivo = registro.arquivo
+                    
+                    # Constrói o caminho no ZIP: projeto_slug/subprojeto_slug/nome_arquivo
+                    projeto_slug = slugify(registro.subprojeto.projeto.nome or 'sem-projeto')
+                    subprojeto_slug = slugify(registro.subprojeto.nome or 'sem-subprojeto')
+                    
+                    # Obtém o nome original do arquivo
+                    arquivo_nome = os.path.basename(arquivo.name)
+                    
+                    # Caminho no ZIP
+                    zip_path = f"{projeto_slug}/{subprojeto_slug}/{arquivo_nome}"
+                    
+                    # Lê o arquivo do storage (funciona com local e S3)
+                    with arquivo.open('rb') as f:
+                        arquivo_conteudo = f.read()
+                        zip_file.writestr(zip_path, arquivo_conteudo)
+                        arquivos_adicionados += 1
+                    
+                except Exception as e:
+                    # Log do erro, mas continua com os próximos arquivos
+                    logger.error(f"Erro ao adicionar arquivo {getattr(registro.arquivo, 'name', 'unknown')}: {str(e)}")
+                    continue
+        
+        # Se nenhum arquivo foi adicionado com sucesso (todos falharam)
+        if arquivos_adicionados == 0:
+            return HttpResponse(
+                'Nenhum arquivo pôde ser lido com sucesso.',
+                status=500,
+                content_type='text/plain; charset=utf-8'
+            )
+        
+        zip_buffer.seek(0)
+        
+        # Retorna o ZIP como download
+        response = FileResponse(
+            zip_buffer,
+            as_attachment=True,
+            filename='registros_filtrados.zip',
+            content_type='application/zip'
+        )
+        
+        return response
+    
+    except Exception as e:
+        logger.exception(f"Erro no download filtrado: {e}")
+        return HttpResponse(
+            f'Erro ao gerar download: {str(e)}',
+            status=500,
+            content_type='text/plain; charset=utf-8'
+        )
+
+
 class RegistroListView(LoginRequiredMixin, ListView):
     """Lista todos os registros com busca e filtros."""
     model = Registro
@@ -43,46 +181,8 @@ class RegistroListView(LoginRequiredMixin, ListView):
     login_url = '/admin/login/'
 
     def get_queryset(self):
-        """Aplica filtros e busca."""
-        queryset = Registro.objects.select_related(
-            'subprojeto__projeto', 'tipo_documento', 'area_tematica', 'status'
-        ).prefetch_related('autores', 'tags')
-
-        # Busca por título ou resumo
-        search = self.request.GET.get('q')
-        if search:
-            queryset = queryset.filter(
-                Q(titulo__icontains=search) | Q(resumo__icontains=search)
-            )
-
-        # Filtro por status
-        status_id = self.request.GET.get('status')
-        if status_id:
-            queryset = queryset.filter(status_id=status_id)
-
-        # Filtro por tipo de documento
-        tipo_doc_id = self.request.GET.get('tipo_documento')
-        if tipo_doc_id:
-            queryset = queryset.filter(tipo_documento_id=tipo_doc_id)
-
-        # Filtro por projeto
-        projeto_id = self.request.GET.get('projeto')
-        if projeto_id:
-            queryset = queryset.filter(subprojeto__projeto_id=projeto_id)
-
-        # Filtro por subprojeto
-        subprojeto_id = self.request.GET.get('subprojeto')
-        if subprojeto_id:
-            queryset = queryset.filter(subprojeto_id=subprojeto_id)
-
-        # Filtro por situação ativa/inativa
-        ativo = self.request.GET.get('ativo')
-        if ativo == '1':
-            queryset = queryset.filter(ativo=True)
-        elif ativo == '0':
-            queryset = queryset.filter(ativo=False)
-
-        return queryset.order_by('-date_create')
+        """Aplica filtros e busca usando helper method."""
+        return _apply_filters_to_queryset(self.request.GET)
 
     def get_context_data(self, **kwargs):
         """Adiciona dados extras ao contexto."""

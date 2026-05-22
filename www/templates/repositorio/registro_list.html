@@ -18,6 +18,11 @@
             <a href="{% url 'repositorio:criar' %}" class="btn btn-success">
                 <i class="bi bi-plus-circle"></i> Novo Registro
             </a>
+            {% if registros %}
+            <a href="{% url 'repositorio:download_filtrados' %}?{{ request.GET.urlencode }}" class="btn btn-info" title="Baixar todos os arquivos filtrados em ZIP">
+                <i class="bi bi-download"></i> Baixar Arquivos Filtrados
+            </a>
+            {% endif %}
         </div>
     </div>
 

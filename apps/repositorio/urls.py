@@ -1,7 +1,8 @@
 from django.urls import path
 from apps.repositorio.views.registro_views import (
 	RegistroListView, RegistroDetailView, RegistroCreateView,
-	RegistroUpdateView, RegistroDeleteView, subprojetos_por_projeto_admin
+	RegistroUpdateView, RegistroDeleteView, subprojetos_por_projeto_admin,
+	download_filtered_registros
 )
 from apps.repositorio.views.galeria_views import (
 	FotoGaleriaListView, FotoGaleriaCreateView,
@@ -34,6 +35,9 @@ urlpatterns = [
 
 	# Excluir registro
 	path('<int:pk>/excluir/', RegistroDeleteView.as_view(), name='excluir'),
+
+	# Download de arquivos filtrados
+	path('download-filtrados/', download_filtered_registros, name='download_filtrados'),
 
 	# Endpoint JSON para carregar subprojetos por projeto (gestão)
 	path('api/subprojetos/', subprojetos_por_projeto_admin, name='subprojetos_por_projeto'),
