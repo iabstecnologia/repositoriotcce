@@ -2,7 +2,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView, D
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.urls import reverse_lazy
-from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect, get_object_or_404
 from django.db.models import Q
 from django.http import JsonResponse, FileResponse, HttpResponse
 from django.contrib.auth.decorators import login_required
@@ -11,7 +11,6 @@ import io
 import os
 from django.utils.text import slugify
 import logging
-from django.shortcuts import redirect
 
 logger = logging.getLogger(__name__)
 
@@ -166,6 +165,13 @@ class RegistroListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         """Aplica filtros e busca usando helper method."""
+        # Salva os parâmetros de filtro na sessão para uso após edição
+        query_params = self.request.GET.copy()
+        query_params.pop('page', None)  # Remove página
+        
+        if query_params:
+            self.request.session['registro_filter_params'] = query_params.urlencode()
+        
         return _apply_filters_to_queryset(self.request.GET)
 
     def get_context_data(self, **kwargs):
@@ -232,13 +238,28 @@ class RegistroCreateView(LoginRequiredMixin, CreateView):
         return super().form_invalid(form)
 
 
+from django.urls import reverse_lazy
+from django.shortcuts import redirect
+
 class RegistroUpdateView(LoginRequiredMixin, UpdateView):
     """Edita um registro existente."""
     model = Registro
     form_class = RegistroForm
     template_name = 'repositorio/registro_form.html'
-    success_url = reverse_lazy('repositorio:lista')
     login_url = '/admin/login/'
+
+    def get_success_url(self):
+        """
+        Retorna para a lista preservando os filtros.
+        Se não houver filtros, retorna para a lista padrão.
+        """
+        # Recupera os parâmetros de filtro salvos na sessão
+        filter_params = self.request.session.get('registro_filter_params', '')
+        
+        if filter_params:
+            return f"{reverse_lazy('repositorio:lista')}?{filter_params}"
+        
+        return reverse_lazy('repositorio:lista')
 
     def form_valid(self, form):
         """Atualiza o usuário da última atualização."""
@@ -253,15 +274,23 @@ class RegistroUpdateView(LoginRequiredMixin, UpdateView):
         list(messages.get_messages(self.request))
         messages.error(self.request, _mensagem_campos_invalidos(form, 'atualizar'))
         return super().form_invalid(form)
-
+    
 
 class RegistroDeleteView(LoginRequiredMixin, DeleteView):
     """Exclui um registro."""
     model = Registro
     template_name = 'repositorio/registro_confirm_delete.html'
-    success_url = reverse_lazy('repositorio:lista')
     context_object_name = 'registro'
     login_url = '/admin/login/'
+
+    def get_success_url(self):
+        """Retorna para a lista preservando os filtros."""
+        filter_params = self.request.session.get('registro_filter_params', '')
+        
+        if filter_params:
+            return f"{reverse_lazy('repositorio:lista')}?{filter_params}"
+        
+        return reverse_lazy('repositorio:lista')
 
     def delete(self, request, *args, **kwargs):
         """Exibe mensagem de sucesso ao deletar."""

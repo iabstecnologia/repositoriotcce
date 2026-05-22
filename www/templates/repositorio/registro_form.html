@@ -233,7 +233,8 @@
 
                         <!-- Botões -->
                         <div class="d-flex gap-2 justify-content-end">
-                            <a href="{% url 'repositorio:lista' %}" class="btn btn-secondary">
+                            <a href="{% url 'repositorio:lista' %}{% if request.session.registro_filter_params %}?{{ request.session.registro_filter_params }}{% endif %}" 
+                            class="btn btn-secondary">
                                 <i class="bi bi-x-circle"></i> Cancelar
                             </a>
                             <button type="submit" class="btn btn-primary">
