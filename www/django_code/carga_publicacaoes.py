@@ -118,17 +118,17 @@ def run_import():
                     registros_criados_count += 1
 
                     # --- C. M2M (Autores e Tags) ---
-                    # Autores
+                    # Autores: cria automaticamente se não existir
                     autores_names = [a.strip() for a in item_data.get("AUTOR", "").split(',') if a.strip()]
                     for nome in autores_names:
-                        autor = Autor.objects.filter(nome=nome).first()
-                        if autor: registro.autores.add(autor)
+                        autor, created = Autor.objects.get_or_create(nome=nome, defaults={'ativo': True})
+                        registro.autores.add(autor)
 
-                    # Tags
+                    # Tags: cria automaticamente se não existir
                     tags_names = [t.strip().replace(',', '').replace('.', '') for t in item_data.get("TAGS", "").split(';') if t.strip()]
                     for t_nome in tags_names:
-                        tag = Tag.objects.filter(nome=t_nome).first()
-                        if tag: registro.tags.add(tag)
+                        tag, created = Tag.objects.get_or_create(nome=t_nome, defaults={'ativo': True})
+                        registro.tags.add(tag)
 
                     print(f"Progresso: {i+1}/{len(itens_para_importar)} - {registro.titulo[:30]}...")
 
