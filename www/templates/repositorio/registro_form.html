@@ -142,6 +142,34 @@
                             </div>
                         </fieldset>
 
+                        <!-- Informações sobre Espécies -->
+                        <fieldset class="mb-4">
+                            <legend class="h5 border-bottom pb-2">Informações sobre Espécies</legend>
+
+                            <div class="form-check mb-3">
+                                {{ form.especie_nova }}
+                                <label class="form-check-label" for="{{ form.especie_nova.id_for_label }}">
+                                    {{ form.especie_nova.label }}
+                                </label>
+                                {% if form.especie_nova.errors %}
+                                <div class="text-danger small">{{ form.especie_nova.errors }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="{{ form.especie_informacoes.id_for_label }}" class="form-label">
+                                    {{ form.especie_informacoes.label }}
+                                </label>
+                                {{ form.especie_informacoes }}
+                                {% if form.especie_informacoes.errors %}
+                                <div class="text-danger small">{{ form.especie_informacoes.errors }}</div>
+                                {% endif %}
+                                {% if form.especie_informacoes.help_text %}
+                                <div class="form-text">{{ form.especie_informacoes.help_text }}</div>
+                                {% endif %}
+                            </div>
+                        </fieldset>
+
                         <!-- Autoria e Tags -->
                         <fieldset class="mb-4">
                             <legend class="h5 border-bottom pb-2">Autoria e Palavras-chave</legend>
@@ -415,6 +443,30 @@
             atualizarCampos(); // Executa na carga inicial
         })();
         // ===== FIM: Controle dinâmico de campos =====
+
+        // ===== NOVO: Controle de campos de espécies =====
+        (function () {
+            const especieCheckbox = document.getElementById('id_especie_nova');
+            const especieInput = document.getElementById('id_especie_informacoes');
+
+            if (!especieCheckbox || !especieInput) {
+                return;
+            }
+
+            function atualizarEspecieInput() {
+                const ativo = especieCheckbox.checked;
+                especieInput.disabled = !ativo;
+                if (!ativo) {
+                    especieInput.classList.add('bg-light');
+                } else {
+                    especieInput.classList.remove('bg-light');
+                }
+            }
+
+            especieCheckbox.addEventListener('change', atualizarEspecieInput);
+            atualizarEspecieInput();
+        })();
+        // ===== FIM: Controle de campos de espécies =====
     })();
 </script>
 {% endblock %}

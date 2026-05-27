@@ -185,6 +185,8 @@ class Registro(models.Model):
     resumo = models.TextField(verbose_name="Resumo / Abstract", blank=True, null=True)
     data_publicacao = models.DateField(null=True, blank=True, verbose_name="Data da Publicação")
     isbn = models.CharField(max_length=20, validators=[validate_isbn], blank=True, null=True, unique=True, verbose_name="ISBN (International Standard Book Number)", help_text="Insira o ISBN-10 ou ISBN-13")
+    especie_nova = models.BooleanField(default=False, verbose_name="Registro relacionado a espécies novas?")
+    especie_informacoes = models.CharField(max_length=500, blank=True, null=True, verbose_name="Nome científico e/ou quantidade", help_text="Informe nome científico e/ou quantidade de espécimes quando aplicável.")
 
     # Arquivo (upload para S3 em produção)
     arquivo = models.FileField(upload_to=item_file_path, null=True, blank=True, verbose_name="Arquivo", max_length=5000)

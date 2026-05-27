@@ -49,7 +49,7 @@ class RegistroForm(forms.ModelForm):
         fields = [
             'titulo', 'subprojeto', 'autores', 'tags',
             'tipo_documento', 'area_tematica', 'status', 'tipo_publicacao',
-            'data_publicacao', 'isbn', 'arquivo', 'link_externo', 'ativo'
+            'data_publicacao', 'isbn', 'especie_nova', 'especie_informacoes', 'arquivo', 'link_externo', 'ativo'
         ]
         widgets = {
             'titulo': forms.TextInput(attrs={
@@ -66,6 +66,13 @@ class RegistroForm(forms.ModelForm):
             'isbn': forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Ex: 978-3-16-148410-0'
+            }),
+            'especie_nova': forms.CheckboxInput(attrs={
+                'class': 'form-check-input'
+            }),
+            'especie_informacoes': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Ex: Rana amazonica, 3 espécimes coletados'
             }),
             'arquivo': forms.ClearableFileInput(attrs={
                 'class': 'form-control'
@@ -91,12 +98,15 @@ class RegistroForm(forms.ModelForm):
             'isbn': 'ISBN',
             'arquivo': 'Arquivo (PDF, Imagem, etc.)',
             'link_externo': 'Link Externo / URL do Vídeo',
+            'especie_nova': 'Registro relacionado a espécies novas?',
+            'especie_informacoes': 'Nome científico e/ou quantidade',
             'ativo': 'Ativo'
         }
         help_texts = {
             'arquivo': 'Faça upload do arquivo. Nota: Vídeos devem usar apenas links.',
             'link_externo': 'Informe a URL se o documento estiver hospedado externamente. Para vídeos, este campo é obrigatório.',
-            'isbn': 'Apenas se aplicável.'
+            'isbn': 'Apenas se aplicável.',
+            'especie_informacoes': 'Preencha apenas se o registro envolver espécies novas.'
         }
 
     def __init__(self, *args, **kwargs):
