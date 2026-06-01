@@ -18,8 +18,25 @@
             <a href="{% url 'repositorio:criar' %}" class="btn btn-success">
                 <i class="bi bi-plus-circle"></i> Novo Registro
             </a>
+            {% if registros %}
+            <a href="{% url 'repositorio:download_filtrados' %}?{{ query_params }}" class="btn btn-info" title="Baixar todos os arquivos filtrados em ZIP">
+                <i class="bi bi-download"></i> Baixar Arquivos Filtrados
+            </a>
+            {% endif %}
         </div>
     </div>
+
+    <!-- Bloco de Mensagens (Django Messages Framework) -->
+    {% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fechar"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 
     <!-- Filtros -->
     <div class="row mb-4">

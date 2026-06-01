@@ -545,7 +545,7 @@
                 <div class="category-icon-container">
                     <img src="{% static 'assets/11-1294.svg' %}" alt="Relatório Técnico" class="img-fluid" />
                 </div>
-                <p class="card-text mt-3 mb-0 text-custom-dark category-text">Relatório Técnico</p>
+                <p class="card-text mt-3 mb-0 text-custom-dark category-text">Relatórios Técnicos</p>
             </div>
         </a>
         {% else %}
@@ -554,7 +554,7 @@
                 <div class="category-icon-container">
                     <img src="{% static 'assets/11-1294.svg' %}" alt="Relatório Técnico" class="img-fluid" />
                 </div>
-                <p class="card-text mt-3 mb-0 text-custom-dark category-text">Relatório Técnico</p>
+                <p class="card-text mt-3 mb-0 text-custom-dark category-text">Relatórios Técnicos</p>
             </div>
         </div>
         {% endif %}
@@ -575,6 +575,26 @@
                     <img src="{% static 'assets/11-1304.svg' %}" alt="Vídeos" class="img-fluid" />
                 </div>
                 <p class="card-text mt-3 mb-0 text-custom-dark category-text">Vídeos</p>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if category_mapping.PublicacaoCientifica %}
+        <a href="{% url 'core:repositorio' %}?tipo_documento={{ category_mapping.PublicacaoCientifica }}" class="card category-card category-link text-decoration-none border-0 rounded-4 bg-custom-light-gray" data-category-name="Publicação Científica">
+            <div class="card-body p-3 d-flex flex-column justify-content-center align-items-center">
+                <div class="category-icon-container">
+                    <img src="{% static 'assets/11-1294.svg' %}" alt="Publicação Científica" class="img-fluid" />
+                </div>
+                <p class="card-text mt-3 mb-0 text-custom-dark category-text">Publicações Científicas<br></p>
+            </div>
+        </a>
+        {% else %}
+        <div class="card category-card text-decoration-none border-0 rounded-4 bg-custom-light-gray" style="opacity: 0.6; cursor: not-allowed;" title="Categoria indisponível">
+            <div class="card-body p-3 d-flex flex-column justify-content-center align-items-center">
+                <div class="category-icon-container">
+                    <img src="{% static 'assets/11-1294.svg' %}" alt="Publicação Científica" class="img-fluid" />
+                </div>
+                <p class="card-text mt-3 mb-0 text-custom-dark category-text">Publicações Científicas<br></p>
             </div>
         </div>
         {% endif %}

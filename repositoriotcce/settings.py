@@ -16,8 +16,10 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 # CONFIGURAÇÕES BÁSICAS
 # --------------------------------------------------------------------------
 SECRET_KEY = env('SECRET_KEY', default='chave-secreta-padrao-apenas-dev')
-DEBUG = env('DEBUG')
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['127.0.0.1', 'localhost'])
+DEBUG = env.bool('DEBUG', default=False)
+
+base_allowed_hosts = env.list('ALLOWED_HOSTS', default=['127.0.0.1', 'localhost', '[::1]'])
+ALLOWED_HOSTS = ['*'] if DEBUG else base_allowed_hosts
 
 # --------------------------------------------------------------------------
 # BANCO DE DADOS (PostgreSQL)
@@ -48,7 +50,7 @@ DJANGO_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.messages',
+    'django.contrib.messages',  # ← Já está aqui, essencial para as mensagens
     'django.contrib.staticfiles',
 ]
 
@@ -67,40 +69,56 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', # WhiteNoise logo abaixo do Security
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',  # ← Essencial para as mensagens
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 # --------------------------------------------------------------------------
 # TEMPLATES
 # --------------------------------------------------------------------------
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        # Caminho global para seus templates customizados
         'DIRS': [os.path.join(BASE_DIR, 'www/templates')],
-        'APP_DIRS': True, # Permite que o Django procure templates dentro das pastas das apps
+        'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+                'django.contrib.messages.context_processors.messages',  # ← Essencial para as mensagens
             ],
         },
     },
 ]
 
 # --------------------------------------------------------------------------
+# MENSAGENS (DJANGO MESSAGES FRAMEWORK)
+# --------------------------------------------------------------------------
+from django.contrib.messages import constants as messages
+
+MESSAGE_TAGS = {
+    messages.DEBUG: 'secondary',      # Cinza
+    messages.INFO: 'info',            # Azul claro
+    messages.SUCCESS: 'success',      # Verde
+    messages.WARNING: 'warning',      # Amarelo
+    messages.ERROR: 'danger',         # Vermelho (Bootstrap usa 'danger' em vez de 'error')
+}
+
+# Nível mínimo de exibição das mensagens
+MESSAGE_LEVEL = messages.DEBUG if DEBUG else messages.INFO
+
+# Armazenamento das mensagens (sessão por padrão)
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+
+# --------------------------------------------------------------------------
 # SEGURANÇA INTELIGENTE
 # --------------------------------------------------------------------------
-# Se DEBUG for True, desativa redirecionamentos HTTPS para evitar o erro que você teve
 SECURE_SSL_REDIRECT = env('SECURE_SSL_REDIRECT') if not DEBUG else False
 SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG

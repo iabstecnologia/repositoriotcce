@@ -130,6 +130,7 @@ class RepositorioView(ListView):
             'Artigos': tipos_documento.filter(nome__icontains='ARTIGO').first(),
             'RelatórioTécnico': tipos_documento.filter(nome__icontains='RELATÓRIO').first(),
             'Vídeos': tipos_documento.filter(nome__icontains='VÍDEO').first(),
+            'PublicacaoCientifica': tipos_documento.filter(nome__icontains='TRABALHOS ACADÊMICOS').first(),
         }
         # Manter apenas os tipos que existem no banco; converter para IDs
         context['category_mapping'] = {k: v.id for k, v in category_mapping.items() if v}

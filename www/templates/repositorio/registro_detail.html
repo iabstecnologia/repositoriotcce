@@ -70,6 +70,16 @@
                             <p class="mb-1"><strong>Tipo de Documento:</strong> {{ registro.tipo_documento.nome }}</p>
                             <p class="mb-1"><strong>Área Temática:</strong> {{ registro.area_tematica.nome }}</p>
                             <p class="mb-1"><strong>Tipo de Publicação:</strong> {{ registro.tipo_publicacao.nome }}</p>
+                            <p class="mb-1"><strong>Espécie Nova:</strong>
+                                {% if registro.especie_nova %}
+                                <span class="badge bg-success">Sim</span>
+                                {% else %}
+                                <span class="badge bg-secondary">Não</span>
+                                {% endif %}
+                            </p>
+                            {% if registro.especie_informacoes %}
+                            <p class="mb-1"><strong>Informações sobre Espécies:</strong> {{ registro.especie_informacoes }}</p>
+                            {% endif %}
                         </div>
 
                         <div class="col-md-6">

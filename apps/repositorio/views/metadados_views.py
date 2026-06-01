@@ -1,6 +1,8 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
+from django.db.models.deletion import ProtectedError
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
@@ -82,12 +84,96 @@ class BaseMetadataUpdateView(LoginRequiredMixin, UpdateView):
 
 
 class BaseMetadataDeleteView(LoginRequiredMixin, DeleteView):
+    """
+    View base para exclusão de metadados.
+    Captura ProtectedError quando houver registros vinculados e exibe
+    uma mensagem detalhada com os nomes dos registros que bloqueiam a exclusão.
+    """
     login_url = '/admin/login/'
+    
+    # Mapeamento de qual modelo de Registro está vinculado a cada modelo de metadado
+    # Pode ser sobrescrito nas subclasses se necessário
+    related_registry_field = None  # Ex: 'subprojeto', 'tipo_documento', 'area_tematica'
 
-    def form_valid(self, form):
-        messages.success(self.request, self.success_message)
-        return super().form_valid(form)
+    def _get_linked_registries(self):
+        """
+        Busca os registros vinculados ao objeto que está sendo excluído.
+        Usa o related_name definido na ForeignKey do modelo Registro.
+        """
+        from apps.repositorio.models.repositorio import Registro
+        
+        obj = self.object
+        
+        # Mapeamento automático baseado no tipo do modelo
+        model_to_field = {
+            'Subprojeto': 'subprojeto',
+            'TipoDocumento': 'tipo_documento',
+            'AreaTematica': 'area_tematica',
+            'TipoPublicacao': 'tipo_publicacao',
+            'Projeto': 'subprojeto__projeto',  # Projeto não tem FK direta, usa subprojeto
+            'Autor': 'autores',                # ManyToMany
+            'Tag': 'tags',                     # ManyToMany
+        }
+        
+        model_name = obj.__class__.__name__
+        field_name = self.related_registry_field or model_to_field.get(model_name)
+        
+        if not field_name:
+            return Registro.objects.none()
+        
+        kwargs = {f'{field_name}': obj}
+        return Registro.objects.filter(**kwargs).distinct().order_by('titulo')
 
+    def post(self, request, *args, **kwargs):
+        """
+        Sobrescreve o método post para capturar ProtectedError.
+        """
+        try:
+            self.object = self.get_object()
+            success_url = self.get_success_url()
+            self.object.delete()
+            messages.success(request, self.success_message)
+            return redirect(success_url)
+        except ProtectedError:
+            registros = self._get_linked_registries()
+            count = registros.count()
+            
+            if count > 0:
+                # Pega os primeiros 5 títulos para exibir na mensagem
+                primeiros = registros.values_list('titulo', flat=True)[:5]
+                lista = '; '.join(f'"{titulo}"' for titulo in primeiros)
+                
+                if count > 5:
+                    lista += f' e mais {count - 5} registro(s)'
+                
+                messages.error(
+                    request,
+                    f'Não é possível excluir "{self.object.nome}" porque '
+                    f'{count} registro(s) estão vinculado(s) a este item:\n'
+                    f'{lista}\n\n'
+                    f'Remova ou reassocie os registros antes de excluir.'
+                )
+            else:
+                messages.error(
+                    request,
+                    f'Não é possível excluir "{self.object.nome}" porque '
+                    f'existem registros vinculados a este item.'
+                )
+            
+            return redirect(self.get_success_url())
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if hasattr(self.object, 'nome'):
+            context['item_name'] = self.object.nome
+        elif hasattr(self.object, 'titulo'):
+            context['item_name'] = self.object.titulo
+        return context
+
+
+# =========================================================================
+# SUBPROJETO
+# =========================================================================
 
 class SubprojetoListView(BaseMetadataListView):
     model = Subprojeto
@@ -164,6 +250,10 @@ class SubprojetoDeleteView(BaseMetadataDeleteView):
         return context
 
 
+# =========================================================================
+# TIPO DE DOCUMENTO
+# =========================================================================
+
 class TipoDocumentoListView(BaseMetadataListView):
     model = TipoDocumento
     template_name = 'repositorio/tipodocumento_list.html'
@@ -211,6 +301,10 @@ class TipoDocumentoDeleteView(BaseMetadataDeleteView):
         context['item_name'] = self.object.nome
         return context
 
+
+# =========================================================================
+# ÁREA TEMÁTICA
+# =========================================================================
 
 class AreaTematicaListView(BaseMetadataListView):
     model = AreaTematica
@@ -260,6 +354,10 @@ class AreaTematicaDeleteView(BaseMetadataDeleteView):
         return context
 
 
+# =========================================================================
+# TIPO DE PUBLICAÇÃO
+# =========================================================================
+
 class TipoPublicacaoListView(BaseMetadataListView):
     model = TipoPublicacao
     template_name = 'repositorio/tipopublicacao_list.html'
@@ -307,6 +405,10 @@ class TipoPublicacaoDeleteView(BaseMetadataDeleteView):
         context['item_name'] = self.object.nome
         return context
 
+
+# =========================================================================
+# AUTOR
+# =========================================================================
 
 class AutorListView(BaseMetadataListView):
     model = Autor
@@ -357,6 +459,10 @@ class AutorDeleteView(BaseMetadataDeleteView):
         return context
 
 
+# =========================================================================
+# TAG (PALAVRA-CHAVE)
+# =========================================================================
+
 class TagListView(BaseMetadataListView):
     model = Tag
     template_name = 'repositorio/tag_list.html'
@@ -404,6 +510,10 @@ class TagDeleteView(BaseMetadataDeleteView):
         context['item_name'] = self.object.nome
         return context
 
+
+# =========================================================================
+# PROJETO
+# =========================================================================
 
 class ProjetoListView(BaseMetadataListView):
     model = Projeto
