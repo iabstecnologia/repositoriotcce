@@ -16,8 +16,10 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 # CONFIGURAÇÕES BÁSICAS
 # --------------------------------------------------------------------------
 SECRET_KEY = env('SECRET_KEY', default='chave-secreta-padrao-apenas-dev')
-DEBUG = env('DEBUG')
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['127.0.0.1', 'localhost'])
+DEBUG = env.bool('DEBUG', default=False)
+
+base_allowed_hosts = env.list('ALLOWED_HOSTS', default=['127.0.0.1', 'localhost', '[::1]'])
+ALLOWED_HOSTS = ['*'] if DEBUG else base_allowed_hosts
 
 # --------------------------------------------------------------------------
 # BANCO DE DADOS (PostgreSQL)
