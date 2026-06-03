@@ -140,10 +140,7 @@ class RepositorioView(ListView):
 
 def subprojetos_por_projeto(request):
     projeto_id = request.GET.get('projeto_id')
-
-    subprojetos = Subprojeto.objects.filter(ativo=True)
-    if projeto_id:
-        subprojetos = subprojetos.filter(projeto_id=projeto_id)
+    subprojetos = Subprojeto.objects.filter(projeto_id=projeto_id)
 
     data = [
         {'id': subprojeto.id, 'nome': subprojeto.nome}

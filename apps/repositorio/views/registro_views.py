@@ -15,7 +15,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-from apps.repositorio.models.repositorio import Registro, Subprojeto
+from apps.repositorio.models.repositorio import Registro, Subprojeto, Projeto
 from apps.repositorio.forms.registro_form import RegistroForm
 
 
@@ -180,16 +180,13 @@ class RegistroListView(LoginRequiredMixin, ListView):
         context['search_query'] = self.request.GET.get('q', '')
         
         # Para os filtros nos dropdowns
-        from apps.repositorio.models.repositorio import Status, TipoDocumento, Projeto, Subprojeto
-        context['status_list'] = Status.objects.filter(ativo=True)
-        context['tipos_documento'] = TipoDocumento.objects.filter(ativo=True)
-        context['projetos'] = Projeto.objects.filter(ativo=True)
+        from apps.repositorio.models.repositorio import Status, TipoDocumento
+        context['status_list'] = Status.objects.all()
+        context['tipos_documento'] = TipoDocumento.objects.all()
+        context['projetos'] = Projeto.objects.all()
 
         projeto_id = self.request.GET.get('projeto')
-        subprojetos = Subprojeto.objects.filter(ativo=True)
-        if projeto_id:
-            subprojetos = subprojetos.filter(projeto_id=projeto_id)
-        context['subprojetos'] = subprojetos
+        context['subprojetos'] = Subprojeto.objects.filter(projeto_id=projeto_id)
 
         query_params = self.request.GET.copy()
         query_params.pop('page', None)
@@ -301,10 +298,7 @@ class RegistroDeleteView(LoginRequiredMixin, DeleteView):
 @login_required(login_url='/admin/login/')
 def subprojetos_por_projeto_admin(request):
     projeto_id = request.GET.get('projeto_id')
-
-    subprojetos = Subprojeto.objects.filter(ativo=True)
-    if projeto_id:
-        subprojetos = subprojetos.filter(projeto_id=projeto_id)
+    subprojetos = Subprojeto.objects.filter(projeto_id=projeto_id)
 
     data = [
         {'id': subprojeto.id, 'nome': subprojeto.nome}
