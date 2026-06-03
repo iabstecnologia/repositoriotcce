@@ -17,7 +17,8 @@ class FotoGaleriaListView(LoginRequiredMixin, ListView):
     login_url = '/admin/login/'
 
     def get_queryset(self):
-        queryset = FotoGaleria.objects.all()
+        # Em administração queremos ver também imagens inativas
+        queryset = FotoGaleria.objects_all.all()
 
         search = self.request.GET.get('q')
         if search:

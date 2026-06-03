@@ -33,7 +33,9 @@ class BaseMetadataListView(LoginRequiredMixin, ListView):
     context_object_name = 'itens'
 
     def get_queryset(self):
-        queryset = self.model.objects.all()
+        # Em modo administrativo queremos incluir itens inativos também;
+        # usa-se `objects_all` para listar todos (ativos + inativos).
+        queryset = self.model.objects_all.all()
 
         search = self.request.GET.get('q')
         if search:
@@ -73,6 +75,12 @@ class BaseMetadataCreateView(LoginRequiredMixin, CreateView):
 
 class BaseMetadataUpdateView(LoginRequiredMixin, UpdateView):
     login_url = '/admin/login/'
+
+    def get_queryset(self):
+        # Use `objects_all` when available so admin can update inactive items
+        if hasattr(self.model, 'objects_all'):
+            return self.model.objects_all.all()
+        return super().get_queryset()
 
     def form_valid(self, form):
         messages.success(self.request, self.success_message)
@@ -162,6 +170,12 @@ class BaseMetadataDeleteView(LoginRequiredMixin, DeleteView):
             
             return redirect(self.get_success_url())
 
+    def get_queryset(self):
+        # Allow deletion of inactive items in admin by using objects_all when present
+        if hasattr(self.model, 'objects_all'):
+            return self.model.objects_all.all()
+        return super().get_queryset()
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if hasattr(self.object, 'nome'):
@@ -182,7 +196,7 @@ class SubprojetoListView(BaseMetadataListView):
     search_fields = ['nome', 'projeto__nome']
 
     def get_queryset(self):
-        queryset = self.model.objects.select_related('projeto').all()
+        queryset = self.model.objects_all.select_related('projeto').all()
 
         search = self.request.GET.get('q')
         if search:
@@ -204,7 +218,7 @@ class SubprojetoListView(BaseMetadataListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['projetos'] = Projeto.objects.filter(ativo=True).order_by('nome')
+        context['projetos'] = Projeto.objects_all.all().order_by('nome')
         return context
 
 

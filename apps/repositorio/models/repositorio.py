@@ -11,6 +11,25 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
+# Custom managers to centralize "ativo" filtering
+class AtivoManager(models.Manager):
+    """Retorna apenas objetos com `ativo=True`."""
+    def get_queryset(self):
+        return super().get_queryset().filter(ativo=True)
+
+
+class InativoManager(models.Manager):
+    """Retorna apenas objetos com `ativo=False`."""
+    def get_queryset(self):
+        return super().get_queryset().filter(ativo=False)
+
+
+class TodosManager(models.Manager):
+    """Retorna todos os objetos, sem filtro por `ativo`."""
+    def get_queryset(self):
+        return super().get_queryset()
+
+
 # Funções de Upload
 def item_file_path(instance, filename):
     """
@@ -44,6 +63,11 @@ def gallery_image_path(instance, filename):
 # Modelos Auxiliares (Metadados e Estrutura)
 class Projeto(models.Model):
     """Representa o projeto guarda-chuva (ex: TCCE I/2018)."""
+    # managers: `objects` (ativos), `objects_inactive`, `objects_all`
+    objects = AtivoManager()
+    objects_inactive = InativoManager()
+    objects_all = TodosManager()
+
     nome = models.CharField(max_length=150, unique=True, verbose_name="Nome do Projeto")
     ativo = models.BooleanField(default=True, verbose_name="Ativo")
 
@@ -58,6 +82,11 @@ class Projeto(models.Model):
 
 class Subprojeto(models.Model):
     """Representa uma sub-coleção dentro de um projeto maior."""
+    # managers: `objects` (ativos), `objects_inactive`, `objects_all`
+    objects = AtivoManager()
+    objects_inactive = InativoManager()
+    objects_all = TodosManager()
+
     projeto = models.ForeignKey(
         Projeto,
         on_delete=models.PROTECT,
@@ -78,6 +107,11 @@ class Subprojeto(models.Model):
 
 class Autor(models.Model):
     """Armazena informações sobre autores/colaboradores."""
+    # managers: `objects` (ativos), `objects_inactive`, `objects_all`
+    objects = AtivoManager()
+    objects_inactive = InativoManager()
+    objects_all = TodosManager()
+
     nome = models.CharField(max_length=255, verbose_name="Nome Completo do Autor")
     lattes_id = models.CharField(max_length=30, blank=True, null=True, verbose_name="ID Lattes")
     ativo = models.BooleanField(default=True, verbose_name="Ativo")
@@ -93,6 +127,10 @@ class Autor(models.Model):
 
 class Tag(models.Model):
     """Novo modelo para palavras-chave consistentes."""
+    # managers: `objects` (ativos), `objects_inactive`, `objects_all`
+    objects = AtivoManager()
+    objects_inactive = InativoManager()
+    objects_all = TodosManager()
     nome = models.CharField(max_length=100, unique=True, verbose_name="Palavra-chave / Tag")
     ativo = models.BooleanField(default=True, verbose_name="Ativo")
 
@@ -107,6 +145,10 @@ class Tag(models.Model):
 
 class TipoDocumento(models.Model):
     """Tipos de documentos (Artigo, Tese, Relatório, Imagem, Planilha, etc.)."""
+    # managers: `objects` (ativos), `objects_inactive`, `objects_all`
+    objects = AtivoManager()
+    objects_inactive = InativoManager()
+    objects_all = TodosManager()
     nome = models.CharField(max_length=100, unique=True, verbose_name="Tipo do Documento")
     ativo = models.BooleanField(default=True, verbose_name="Ativo")
 
@@ -121,6 +163,10 @@ class TipoDocumento(models.Model):
 
 class AreaTematica(models.Model):
     """Áreas de conhecimento ou temas principais."""
+    # managers: `objects` (ativos), `objects_inactive`, `objects_all`
+    objects = AtivoManager()
+    objects_inactive = InativoManager()
+    objects_all = TodosManager()
     nome = models.CharField(max_length=100, unique=True, verbose_name="Área Temática")
     ativo = models.BooleanField(default=True, verbose_name="Ativo")
 
@@ -135,6 +181,10 @@ class AreaTematica(models.Model):
 
 class Status(models.Model):
     """Status de fluxo de trabalho (Rascunho, Em Revisão, Publicado, Arquivado)."""
+    # managers: `objects` (ativos), `objects_inactive`, `objects_all`
+    objects = AtivoManager()
+    objects_inactive = InativoManager()
+    objects_all = TodosManager()
     nome = models.CharField(max_length=50, unique=True, verbose_name="Nome do Status")
     ativo = models.BooleanField(default=True, verbose_name="Ativo")
     is_public = models.BooleanField(default=True, verbose_name="É público?")
@@ -150,6 +200,10 @@ class Status(models.Model):
 
 class TipoPublicacao(models.Model):
     """Tipo de veículo de publicação (Revista, Anais de Evento, Livro, etc.)."""
+    # managers: `objects` (ativos), `objects_inactive`, `objects_all`
+    objects = AtivoManager()
+    objects_inactive = InativoManager()
+    objects_all = TodosManager()
     nome = models.CharField(max_length=100, unique=True, verbose_name="Tipo da Publicação")
     ativo = models.BooleanField(default=True, verbose_name="Ativo")
 
@@ -166,6 +220,11 @@ class TipoPublicacao(models.Model):
 
 class Registro(models.Model):
     """Modelo principal para itens do acervo (documentos, imagens, publicações)."""
+
+    # managers: `objects` (ativos), `objects_inactive`, `objects_all`
+    objects = AtivoManager()
+    objects_inactive = InativoManager()
+    objects_all = TodosManager()
 
     # ------------------------------------
     # RELAÇÕES E METADADOS CONTROLADOS
@@ -218,12 +277,7 @@ class Registro(models.Model):
         verbose_name = "Registro / Documento"
         verbose_name_plural = "Registros / Documentos"
         ordering = ['-data_publicacao', 'titulo']
-
-    def validate_isbn(value):
-        # Remove hifens e espaços antes de validar
-        if not isbn.is_valid(value):
-            raise ValidationError(f"'{value}' não é um ISBN-10 ou ISBN-13 válido.")
-
+    
     def __str__(self):
         return self.titulo
 
@@ -263,6 +317,11 @@ class Registro(models.Model):
 
 class FotoGaleria(models.Model):
     """Modelo para imagens da galeria do site."""
+
+    # managers: `objects` (ativos), `objects_inactive`, `objects_all`
+    objects = AtivoManager()
+    objects_inactive = InativoManager()
+    objects_all = TodosManager()
 
     titulo = models.CharField(max_length=200, verbose_name="Titulo")
     descricao = models.TextField(blank=True, null=True, verbose_name="Descricao")
