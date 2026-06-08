@@ -47,7 +47,7 @@ def _apply_filters_to_queryset(query_params):
     Aplica filtros ao queryset baseado nos parâmetros GET.
     Utilizado tanto pela lista quanto pelo download para garantir consistência.
     """
-    queryset = Registro.objects.select_related(
+    queryset = Registro.objects_all.select_related(
         'subprojeto__projeto', 'tipo_documento', 'area_tematica', 'status'
     ).prefetch_related('autores', 'tags')
 
@@ -186,7 +186,10 @@ class RegistroListView(LoginRequiredMixin, ListView):
         context['projetos'] = Projeto.objects.all()
 
         projeto_id = self.request.GET.get('projeto')
-        context['subprojetos'] = Subprojeto.objects.filter(projeto_id=projeto_id)
+        if projeto_id:
+            context['subprojetos'] = Subprojeto.objects.filter(projeto_id=projeto_id)
+        else:
+            context['subprojetos'] = Subprojeto.objects.all()
 
         query_params = self.request.GET.copy()
         query_params.pop('page', None)
@@ -203,7 +206,7 @@ class RegistroDetailView(LoginRequiredMixin, DetailView):
     login_url = '/admin/login/'
 
     def get_queryset(self):
-        return Registro.objects.select_related(
+        return Registro.objects_all.select_related(
             'subprojeto__projeto', 'tipo_documento', 'area_tematica',
             'status', 'tipo_publicacao', 'usuario_criacao', 'usuario_ultima_atualizacao'
         ).prefetch_related('autores', 'tags')
@@ -245,6 +248,12 @@ class RegistroUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'repositorio/registro_form.html'
     login_url = '/admin/login/'
 
+    def get_queryset(self):
+        return Registro.objects_all.select_related(
+            'subprojeto__projeto', 'tipo_documento', 'area_tematica',
+            'status', 'tipo_publicacao', 'usuario_criacao', 'usuario_ultima_atualizacao'
+        ).prefetch_related('autores', 'tags')
+
     def get_success_url(self):
         """
         Retorna para a lista preservando os filtros.
@@ -279,6 +288,12 @@ class RegistroDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'repositorio/registro_confirm_delete.html'
     context_object_name = 'registro'
     login_url = '/admin/login/'
+
+    def get_queryset(self):
+        return Registro.objects_all.select_related(
+            'subprojeto__projeto', 'tipo_documento', 'area_tematica',
+            'status', 'tipo_publicacao', 'usuario_criacao', 'usuario_ultima_atualizacao'
+        ).prefetch_related('autores', 'tags')
 
     def get_success_url(self):
         """Retorna para a lista preservando os filtros."""

@@ -24,6 +24,7 @@ django.setup()
 # --------------------------------------------------------------------------------
 # 2. IMPORTAÇÃO DOS MODELOS
 # --------------------------------------------------------------------------------
+
 from apps.repositorio.models import (
     Registro, Projeto, Subprojeto, Autor, Tag,
     TipoDocumento, AreaTematica, Status, TipoPublicacao
