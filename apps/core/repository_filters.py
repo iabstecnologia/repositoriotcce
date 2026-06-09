@@ -84,7 +84,7 @@ def build_repositorio_filter_context(query_params):
     form = RepositorioFilterForm(query_params)
     search_term = query_params.get('q', '')
 
-    tipos_documento = TipoDocumento.objects.filter(ativo=True).order_by('nome')
+    tipos_documento = TipoDocumento.objects.all().order_by('nome')
     category_mapping = {
         'Livros': tipos_documento.filter(nome__icontains='LIVRO').first(),
         'Artigos': tipos_documento.filter(nome__icontains='ARTIGO').first(),
