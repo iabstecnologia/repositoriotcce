@@ -49,7 +49,7 @@ class RepositorioFilterForm(forms.Form):
     )
     status = forms.ModelChoiceField(
         # Lista apenas status públicos para o usuário final
-        queryset=Status.objects.filter(is_public=True),
+        queryset=Status.objects.filter(is_public=True, ativo=True),
         required=False,
         empty_label="Status (Todos)",
         widget=forms.Select(attrs={'class': 'form-select'})
@@ -87,3 +87,5 @@ class RepositorioFilterForm(forms.Form):
 
         if projeto_id:
             self.fields['subprojeto'].queryset = Subprojeto.objects.filter(projeto_id=projeto_id)
+        else:
+            self.fields['subprojeto'].queryset = Subprojeto.objects.all()

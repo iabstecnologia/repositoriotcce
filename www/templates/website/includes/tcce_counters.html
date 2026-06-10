@@ -2,7 +2,7 @@
 
 <!-- Seção de Contadores (Reutilizável) -->
 <div class="container pt-3 pb-5">
-    <div class="row text-center row-cols-2 row-cols-md-3 row-cols-lg-6 g-4 align-items-stretch">
+    <div class="row text-center row-cols-2 row-cols-md-3 row-cols-lg-6 g-4 justify-content-center">
 
         <div class="col">
             <div class="d-flex flex-column align-items-center h-100 p-2">
@@ -30,7 +30,7 @@
 
         <div class="col">
             <div class="d-flex flex-column align-items-center h-100 p-2">
-                <img src="{% static 'assets/11-1304.svg' %}" alt="Ícone Autores Únicos" class="icon-stat mb-3" />
+                <img src="{% static 'assets/autor.svg' %}" alt="Ícone Autores Únicos" class="icon-stat mb-3" />
                 <div class="counter-value display-4" data-target="{{ tcce_data.autores_unicos|default:0 }}">0</div>
                 <p class="text-muted mt-auto stat-text-footer">Autores Únicos</p>
             </div>

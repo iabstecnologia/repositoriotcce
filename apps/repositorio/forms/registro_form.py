@@ -112,14 +112,14 @@ class RegistroForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Filtra apenas registros ativos para os selects
-        self.fields['novo_projeto_subprojeto'].queryset = Projeto.objects.filter(ativo=True)
-        self.fields['subprojeto'].queryset = Subprojeto.objects.filter(ativo=True)
-        self.fields['autores'].queryset = Autor.objects.filter(ativo=True)
-        self.fields['tags'].queryset = Tag.objects.filter(ativo=True)
-        self.fields['tipo_documento'].queryset = TipoDocumento.objects.filter(ativo=True)
-        self.fields['area_tematica'].queryset = AreaTematica.objects.filter(ativo=True)
-        self.fields['status'].queryset = Status.objects.filter(ativo=True)
-        self.fields['tipo_publicacao'].queryset = TipoPublicacao.objects.filter(ativo=True)
+        self.fields['novo_projeto_subprojeto'].queryset = Projeto.objects.all()
+        self.fields['subprojeto'].queryset = Subprojeto.objects.all()
+        self.fields['autores'].queryset = Autor.objects.all()
+        self.fields['tags'].queryset = Tag.objects.all()
+        self.fields['tipo_documento'].queryset = TipoDocumento.objects.all()
+        self.fields['area_tematica'].queryset = AreaTematica.objects.all()
+        self.fields['status'].queryset = Status.objects.all()
+        self.fields['tipo_publicacao'].queryset = TipoPublicacao.objects.all()
 
         self.fields['subprojeto'].required = False
         self.fields['tipo_documento'].required = True
