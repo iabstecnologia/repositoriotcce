@@ -238,7 +238,6 @@ input, textarea, select {
 
 @media (max-width: 480px) {
     .hero-section div > nav > div{
-        flex-direction: column;
         align-items: center;
     }
 
