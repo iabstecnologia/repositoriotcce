@@ -41,11 +41,14 @@ class TCCEView(TemplateView):
         context['tcce2'] = tcces.get('tcce2', {})
         context['tcce3'] = tcces.get('tcce3', {})
         
+        # Adiciona as estatísticas agregadas de todos os TCCEs
+        context['estatisticas_globais'] = self._calcular_estatisticas_todos_tcces()
+        
         return context
     
     def _calcular_estatisticas_tcce(self, projeto_id):
         """
-        Calcula as 6 estatísticas principais para um projeto TCCE específico.
+        Calcula as 5 estatísticas principais para um projeto TCCE específico.
         
         Args:
             projeto_id: ID do projeto
@@ -56,7 +59,6 @@ class TCCEView(TemplateView):
             - producoes_publicadas: Total de registros com status PUBLICADO
             - artigos_cientificos: Total de artigos científicos
             - autores_unicos: Total de autores únicos
-            - subprojetos_ativos: Total de subprojetos ativos
             - relatorios_tecnicos: Total de relatórios técnicos
         """
         try:
@@ -102,6 +104,61 @@ class TCCEView(TemplateView):
         ).distinct().count()
         
         # Relatórios técnicos (tipo_documento contém 'RELATÓRIO')
+        relatorios_tecnicos = registros_queryset.filter(
+            tipo_documento__nome__icontains='RELATÓRIO TÉCNICO FINAL'
+        ).count()
+        
+        return {
+            'producoes_academicas': producoes_academicas,
+            'producoes_publicadas': producoes_publicadas,
+            'artigos_cientificos': artigos_cientificos,
+            'autores_unicos': autores_unicos,
+            'relatorios_tecnicos': relatorios_tecnicos,
+        }
+    
+    def _calcular_estatisticas_todos_tcces(self):
+        """
+        Calcula as 5 estatísticas principais agregadas para TODOS os TCCEs.
+        
+        Returns:
+            Dict com as seguintes chaves:
+            - producoes_academicas: Total de registros ativos em todos os TCCEs
+            - producoes_publicadas: Total de registros com status PUBLICADO em todos os TCCEs
+            - artigos_cientificos: Total de artigos científicos em todos os TCCEs
+            - autores_unicos: Total de autores únicos em todos os TCCEs
+            - relatorios_tecnicos: Total de relatórios técnicos em todos os TCCEs
+        """
+        # Query base para todos os registros de todos os projetos TCCE ativos
+        registros_queryset = Registro.objects.filter(
+            subprojeto__projeto__ativo=True,
+            ativo=True
+        ).select_related(
+            'subprojeto',
+            'subprojeto__projeto',
+            'tipo_documento',
+            'status'
+        ).prefetch_related('autores', 'tags')
+        
+        # Total de produções acadêmicas (todos os registros ativos)
+        producoes_academicas = registros_queryset.count()
+        
+        # Produções publicadas (status = PUBLICADO)
+        producoes_publicadas = registros_queryset.filter(
+            status__nome='PUBLICADO'
+        ).count()
+        
+        # Artigos científicos (tipo_documento contém 'ARTIGO')
+        artigos_cientificos = registros_queryset.filter(
+            tipo_documento__nome__icontains='ARTIGO'
+        ).count()
+        
+        # Autores únicos em todos os TCCEs
+        autores_unicos = Autor.objects.filter(
+            autores__subprojeto__projeto__ativo=True,
+            ativo=True
+        ).distinct().count()
+        
+        # Relatórios técnicos (tipo_documento contém 'RELATÓRIO TÉCNICO FINAL')
         relatorios_tecnicos = registros_queryset.filter(
             tipo_documento__nome__icontains='RELATÓRIO TÉCNICO FINAL'
         ).count()

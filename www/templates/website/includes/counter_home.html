@@ -1,0 +1,42 @@
+{% load static %}
+
+<style>
+.icon-stat {
+    color: #495965;
+    font-size: 3rem;
+}
+
+.tcce-counter .counter-value,
+.tcce-counter .stat-text-footer {
+  color: #495965 !important;
+}
+
+.tcce-counter .counter-value {
+  min-height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>
+
+<!-- Seção de Contadores (Reutilizável) -->
+<div class="container pt-3 tcce-counter">
+    <div class="row text-center row-cols-2 row-cols-md-3 row-cols-lg-6 g-4 justify-content-center">
+
+        <div class="col">
+            <div class="d-flex flex-column align-items-center h-100 p-2">
+                <i class="bi bi-file-check icon-stat mb-3" aria-hidden="true"></i>
+                <div class="counter-value display-4" data-target="4">0</div>
+                <p class="text-muted mt-auto stat-text-footer">TCCEs Formalizados</p>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="d-flex flex-column align-items-center h-100 p-2">
+                <i class="bi bi-kanban icon-stat mb-3" aria-hidden="true"></i>
+                <div class="counter-value display-4" data-target="176">0</div>
+                <p class="text-muted mt-auto stat-text-footer">Projetos</p>
+            </div>
+        </div>
+    </div>
+</div>

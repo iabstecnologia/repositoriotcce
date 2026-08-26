@@ -1,46 +1,53 @@
 {% load static %}
 
+<style>
+    .icon-stat {
+        color: white;
+        font-size: 3rem;
+    }
+</style>
+
 <!-- Seção de Contadores (Reutilizável) -->
-<div class="container pt-3 pb-5">
-    <div class="row text-center row-cols-2 row-cols-md-3 row-cols-lg-6 g-4 justify-content-center">
+<div class="container pt-3">
+    <div class="row text-center row-cols-2 row-cols-md-3 row-cols-lg-5 g-4 justify-content-center">
 
         <div class="col">
             <div class="d-flex flex-column align-items-center h-100 p-2">
-                <i class="bi bi-mortarboard-fill icon-stat text-muted mb-3" aria-hidden="true"></i>
+                <i class="bi bi-mortarboard-fill icon-stat text-white mb-3" aria-hidden="true"></i>
                 <div class="counter-value display-4" data-target="{{ tcce_data.producoes_academicas|default:0 }}">0</div>
-                <p class="text-muted fs-6 mt-auto stat-text-footer">Produções Acadêmicas</p>
+                <p class="text-white fs-6 mt-auto stat-text-footer">Produções Acadêmicas</p>
             </div>
         </div>
 
         <div class="col">
             <div class="d-flex flex-column align-items-center h-100 p-2">
-                <i class="bi bi-journal-check icon-stat text-muted mb-3" aria-hidden="true"></i>
+                <i class="bi bi-journal-check icon-stat text-white mb-3" aria-hidden="true"></i>
                 <div class="counter-value display-4" data-target="{{ tcce_data.producoes_publicadas|default:0 }}">0</div>
-                <p class="text-muted fs-6 mt-auto stat-text-footer">Produções Publicadas</p>
+                <p class="text-white fs-6 mt-auto stat-text-footer">Produções Publicadas</p>
             </div>
         </div>
 
         <div class="col">
             <div class="d-flex flex-column align-items-center h-100 p-2">
-                <i class="bi bi-file-earmark-text-fill icon-stat text-muted mb-3" aria-hidden="true"></i>
+                <i class="bi bi-file-earmark-text-fill icon-stat text-white mb-3" aria-hidden="true"></i>
                 <div class="counter-value display-4" data-target="{{ tcce_data.artigos_cientificos|default:0 }}">0</div>
-                <p class="text-muted fs-6 mt-auto stat-text-footer">Artigos Científicos</p>
+                <p class="text-white fs-6 mt-auto stat-text-footer">Artigos Científicos</p>
             </div>
         </div>
 
         <div class="col">
             <div class="d-flex flex-column align-items-center h-100 p-2">
-                <i class="bi bi-people-fill icon-stat text-muted mb-3" aria-hidden="true"></i>
+                <i class="bi bi-people-fill icon-stat text-white mb-3" aria-hidden="true"></i>
                 <div class="counter-value display-4" data-target="{{ tcce_data.autores_unicos|default:0 }}">0</div>
-                <p class="text-muted fs-6 mt-auto stat-text-footer">Autores</p>
+                <p class="text-white fs-6 mt-auto stat-text-footer">Autores</p>
             </div>
         </div>
 
         <div class="col">
             <div class="d-flex flex-column align-items-center h-100 p-2">
-                <i class="bi bi-file-earmark-bar-graph-fill icon-stat text-muted mb-3" aria-hidden="true"></i>
+                <i class="bi bi-file-earmark-bar-graph-fill icon-stat text-white mb-3" aria-hidden="true"></i>
                 <div class="counter-value display-4" data-target="{{ tcce_data.relatorios_tecnicos|default:0 }}">0</div>
-                <p class="text-muted fs-6 mt-auto stat-text-footer">Relatórios Técnicos</p>
+                <p class="text-white fs-6 mt-auto stat-text-footer">Relatórios Técnicos</p>
             </div>
         </div>
 
