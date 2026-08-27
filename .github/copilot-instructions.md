@@ -26,6 +26,7 @@ A documentacao existente pode mencionar uma estrutura `backend/`; use a estrutur
 - Antes de editar, localize a implementacao que realmente decide o comportamento e consulte usos, testes e configuracoes proximos.
 - Formule uma hipotese curta sobre a causa ou o comportamento esperado e escolha uma verificacao que possa confirma-la ou refuta-la.
 - Prefira a menor mudanca compativel com os padroes existentes do projeto. Evite refatoracoes ou formatacoes sem relacao com a tarefa.
+- Ao trabalhar na interface, priorize sempre os componentes e utilitarios nativos do Bootstrap ja adotado pelo projeto. Crie CSS ou componentes proprios somente quando o Bootstrap nao atender a necessidade.
 - Preserve APIs publicas, nomes, convencoes Django e comportamento existente, salvo quando a tarefa exigir mudanca.
 - Ao alterar modelos, avalie explicitamente se uma migration e necessaria. Nao edite migrations antigas para corrigir um estado ja aplicado; crie uma nova migration quando apropriado.
 - Nao altere dados, cargas iniciais, banco, arquivos de media ou configuracoes de producao sem necessidade clara. Para operacoes destrutivas ou de alto impacto, solicite confirmacao antes de executa-las.
