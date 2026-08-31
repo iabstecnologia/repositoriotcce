@@ -4,6 +4,7 @@ from apps.repositorio.models.repositorio import (
     Subprojeto,
     TipoDocumento,
     AreaTematica,
+    SubAreaTematica,
     TipoPublicacao,
     Autor,
     Tag,
@@ -57,6 +58,26 @@ class AreaTematicaForm(forms.ModelForm):
             'nome': 'Área Temática',
             'ativo': 'Ativo',
         }
+
+
+class SubAreaTematicaForm(forms.ModelForm):
+    class Meta:
+        model = SubAreaTematica
+        fields = ['area_tematica', 'nome', 'ativo']
+        widgets = {
+            'area_tematica': forms.Select(attrs={'class': 'form-select'}),
+            'nome': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nome da subárea temática'}),
+            'ativo': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+        labels = {
+            'area_tematica': 'Área Temática',
+            'nome': 'Subárea Temática',
+            'ativo': 'Ativo',
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['area_tematica'].queryset = AreaTematica.objects.filter(ativo=True)
 
 
 class TipoPublicacaoForm(forms.ModelForm):

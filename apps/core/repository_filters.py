@@ -11,7 +11,12 @@ def filter_repository_queryset(query_params):
     queryset = Registro.objects.filter(
         ativo=True,
         status__is_public=True
-    ).prefetch_related('autores', 'tags', 'subprojeto__projeto')
+    ).prefetch_related(
+        'autores',
+        'tags',
+        'subprojeto__projeto',
+        'subareas_tematicas__area_tematica',
+    )
 
     query = query_params.get('q')
     projeto_id = query_params.get('projeto')
@@ -21,6 +26,7 @@ def filter_repository_queryset(query_params):
     tipo_documento_id = query_params.get('tipo_documento')
     categoria = query_params.get('categoria')
     area_tematica_id = query_params.get('area_tematica')
+    subarea_tematica_id = query_params.get('subarea_tematica') or query_params.get('subareas_tematicas')
     status_id = query_params.get('status')
     ano = query_params.get('ano')
     ordenar_por = query_params.get('ordenar_por', '-data_publicacao')
@@ -63,6 +69,8 @@ def filter_repository_queryset(query_params):
 
     if area_tematica_id:
         queryset = queryset.filter(area_tematica__id=area_tematica_id)
+    if subarea_tematica_id:
+        queryset = queryset.filter(subareas_tematicas__id=subarea_tematica_id).distinct()
     if status_id:
         queryset = queryset.filter(status__id=status_id)
 

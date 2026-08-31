@@ -69,6 +69,13 @@
                             <p class="mb-1"><strong>Subprojeto:</strong> {{ registro.subprojeto }}</p>
                             <p class="mb-1"><strong>Tipo de Documento:</strong> {{ registro.tipo_documento.nome }}</p>
                             <p class="mb-1"><strong>Área Temática:</strong> {{ registro.area_tematica.nome }}</p>
+                            <p class="mb-1"><strong>Subáreas Temáticas:</strong>
+                                {% for subarea in registro.subareas_tematicas.all %}
+                                    {% if not forloop.first %}, {% endif %}{{ subarea.nome }}
+                                {% empty %}
+                                    Não informadas
+                                {% endfor %}
+                            </p>
                             <p class="mb-1"><strong>Tipo de Publicação:</strong> {{ registro.tipo_publicacao.nome }}</p>
                             <p class="mb-1"><strong>Espécie Nova:</strong>
                                 {% if registro.especie_nova %}

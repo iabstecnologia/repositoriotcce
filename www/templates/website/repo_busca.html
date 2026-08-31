@@ -560,6 +560,9 @@
                             {% if registro.data_publicacao %}<span class="badge rounded-pill text-bg-ano small">{{ registro.data_publicacao|date:"Y" }}</span>{% endif %}
                             <span class="badge rounded-pill text-bg-projeto small">{{ registro.subprojeto.projeto.nome }}</span>
                             <span class="badge rounded-pill text-bg-ciencia small">{{ registro.area_tematica.nome }}</span>
+                            {% for subarea in registro.subareas_tematicas.all %}
+                            <span class="badge rounded-pill text-bg-secondary small">{{ subarea.nome }}</span>
+                            {% endfor %}
                         </div>
                     </div>
 
@@ -710,7 +713,7 @@
 
         if (clearFiltersBtn) {
             const params = new URLSearchParams(window.location.search);
-            const advancedFields = ['ano', 'ordenar_por', 'projeto', 'subprojeto', 'autor', 'tipo_documento', 'area_tematica', 'status'];
+            const advancedFields = ['ano', 'ordenar_por', 'projeto', 'subprojeto', 'autor', 'tipo_documento', 'area_tematica', 'subarea_tematica', 'status'];
             const hasAdvancedFilters = advancedFields.some((field) => {
                 const value = params.get(field);
                 return value && value.trim() !== '';
@@ -795,7 +798,8 @@
             'text-bg-publicacao': { field: 'tipo_documento', isSelect: true },
             'text-bg-ano': { field: 'ano', isSelect: false },
             'text-bg-projeto': { field: 'projeto', isSelect: true },
-            'text-bg-ciencia': { field: 'area_tematica', isSelect: true }
+            'text-bg-ciencia': { field: 'area_tematica', isSelect: true },
+            'text-bg-secondary': { field: 'subarea_tematica', isSelect: true }
         };
 
         const normalizeText = (value) => String(value || '')

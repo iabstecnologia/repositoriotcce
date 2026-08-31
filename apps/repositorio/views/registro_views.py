@@ -49,7 +49,7 @@ def _apply_filters_to_queryset(query_params):
     """
     queryset = Registro.objects_all.select_related(
         'subprojeto__projeto', 'tipo_documento', 'area_tematica', 'status'
-    ).prefetch_related('autores', 'tags')
+    ).prefetch_related('autores', 'tags', 'subareas_tematicas__area_tematica')
 
     # Busca por título ou resumo
     search = query_params.get('q')
@@ -209,7 +209,7 @@ class RegistroDetailView(LoginRequiredMixin, DetailView):
         return Registro.objects_all.select_related(
             'subprojeto__projeto', 'tipo_documento', 'area_tematica',
             'status', 'tipo_publicacao', 'usuario_criacao', 'usuario_ultima_atualizacao'
-        ).prefetch_related('autores', 'tags')
+        ).prefetch_related('autores', 'tags', 'subareas_tematicas__area_tematica')
 
 
 class RegistroCreateView(LoginRequiredMixin, CreateView):
@@ -252,7 +252,7 @@ class RegistroUpdateView(LoginRequiredMixin, UpdateView):
         return Registro.objects_all.select_related(
             'subprojeto__projeto', 'tipo_documento', 'area_tematica',
             'status', 'tipo_publicacao', 'usuario_criacao', 'usuario_ultima_atualizacao'
-        ).prefetch_related('autores', 'tags')
+        ).prefetch_related('autores', 'tags', 'subareas_tematicas__area_tematica')
 
     def get_success_url(self):
         """
@@ -293,7 +293,7 @@ class RegistroDeleteView(LoginRequiredMixin, DeleteView):
         return Registro.objects_all.select_related(
             'subprojeto__projeto', 'tipo_documento', 'area_tematica',
             'status', 'tipo_publicacao', 'usuario_criacao', 'usuario_ultima_atualizacao'
-        ).prefetch_related('autores', 'tags')
+        ).prefetch_related('autores', 'tags', 'subareas_tematicas__area_tematica')
 
     def get_success_url(self):
         """Retorna para a lista preservando os filtros."""

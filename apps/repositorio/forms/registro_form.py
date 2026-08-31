@@ -4,7 +4,7 @@ from django.db import transaction
 from django.db.models.functions import Lower
 from apps.repositorio.models.repositorio import (
     Registro, Projeto, Subprojeto, Autor, Tag, TipoDocumento,
-    AreaTematica, Status, TipoPublicacao
+    AreaTematica, SubAreaTematica, Status, TipoPublicacao
 )
 
 
@@ -49,6 +49,7 @@ class RegistroForm(forms.ModelForm):
         fields = [
             'titulo', 'subprojeto', 'autores', 'tags',
             'tipo_documento', 'area_tematica', 'status', 'tipo_publicacao',
+            'subareas_tematicas',
             'data_publicacao', 'isbn', 'especie_nova', 'especie_informacoes', 'arquivo', 'link_externo', 'ativo'
         ]
         widgets = {
@@ -61,6 +62,7 @@ class RegistroForm(forms.ModelForm):
             'tags': forms.SelectMultiple(attrs={'class': 'form-select', 'size': 8}),
             'tipo_documento': forms.Select(attrs={'class': 'form-select'}),
             'area_tematica': forms.Select(attrs={'class': 'form-select'}),
+            'subareas_tematicas': forms.SelectMultiple(attrs={'class': 'form-select', 'size': 8}),
             'status': forms.Select(attrs={'class': 'form-select'}),
             'tipo_publicacao': forms.Select(attrs={'class': 'form-select'}),
             'isbn': forms.TextInput(attrs={
@@ -92,6 +94,7 @@ class RegistroForm(forms.ModelForm):
             'tags': 'Palavras-chave',
             'tipo_documento': 'Tipo de Documento',
             'area_tematica': 'Área Temática',
+            'subareas_tematicas': 'Subáreas Temáticas',
             'status': 'Status',
             'tipo_publicacao': 'Tipo de Publicação',
             'data_publicacao': 'Data de Publicação',
@@ -118,12 +121,16 @@ class RegistroForm(forms.ModelForm):
         self.fields['tags'].queryset = Tag.objects.all()
         self.fields['tipo_documento'].queryset = TipoDocumento.objects.all()
         self.fields['area_tematica'].queryset = AreaTematica.objects.all()
+        self.fields['subareas_tematicas'].queryset = SubAreaTematica.objects.filter(
+            ativo=True
+        ).select_related('area_tematica').order_by('area_tematica__nome', 'nome')
         self.fields['status'].queryset = Status.objects.all()
         self.fields['tipo_publicacao'].queryset = TipoPublicacao.objects.all()
 
         self.fields['subprojeto'].required = False
         self.fields['tipo_documento'].required = True
         self.fields['area_tematica'].required = True
+        self.fields['subareas_tematicas'].required = self.instance.pk is None
         self.fields['tipo_publicacao'].required = True
         self.fields['autores'].required = False
         self.fields['tags'].required = False
@@ -175,6 +182,8 @@ class RegistroForm(forms.ModelForm):
         link_externo = cleaned_data.get('link_externo')
         tipo_documento = cleaned_data.get('tipo_documento')
         novo_subprojeto = self._normalize_text(cleaned_data.get('novo_subprojeto'))
+        area_tematica = cleaned_data.get('area_tematica')
+        subareas_tematicas = cleaned_data.get('subareas_tematicas')
 
         # Verifica se é um vídeo
         is_video = tipo_documento and 'vídeo' in tipo_documento.nome.lower()
@@ -193,6 +202,17 @@ class RegistroForm(forms.ModelForm):
 
         if not cleaned_data.get('subprojeto') and not novo_subprojeto:
             self.add_error('subprojeto', 'Selecione um subprojeto existente ou informe um novo subprojeto.')
+
+        if area_tematica and subareas_tematicas:
+            subareas_de_outra_area = [
+                subarea.nome for subarea in subareas_tematicas
+                if subarea.area_tematica_id != area_tematica.id
+            ]
+            if subareas_de_outra_area:
+                self.add_error(
+                    'subareas_tematicas',
+                    'Todas as subáreas devem pertencer à Área Temática selecionada.',
+                )
 
         if novo_subprojeto and not cleaned_data.get('novo_projeto_subprojeto'):
             self.add_error('novo_projeto_subprojeto', 'Selecione o projeto para cadastrar o novo subprojeto.')
@@ -268,6 +288,10 @@ class RegistroForm(forms.ModelForm):
 
                 if tags_ids:
                     instance.tags.set(tags_ids)
+
+                instance.subareas_tematicas.set(
+                    self.cleaned_data.get('subareas_tematicas', [])
+                )
 
         # Lógica de limpeza de arquivo físico
         if arquivo_anterior:

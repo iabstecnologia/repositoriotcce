@@ -8,6 +8,7 @@ from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
 from apps.repositorio.forms.metadados_forms import (
     AreaTematicaForm,
+    SubAreaTematicaForm,
     AutorForm,
     ProjetoForm,
     SubprojetoForm,
@@ -17,6 +18,7 @@ from apps.repositorio.forms.metadados_forms import (
 )
 from apps.repositorio.models.repositorio import (
     AreaTematica,
+    SubAreaTematica,
     Autor,
     Projeto,
     Subprojeto,
@@ -117,6 +119,7 @@ class BaseMetadataDeleteView(LoginRequiredMixin, DeleteView):
             'Subprojeto': 'subprojeto',
             'TipoDocumento': 'tipo_documento',
             'AreaTematica': 'area_tematica',
+            'SubAreaTematica': 'subareas_tematicas',
             'TipoPublicacao': 'tipo_publicacao',
             'Projeto': 'subprojeto__projeto',  # Projeto não tem FK direta, usa subprojeto
             'Autor': 'autores',                # ManyToMany
@@ -364,6 +367,62 @@ class AreaTematicaDeleteView(BaseMetadataDeleteView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['entity_name'] = 'Área Temática'
+        context['item_name'] = self.object.nome
+        return context
+
+
+# =========================================================================
+# SUBÁREA TEMÁTICA
+# =========================================================================
+
+class SubAreaTematicaListView(BaseMetadataListView):
+    model = SubAreaTematica
+    template_name = 'repositorio/subareatematica_list.html'
+    context_object_name = 'subareas_tematicas'
+    search_fields = ['nome', 'area_tematica__nome']
+
+    def get_queryset(self):
+        return super().get_queryset().select_related('area_tematica')
+
+
+class SubAreaTematicaCreateView(BaseMetadataCreateView):
+    model = SubAreaTematica
+    form_class = SubAreaTematicaForm
+    template_name = 'repositorio/metadado_form.html'
+    success_url = reverse_lazy('repositorio:subareatematica_lista')
+    success_message = 'Subárea temática criada com sucesso!'
+    error_message = 'Erro ao criar subárea temática. Verifique os campos.'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['entity_name'] = 'Subárea Temática'
+        return context
+
+
+class SubAreaTematicaUpdateView(BaseMetadataUpdateView):
+    model = SubAreaTematica
+    form_class = SubAreaTematicaForm
+    template_name = 'repositorio/metadado_form.html'
+    success_url = reverse_lazy('repositorio:subareatematica_lista')
+    success_message = 'Subárea temática atualizada com sucesso!'
+    error_message = 'Erro ao atualizar subárea temática. Verifique os campos.'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['entity_name'] = 'Subárea Temática'
+        return context
+
+
+class SubAreaTematicaDeleteView(BaseMetadataDeleteView):
+    model = SubAreaTematica
+    template_name = 'repositorio/metadado_confirm_delete.html'
+    success_url = reverse_lazy('repositorio:subareatematica_lista')
+    context_object_name = 'item'
+    success_message = 'Subárea temática excluída com sucesso!'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['entity_name'] = 'Subárea Temática'
         context['item_name'] = self.object.nome
         return context
 

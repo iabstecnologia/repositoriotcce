@@ -8,6 +8,7 @@ from apps.repositorio.models.repositorio import (
     Projeto,
     Registro,
     Status,
+    SubAreaTematica,
     Subprojeto,
     Tag,
     TipoDocumento,
@@ -27,6 +28,11 @@ class RegistroCreateViewSpeciesFieldsTest(TestCase):
         self.subprojeto = Subprojeto.objects.create(projeto=self.projeto, nome='Subprojeto View', ativo=True)
         self.tipo_documento = TipoDocumento.objects.create(nome='Documento', ativo=True)
         self.area_tematica = AreaTematica.objects.create(nome='Zoologia', ativo=True)
+        self.subarea_tematica = SubAreaTematica.objects.create(
+            area_tematica=self.area_tematica,
+            nome='Zoologia Aplicada',
+            ativo=True,
+        )
         self.status = Status.objects.create(nome='Rascunho', ativo=True, is_public=False)
         self.tipo_publicacao = TipoPublicacao.objects.create(nome='Livro', ativo=True)
         self.autor = Autor.objects.create(nome='Autor da View', ativo=True)
@@ -53,6 +59,7 @@ class RegistroCreateViewSpeciesFieldsTest(TestCase):
                 'tags': [self.tag.pk],
                 'tipo_documento': self.tipo_documento.pk,
                 'area_tematica': self.area_tematica.pk,
+                'subareas_tematicas': [self.subarea_tematica.pk],
                 'status': self.status.pk,
                 'tipo_publicacao': self.tipo_publicacao.pk,
                 'data_publicacao': '2026-05-27',

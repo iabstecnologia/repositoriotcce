@@ -80,7 +80,7 @@ class TCCEView(TemplateView):
             'subprojeto__projeto',
             'tipo_documento',
             'status'
-        ).prefetch_related('autores', 'tags')
+        ).prefetch_related('autores', 'tags', 'subareas_tematicas__area_tematica')
         
         # Total de produções acadêmicas (todos os registros ativos)
         producoes_academicas = registros_queryset.count()

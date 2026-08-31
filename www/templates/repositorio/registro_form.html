@@ -139,6 +139,17 @@
                                     <div class="text-danger small">{{ form.tipo_publicacao.errors }}</div>
                                     {% endif %}
                                 </div>
+
+                                <div class="col-md-12 mb-3">
+                                    <label for="{{ form.subareas_tematicas.id_for_label }}" class="form-label">
+                                        {{ form.subareas_tematicas.label }}{% if form.subareas_tematicas.field.required %} <span class="text-danger">*</span>{% endif %}
+                                    </label>
+                                    {{ form.subareas_tematicas }}
+                                    {% if form.subareas_tematicas.errors %}
+                                    <div class="text-danger small">{{ form.subareas_tematicas.errors }}</div>
+                                    {% endif %}
+                                    <div class="form-text">Selecione uma ou mais subáreas da Área Temática escolhida.</div>
+                                </div>
                             </div>
                         </fieldset>
 
