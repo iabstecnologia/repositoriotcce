@@ -179,6 +179,37 @@ class AreaTematica(models.Model):
         return self.nome
 
 
+class SubAreaTematica(models.Model):
+    """Subárea de conhecimento vinculada a uma área temática."""
+
+    objects = AtivoManager()
+    objects_inactive = InativoManager()
+    objects_all = TodosManager()
+
+    area_tematica = models.ForeignKey(
+        AreaTematica,
+        on_delete=models.PROTECT,
+        related_name='subareas_tematicas',
+        verbose_name='Área Temática',
+    )
+    nome = models.CharField(max_length=150, verbose_name='Subárea Temática')
+    ativo = models.BooleanField(default=True, verbose_name='Ativo')
+
+    class Meta:
+        verbose_name = 'Subárea Temática'
+        verbose_name_plural = 'Subáreas Temáticas'
+        ordering = ['area_tematica', 'nome']
+        constraints = [
+            models.UniqueConstraint(
+                fields=['area_tematica', 'nome'],
+                name='unique_subarea_tematica_por_area',
+            ),
+        ]
+
+    def __str__(self):
+        return self.nome
+
+
 class Status(models.Model):
     """Status de fluxo de trabalho (Rascunho, Em Revisão, Publicado, Arquivado)."""
     # managers: `objects` (ativos), `objects_inactive`, `objects_all`
@@ -234,6 +265,12 @@ class Registro(models.Model):
     tags = models.ManyToManyField(Tag, related_name="tags", verbose_name="Palavras-chave")
     tipo_documento = models.ForeignKey(TipoDocumento, on_delete=models.PROTECT, related_name="tipo_documentos", verbose_name="Tipo de Documento")
     area_tematica = models.ForeignKey(AreaTematica, on_delete=models.PROTECT, related_name="areas_tematicas", verbose_name="Área Temática")
+    subareas_tematicas = models.ManyToManyField(
+        'SubAreaTematica',
+        related_name='registros',
+        blank=True,
+        verbose_name='Subáreas Temáticas',
+    )
     status = models.ForeignKey(Status, on_delete=models.PROTECT, related_name="status", verbose_name="Status de Publicação")
     tipo_publicacao = models.ForeignKey(TipoPublicacao, on_delete=models.PROTECT, related_name="tipo_publicacaoes",  verbose_name="Veículo de Publicação")
 

@@ -7,6 +7,7 @@ from apps.repositorio.models.repositorio import (
     Autor,
     Projeto,
     Status,
+    SubAreaTematica,
     Subprojeto,
     Tag,
     TipoDocumento,
@@ -26,6 +27,11 @@ class RegistroFormSpeciesFieldsTest(TestCase):
         self.subprojeto = Subprojeto.objects.create(projeto=self.projeto, nome='Subprojeto Form', ativo=True)
         self.tipo_documento = TipoDocumento.objects.create(nome='Relatório', ativo=True)
         self.area_tematica = AreaTematica.objects.create(nome='Ecologia', ativo=True)
+        self.subarea_tematica = SubAreaTematica.objects.create(
+            area_tematica=self.area_tematica,
+            nome='Ecologia Aplicada',
+            ativo=True,
+        )
         self.status = Status.objects.create(nome='Em Revisão', ativo=True, is_public=False)
         self.tipo_publicacao = TipoPublicacao.objects.create(nome='Anais', ativo=True)
         self.autor = Autor.objects.create(nome='Autor do Form', ativo=True)
@@ -39,6 +45,7 @@ class RegistroFormSpeciesFieldsTest(TestCase):
             'tags': [self.tag.pk],
             'tipo_documento': self.tipo_documento.pk,
             'area_tematica': self.area_tematica.pk,
+            'subareas_tematicas': [self.subarea_tematica.pk],
             'status': self.status.pk,
             'tipo_publicacao': self.tipo_publicacao.pk,
             'data_publicacao': '2026-05-27',

@@ -12,6 +12,7 @@ from apps.repositorio.views.metadados_views import (
 	SubprojetoListView, SubprojetoCreateView, SubprojetoUpdateView, SubprojetoDeleteView,
 	TipoDocumentoListView, TipoDocumentoCreateView, TipoDocumentoUpdateView, TipoDocumentoDeleteView,
 	AreaTematicaListView, AreaTematicaCreateView, AreaTematicaUpdateView, AreaTematicaDeleteView,
+	SubAreaTematicaListView, SubAreaTematicaCreateView, SubAreaTematicaUpdateView, SubAreaTematicaDeleteView,
 	TipoPublicacaoListView, TipoPublicacaoCreateView, TipoPublicacaoUpdateView, TipoPublicacaoDeleteView,
 	AutorListView, AutorCreateView, AutorUpdateView, AutorDeleteView,
 	TagListView, TagCreateView, TagUpdateView, TagDeleteView,
@@ -62,6 +63,10 @@ urlpatterns = [
 	path('areas-tematicas/nova/', AreaTematicaCreateView.as_view(), name='areatematica_criar'),
 	path('areas-tematicas/<int:pk>/editar/', AreaTematicaUpdateView.as_view(), name='areatematica_editar'),
 	path('areas-tematicas/<int:pk>/excluir/', AreaTematicaDeleteView.as_view(), name='areatematica_excluir'),
+	path('subareas-tematicas/', SubAreaTematicaListView.as_view(), name='subareatematica_lista'),
+	path('subareas-tematicas/nova/', SubAreaTematicaCreateView.as_view(), name='subareatematica_criar'),
+	path('subareas-tematicas/<int:pk>/editar/', SubAreaTematicaUpdateView.as_view(), name='subareatematica_editar'),
+	path('subareas-tematicas/<int:pk>/excluir/', SubAreaTematicaDeleteView.as_view(), name='subareatematica_excluir'),
 
 	path('tipos-publicacao/', TipoPublicacaoListView.as_view(), name='tipopublicacao_lista'),
 	path('tipos-publicacao/novo/', TipoPublicacaoCreateView.as_view(), name='tipopublicacao_criar'),

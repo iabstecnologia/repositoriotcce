@@ -3,7 +3,7 @@ from django.utils.html import format_html
 from django.urls import reverse
 from ..models.repositorio import (
     Projeto, Subprojeto, Autor, Tag, TipoDocumento,
-    AreaTematica, Status, TipoPublicacao, Registro
+    AreaTematica, SubAreaTematica, Status, TipoPublicacao, Registro
 )
 
 
@@ -57,6 +57,15 @@ class TipoDocumentoAdmin(BaseMetadataAdmin):
 class AreaTematicaAdmin(BaseMetadataAdmin):
     """Gerenciamento de Áreas Temáticas."""
     pass
+
+@admin.register(SubAreaTematica)
+class SubAreaTematicaAdmin(BaseMetadataAdmin):
+    """Gerenciamento de Subáreas Temáticas."""
+    list_display = ('nome', 'area_tematica', 'ativo')
+    list_filter = ('area_tematica', 'ativo')
+    search_fields = ('nome', 'area_tematica__nome')
+    ordering = ('area_tematica__nome', 'nome')
+    raw_id_fields = ('area_tematica',)
 
 @admin.register(TipoPublicacao)
 class TipoPublicacaoAdmin(BaseMetadataAdmin):

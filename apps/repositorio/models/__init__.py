@@ -5,6 +5,7 @@ from .repositorio import (
     Tag,
     TipoDocumento,
     AreaTematica,
+    SubAreaTematica,
     Status,
     TipoPublicacao,
     Registro,

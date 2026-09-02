@@ -54,7 +54,7 @@ class RegistroAdmin(admin.ModelAdmin):
         }),
         ('Classificação e Relações', {
             'fields': (
-                'subprojeto', 'tipo_documento', 'area_tematica', 'tipo_publicacao',
+                'subprojeto', 'tipo_documento', 'area_tematica', 'subareas_tematicas', 'tipo_publicacao',
                 'autores', 'tags'
             ),
             'classes': ('wide',),
@@ -76,7 +76,7 @@ class RegistroAdmin(admin.ModelAdmin):
     raw_id_fields = (
         'subprojeto',
         # Removido 'usuario_ultima_atualizacao' e 'usuario_criacao' pois são preenchidos automaticamente/readonly
-        'autores', 'tags'
+        'autores', 'tags', 'subareas_tematicas'
     )
 
     # Sobrescreve o widget de Textarea para campos grandes

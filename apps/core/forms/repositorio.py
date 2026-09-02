@@ -1,5 +1,5 @@
 from django import forms
-from apps.repositorio.models import Projeto, Subprojeto, Autor, TipoDocumento, AreaTematica, Status
+from apps.repositorio.models import Projeto, Subprojeto, Autor, TipoDocumento, AreaTematica, Status, SubAreaTematica
 from datetime import datetime
 
 
@@ -45,6 +45,13 @@ class RepositorioFilterForm(forms.Form):
         queryset=AreaTematica.objects.all(),
         required=False,
         empty_label="Área Temática (Todas)",
+        widget=forms.Select(attrs={'class': 'form-select'})
+    )
+    subarea_tematica = forms.ModelChoiceField(
+        queryset=SubAreaTematica.objects.filter(ativo=True).select_related('area_tematica').order_by('area_tematica__nome', 'nome'),
+        required=False,
+        empty_label="Subárea Temática (Todas)",
+        label="Subárea Temática",
         widget=forms.Select(attrs={'class': 'form-select'})
     )
     status = forms.ModelChoiceField(
