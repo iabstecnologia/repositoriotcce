@@ -631,7 +631,7 @@ INSERT INTO repositorio_autor (id, nome, lattes_id, ativo) VALUES
 	(526, 'YAWAR HUSSAIN', null, TRUE),
 	(527, 'YESENIA M. CARPIO DIAZ', null, TRUE),
 	(528, 'ZACARIAS TARGINO DE FREITAS NETO', null, TRUE),
-	(529, 'ZENEIDE DAMIÃO DA SILVAON', null, TRUE),
+	(529, 'ZENEIDE DAMIÃO DA SILVAO', null, TRUE),
 	(530, 'VINÍCIUS DA F. SPERANDEI', null, TRUE),
 	(531, 'WILLIAM HANSON', null, TRUE),
 	(532, 'VANESSA L. GONZÁLEZ', null, TRUE),

@@ -93,7 +93,7 @@ class Subprojeto(models.Model):
         related_name="subprojetos",
         verbose_name="Projeto"
     )
-    nome = models.CharField(max_length=150, verbose_name="Nome do Subprojeto")
+    nome = models.CharField(max_length=255, verbose_name="Nome do Subprojeto")
     ativo = models.BooleanField(default=True, verbose_name="Ativo")
 
     class Meta:
