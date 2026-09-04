@@ -36,7 +36,7 @@ A documentacao existente pode mencionar uma estrutura `backend/`; use a estrutur
 
 - Depois de uma edicao, execute primeiro a verificacao mais focada disponivel para o comportamento alterado.
 - Para mudancas Django, priorize testes especificos do app ou caso afetado e depois `python manage.py check` quando aplicavel.
-- Use a configuracao de testes existente antes de concluir qual banco ou ambiente esta sendo usado. `repositoriotcce/settings_test.py` configura SQLite para testes, mas o settings efetivo deve ser confirmado pelo comando executado.
+- Use a configuracao de testes existente antes de concluir qual banco ou ambiente esta sendo usado. `repositoriotcce/settings_test.py` herda o PostgreSQL configurado em `repositoriotcce/settings.py`, mas o settings efetivo deve ser confirmado pelo comando executado.
 - Se uma validacao nao puder ser executada por falta de dependencia, servico ou configuracao, informe o bloqueio e nao apresente a tarefa como totalmente validada.
 
 ## Seguranca
