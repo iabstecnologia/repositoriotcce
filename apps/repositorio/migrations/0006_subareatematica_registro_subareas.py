@@ -3,17 +3,17 @@ import django.db.models.deletion
 
 
 SUBAREAS_INICIAIS = {
-    'Meio Físico': (
+    'MEIO FÍSICO': (
         'Geologia e Geomorfologia',
         'Hidrologia e Hidrogeologia',
         'Espeleologia e Caracterização Ambiental',
     ),
-    'Meio Biótico': (
+    'MEIO BIÓTICO': (
         'Biodiversidade Subterrânea',
         'Ecologia',
         'Conservação da biodiversidade',
     ),
-    'Outros': (
+    'OUTROS': (
         'Socioeconômico e socioambiental',
         'Gestão Ambiental',
         'Espeleoturismo e Uso Público',
@@ -26,6 +26,9 @@ def criar_subareas_iniciais(apps, schema_editor):
     SubAreaTematica = apps.get_model('repositorio', 'SubAreaTematica')
 
     for area_nome, subareas in SUBAREAS_INICIAIS.items():
+        # Usa o nome em MAIÚSCULO para reaproveitar as áreas já cadastradas
+        # pelo script de carga inicial (www/sql/carga_inicial.sql), evitando
+        # criar registros duplicados de AreaTematica.
         area, _ = AreaTematica.objects.get_or_create(
             nome=area_nome,
             defaults={'ativo': True},
