@@ -13,6 +13,15 @@
     text-decoration: none;
 }
 
+.advanced-search-arrow {
+    display: inline-block;
+    transition: transform 300ms ease;
+}
+
+.advanced-search-link.advanced-search-open .advanced-search-arrow {
+    transform: rotate(90deg);
+}
+
 /* Estilos para ocultar/mostrar a busca avançada */
 #advancedSearchArea {
     /* Estado inicial fechado — não usa `display:none` para permitir transição */
@@ -405,7 +414,7 @@
                     <div class="col-md-6">
                         <!-- Advanced Search Link -->
                         <div class="text-end text-white text-decoration-none small">
-                            <a class="advanced-search-link" onclick="toggleAdvancedSearch(); return false;">BUSCA AVANÇADA &gt;</a>
+                            <a class="advanced-search-link" onclick="toggleAdvancedSearch(); return false;">BUSCA AVANÇADA <span class="advanced-search-arrow">&gt;</span></a>
                         </div>
                     </div>
                 </div>
@@ -677,6 +686,7 @@
      */
     function toggleAdvancedSearch() {
         const area = document.getElementById('advancedSearchArea');
+        const advancedSearchLink = document.querySelector('.advanced-search-link');
         const categoriesSection = document.querySelector('.categories-section');
         const heroOverlay = document.querySelector('.hero-overlay');
 
@@ -685,6 +695,7 @@
         // Vamos alternar a classe 'open' para permitir transição suave via CSS
         const willShow = !area.classList.contains('open');
         area.classList.toggle('open', willShow);
+        advancedSearchLink?.classList.toggle('advanced-search-open', willShow);
 
         // Quando a área avançada é mostrada, escondemos as categories; ao fechar, mostramos novamente
         if (categoriesSection) {

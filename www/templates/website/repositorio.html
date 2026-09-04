@@ -12,6 +12,15 @@
     text-decoration: none;
 }
 
+.advanced-search-arrow {
+    display: inline-block;
+    transition: transform 300ms ease;
+}
+
+.advanced-search-link.advanced-search-open .advanced-search-arrow {
+    transform: rotate(90deg);
+}
+
 /* Estilos de Botão de Filtro (search-filter-button) */
 .search-filter-button {
     /* Define cores específicas para este componente (não estão no commons) */
@@ -219,7 +228,7 @@
     <div class="mt-1 position-relative">
         <!-- Advanced Search Link / Button -->
         <div class="text-end text-white text-decoration-none small">
-            <a class="advanced-search-link" onclick="toggleAdvancedSearch(); return false;">BUSCA AVANÇADA &gt;</a>
+            <a class="advanced-search-link" onclick="toggleAdvancedSearch(); return false;">BUSCA AVANÇADA <span class="advanced-search-arrow">&gt;</span></a>
         </div>
 
         <!-- Advanced Search Container -->
@@ -626,6 +635,10 @@ function toggleAdvancedSearch() {
     // Alterna a visibilidade dos elementos principais
     advancedSearchContainer.classList.toggle('d-none');
     advancedSearchLink.classList.toggle('invisible');
+    advancedSearchLink.classList.toggle(
+        'advanced-search-open',
+        !advancedSearchContainer.classList.contains('d-none')
+    );
     categoriesSection.classList.toggle('d-none');
     heroSection.classList.toggle('z-3');
 }
