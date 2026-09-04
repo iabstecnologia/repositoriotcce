@@ -21,5 +21,6 @@ urlpatterns = [
 # Configuração para servir arquivos de mídia e estáticos em desenvolvimento
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    # Em desenvolvimento, o Django serve arquivos estáticos. Em produção, Whitenoise/S3 faz isso.
-    # urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    # Em desenvolvimento, o Django serve arquivos estáticos a partir de STATICFILES_DIRS.
+    # Em produção, Whitenoise/S3 faz isso a partir de STATIC_ROOT (após collectstatic).
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
