@@ -29,6 +29,8 @@ function handleMobileResponsiveness() {
 document.addEventListener('DOMContentLoaded', function() {
     // Responsividade para mobile
     const navbar = document.querySelector('.navbar');
+    const navbarMenu = document.getElementById('navbarNav');
+    const navbarToggler = document.querySelector('.navbar-toggler');
     if (navbar) {
         window.addEventListener('resize', function() {
             if (window.innerWidth < 992) {
@@ -39,12 +41,25 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    if (navbarMenu && navbarToggler) {
+        document.addEventListener('click', function(event) {
+            if (
+                window.innerWidth < 992 &&
+                navbarMenu.classList.contains('show') &&
+                !navbarMenu.contains(event.target) &&
+                !navbarToggler.contains(event.target)
+            ) {
+                const navbarCollapse = bootstrap.Collapse.getInstance(navbarMenu);
+                navbarCollapse?.hide();
+            }
+        });
+    }
+
     // 1. Chamar a função Imediatamente
     handleMobileResponsiveness();
 
     // 2. Chamar a função no evento de redimensionamento da janela
     window.addEventListener('resize', handleMobileResponsiveness);
 });
-
 
 
