@@ -6,7 +6,7 @@ from pathlib import Path
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
 
-from apps.repositorio.models import Projeto, Subprojeto
+from apps.repositorio.models import Projeto, Registro, Subprojeto
 
 
 CSV_PATTERN = 'Lista de Projetos TCCE*.csv'
@@ -39,7 +39,12 @@ def carregar_linhas(base_dir):
 
 
 def codigo_do_nome(nome):
-    return extrair_codigo(nome.replace('SUBPROJETO', '', 1).strip())
+    nome_normalizado = normalizar_texto(nome)
+    nome_normalizado = re.sub(r'\(\s*ACAO\s+', '(', nome_normalizado)
+    match = re.fullmatch(r'SUBPROJETO\s+(.+)', nome_normalizado)
+    if not match:
+        return None
+    return extrair_codigo(match.group(1))
 
 
 class Command(BaseCommand):
@@ -58,11 +63,27 @@ class Command(BaseCommand):
         if not linhas:
             raise CommandError(f'Nenhum arquivo encontrado: {base_dir / CSV_PATTERN}')
 
-        projetos = {normalizar_tcce(projeto.nome): projeto for projeto in Projeto.objects.all()}
-        existentes = {}
+        projetos = {
+            normalizar_tcce(projeto.nome): projeto
+            for projeto in Projeto.objects_all.all()
+        }
+        subprojetos_por_codigo = {}
+        subprojetos_por_nome = {}
+        for subprojeto in Subprojeto.objects_all.select_related('projeto'):
+            chave_projeto = normalizar_tcce(subprojeto.projeto.nome)
+            codigo = codigo_do_nome(subprojeto.nome)
+            if codigo:
+                subprojetos_por_codigo.setdefault(
+                    (chave_projeto, codigo), []
+                ).append(subprojeto)
+            subprojetos_por_nome.setdefault(
+                (chave_projeto, subprojeto.nome), []
+            ).append(subprojeto)
+
         atualizacoes = []
         criacoes_projetos = {}
         criacoes_subprojetos = []
+        duplicatas = []
         erros = []
         chaves_processadas = set()
 
@@ -81,29 +102,42 @@ class Command(BaseCommand):
                 continue
             chaves_processadas.add(chave)
 
-            subprojetos = list(Subprojeto.objects.filter(projeto=projeto)) if projeto.pk else []
-            correspondentes = [
-                subprojeto for subprojeto in subprojetos
-                if codigo_do_nome(subprojeto.nome) == codigo
-            ]
-            if len(correspondentes) > 1:
+            correspondentes_codigo = subprojetos_por_codigo.get((tcce, codigo), [])
+            correspondentes_nome = subprojetos_por_nome.get((tcce, novo_nome), [])
+            if len(correspondentes_codigo) > 1:
                 erros.append(f'Múltiplos subprojetos para: {linha["TCCE"]} / {linha["Subprojeto"]}')
                 continue
-            if correspondentes:
-                subprojeto = correspondentes[0]
-                existentes[chave] = subprojeto
+            if len(correspondentes_nome) > 1:
+                erros.append(f'Múltiplos subprojetos com o nome: {linha["Nome do Projeto"]}')
+                continue
+
+            subprojeto_codigo = correspondentes_codigo[0] if correspondentes_codigo else None
+            subprojeto_nome = correspondentes_nome[0] if correspondentes_nome else None
+            if subprojeto_codigo and subprojeto_nome and subprojeto_codigo != subprojeto_nome:
+                duplicatas.append((subprojeto_codigo, subprojeto_nome))
+                atualizacoes.append((subprojeto_codigo, novo_nome))
+            elif subprojeto_codigo:
+                subprojeto = subprojeto_codigo
                 if subprojeto.nome != novo_nome:
                     atualizacoes.append((subprojeto, novo_nome))
+            elif subprojeto_nome:
+                continue
             else:
                 criacoes_subprojetos.append((projeto, codigo, novo_nome))
 
         if erros:
             raise CommandError('\n'.join(erros))
 
+        atualizacoes_por_id = {
+            subprojeto.pk: (subprojeto, novo_nome)
+            for subprojeto, novo_nome in atualizacoes
+        }
+
         self.stdout.write(
-            f'{len(atualizacoes)} atualização(ões), '
+            f'{len(atualizacoes_por_id)} atualização(ões), '
             f'{len(criacoes_projetos)} projeto(s) novo(s), '
-            f'{len(criacoes_subprojetos)} subprojeto(s) novo(s).'
+            f'{len(criacoes_subprojetos)} subprojeto(s) novo(s), '
+            f'{len(duplicatas)} duplicata(s) a consolidar.'
         )
 
         if not options['apply']:
@@ -113,10 +147,19 @@ class Command(BaseCommand):
         with transaction.atomic():
             for projeto in criacoes_projetos.values():
                 projeto.save()
+            for subprojeto_canonico, subprojeto_duplicado in duplicatas:
+                Registro.objects_all.filter(subprojeto=subprojeto_duplicado).update(
+                    subprojeto=subprojeto_canonico
+                )
+                subprojeto_duplicado.delete()
             for projeto, codigo, novo_nome in criacoes_subprojetos:
                 Subprojeto.objects.create(projeto=projeto, nome=novo_nome, ativo=True)
-            for subprojeto, novo_nome in atualizacoes:
+            for subprojeto, novo_nome in atualizacoes_por_id.values():
                 subprojeto.nome = novo_nome
-                subprojeto.save(update_fields=['nome'])
+            if atualizacoes_por_id:
+                Subprojeto.objects_all.bulk_update(
+                    [subprojeto for subprojeto, _ in atualizacoes_por_id.values()],
+                    ['nome'],
+                )
 
         self.stdout.write(self.style.SUCCESS('Sincronização concluída com sucesso.'))

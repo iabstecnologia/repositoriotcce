@@ -15,7 +15,9 @@ O comando:
 - atualiza o nome de subprojetos existentes;
 - cria subprojetos ausentes;
 - cria o projeto-pai quando ele ainda não existe;
-- não altera os vínculos existentes entre registros e subprojetos;
+- preserva os subprojetos legados identificados pelo código e, quando encontrar
+  uma duplicata criada com o nome novo, transfere os registros para o legado
+  antes de remover a duplicata;
 - executa as gravações dentro de uma transação;
 - rejeita linhas duplicadas ou códigos ambíguos.
 
