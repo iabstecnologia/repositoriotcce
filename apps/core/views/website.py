@@ -1,7 +1,7 @@
 from django.views.generic import TemplateView
 from django.db.models import Count, Q, Prefetch
 
-from apps.repositorio.models.repositorio import FotoGaleria, Projeto, Registro, Autor
+from apps.repositorio.models.repositorio import FotoGaleria, Projeto, Registro, Autor, Subprojeto
 
 
 class HomeView(TemplateView):
@@ -9,9 +9,13 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         """
-        Adiciona contexto específico para a pagina (futuramente dados de contadores/métricas).
+        Adiciona os contadores de TCCEs e projetos ativos à página inicial.
         """
         context = super().get_context_data(**kwargs)
+        context['home_counters'] = {
+            'tcces_formalizados': Projeto.objects.count(),
+            'projetos': Subprojeto.objects.filter(projeto__ativo=True).count(),
+        }
         return context
 
 
@@ -58,7 +62,7 @@ class TCCEView(TemplateView):
             - producoes_academicas: Total de registros ativos
             - producoes_publicadas: Total de registros com status PUBLICADO
             - artigos_cientificos: Total de artigos científicos
-            - autores_unicos: Total de autores únicos
+            - autores_unicos: Total de autores únicos em registros ativos
             - relatorios_tecnicos: Total de relatórios técnicos
         """
         try:
@@ -76,6 +80,7 @@ class TCCEView(TemplateView):
         # Query base para todos os registros do projeto
         registros_queryset = Registro.objects.filter(
             subprojeto__projeto=projeto,
+            subprojeto__ativo=True,
             ativo=True
         ).select_related(
             'subprojeto',
@@ -97,10 +102,11 @@ class TCCEView(TemplateView):
             tipo_documento__nome__icontains='ARTIGO'
         ).count()
         
-        # Autores únicos
+        # Autores ativos vinculados a registros em subprojetos ativos do projeto.
         autores_unicos = Autor.objects.filter(
+            autores__ativo=True,
             autores__subprojeto__projeto=projeto,
-            ativo=True
+            autores__subprojeto__ativo=True,
         ).distinct().count()
         
         # Relatórios técnicos (tipo_documento contém 'RELATÓRIO')
@@ -125,12 +131,13 @@ class TCCEView(TemplateView):
             - producoes_academicas: Total de registros ativos em todos os TCCEs
             - producoes_publicadas: Total de registros com status PUBLICADO em todos os TCCEs
             - artigos_cientificos: Total de artigos científicos em todos os TCCEs
-            - autores_unicos: Total de autores únicos em todos os TCCEs
+            - autores_unicos: Total de autores únicos em registros ativos
             - relatorios_tecnicos: Total de relatórios técnicos em todos os TCCEs
         """
         # Query base para todos os registros de todos os projetos TCCE ativos
         registros_queryset = Registro.objects.filter(
             subprojeto__projeto__ativo=True,
+            subprojeto__ativo=True,
             ativo=True
         ).select_related(
             'subprojeto',
@@ -152,10 +159,11 @@ class TCCEView(TemplateView):
             tipo_documento__nome__icontains='ARTIGO'
         ).count()
         
-        # Autores únicos em todos os TCCEs
+        # Autores ativos vinculados a registros em projetos e subprojetos ativos.
         autores_unicos = Autor.objects.filter(
+            autores__ativo=True,
             autores__subprojeto__projeto__ativo=True,
-            ativo=True
+            autores__subprojeto__ativo=True,
         ).distinct().count()
         
         # Relatórios técnicos (tipo_documento contém 'RELATÓRIO TÉCNICO FINAL')

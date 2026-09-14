@@ -5,12 +5,12 @@
 
 {% block extra_css %}
 <style>
-    .btn-tcces-saibamais{
+    .btn-tcces-saibamais {
         background-color: #72808A;
         transition: background-color 0.3s ease;
     }
 
-    .btn-tcces-saibamais:hover{
+    .btn-tcces-saibamais:hover {
         background-color: #495965;
     }
 
@@ -23,24 +23,27 @@
 {% endblock extra_css %}
 
 {% block hero_title %}
-    Repositório TCCEs
+Repositório TCCEs
 {% endblock hero_title %}
 
 {% block hero_content %}
-    <div class="text-white mb-5 col-lg-8 col-md-10 col-12 mx-auto">
-        
-        O Repositório digital é uma plataforma dedicada à disponibilização de produção intelectual, científica e técnica desenvolvidas no âmbito dos projetos
-        contemplados pelos <strong>Termos de Compromisso de Compensação Espeleológica - TCCEs</strong>.<br/><br/>
-        Tem como objetivo promover a <strong>visibilidade, acessibilidade e difusão</strong> de dados e resultados de projetos. Além disso, funciona como uma valiosa fonte
-        de referência para pesquisadores, gestores ambientais e a comunidade espeleológica, apoiando iniciativas voltadas à sustentabilidade e à preservação desse
-        patrimônio, enquanto reforça o compromisso com a <strong>transparência e o acesso à informação</strong>.
-    </div>
+<div class="text-white mb-5 col-lg-8 col-md-10 col-12 mx-auto">
 
-    <div>
-        <a class="btn bg-custom-green text-white rounded-3 px-4 py-2 text-lg-nowrap" href="{% url 'core:repositorio' %}">
-            REPOSITÓRIO TCCEs
-        </a>
-    </div>
+    O Repositório digital é uma plataforma dedicada à disponibilização de produção intelectual, científica e técnica
+    desenvolvidas no âmbito dos projetos
+    contemplados pelos <strong>Termos de Compromisso de Compensação Espeleológica - TCCEs</strong>.<br /><br />
+    Tem como objetivo promover a <strong>visibilidade, acessibilidade e difusão</strong> de dados e resultados de
+    projetos. Além disso, funciona como uma valiosa fonte
+    de referência para pesquisadores, gestores ambientais e a comunidade espeleológica, apoiando iniciativas voltadas à
+    sustentabilidade e à preservação desse
+    patrimônio, enquanto reforça o compromisso com a <strong>transparência e o acesso à informação</strong>.
+</div>
+
+<div>
+    <a class="btn bg-custom-green text-white rounded-3 px-4 py-2 text-lg-nowrap" href="{% url 'core:repositorio' %}">
+        REPOSITÓRIO TCCEs
+    </a>
+</div>
 {% endblock hero_content %}
 
 {% block content %}
@@ -55,28 +58,38 @@
                         <div>
                             <h2 class="text-custom-dark mb-4">Sobre os TCCEs</h2>
                             <p class="text-custom-dark">
-                                O <strong>Termo de Compromisso de Compensação Espeleológica (TCCE)</strong> é um documento celebrado entre o 
-                                Instituto Chico Mendes de Conservação da Biodiversidade (<strong>ICMBio</strong>) e empresas mineradoras. Ele 
-                                visa garantir a execução da compensação pelos impactos negativos irreversíveis a cavidades naturais subterrâneas
-                                 com grau de relevância alto.
-                                <br/><br/>
-                                    O recurso consiste na implementação de ações para <strong>preservação de cavernas <em>in loco</em></strong>, além da 
-                                execução de ações do <strong>Programa Nacional de Conservação do Patrimônio Espeleológico (PNCPE)</strong>. 
-                                Dentre as atividades previstas estão o financiamento de estudos, pesquisas científicas e de infraestrutura, além
-                                 de cursos de capacitação e a realização de congressos nacionais e internacionais que contribuam para o avanço do
-                                  conhecimento espeleológico.
+                                O <strong>Termo de Compromisso de Compensação Espeleológica (TCCE)</strong> é um
+                                documento celebrado entre o
+                                Instituto Chico Mendes de Conservação da Biodiversidade (<strong>ICMBio</strong>) e
+                                empresas mineradoras. Ele
+                                visa garantir a execução da compensação pelos impactos negativos irreversíveis a
+                                cavidades naturais subterrâneas
+                                com grau de relevância alto.
+                                <br /><br />
+                                O recurso consiste na implementação de ações para <strong>preservação de cavernas <em>in
+                                        loco</em></strong>, além da
+                                execução de ações do <strong>Programa Nacional de Conservação do Patrimônio
+                                    Espeleológico (PNCPE)</strong>.
+                                Dentre as atividades previstas estão o financiamento de estudos, pesquisas científicas e
+                                de infraestrutura, além
+                                de cursos de capacitação e a realização de congressos nacionais e internacionais que
+                                contribuam para o avanço do
+                                conhecimento espeleológico.
                             </p>
                         </div>
 
                         <div>
-                            <a class="btn btn-tcces-saibamais text-white text-wrap rounded-3 px-4 py-2 mt-3" href="{% url 'core:tcce' %}">
+                            <a class="btn btn-tcces-saibamais text-white text-wrap rounded-3 px-4 py-2 mt-3"
+                                href="{% url 'core:tcce' %}">
                                 SAIBA MAIS SOBRE OS TCCEs
                             </a>
                         </div>
                     </div>
 
                     <div class="col-lg-6 d-none d-lg-block">
-                        <img src="{% static 'assets/img/sobre-tcces-section.webp' %}" class="img-fluid rounded-3" style="width: 100%; height: auto; object-fit: cover;" alt="Imagem ilustrativa de uma caverna ou espeleologia"/>
+                        <img src="{% static 'assets/img/sobre-tcces-section.webp' %}" class="img-fluid rounded-3"
+                            style="width: 100%; height: auto; object-fit: cover;"
+                            alt="Imagem ilustrativa de uma caverna ou espeleologia" />
                     </div>
                 </div>
             </div>
@@ -88,7 +101,7 @@
     <div class="row justify-content-center">
         <div class="col-lg-10">
             <div class="bg-custom-light-gray rounded-4 position-relative">
-                {% include 'website/includes/counter_home.html' %}
+                {% include 'website/includes/counter_home.html' with counters=home_counters %}
             </div>
         </div>
     </div>
