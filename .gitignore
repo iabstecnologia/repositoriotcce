@@ -36,6 +36,12 @@ Pastas de migração vazias (opcional)
 
 /migrations/
 
+Planilhas
+
+*.xlsx
+*.xls
+*.csv
+
 # ----------------------------------------------------------------------
 # Ferramentas e IDEs
 # ----------------------------------------------------------------------
@@ -44,5 +50,6 @@ Pastas de migração vazias (opcional)
 .DS_Store
 PyCharm
 .idea/
+
 # Não versionar PDFs de media
 www/media/*.pdf
