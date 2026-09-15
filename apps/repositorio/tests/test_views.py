@@ -205,3 +205,35 @@ class TCCEViewCountersTest(TestCase):
             'projetos': Subprojeto.objects.filter(projeto__ativo=True).count(),
         })
         self.assertContains(response, 'data-target="2"')
+
+    def test_global_author_counter_deduplicates_authors_shared_between_tcces(self):
+        registro_primeiro_tcce = self._criar_registro(
+            subprojeto=self.subprojeto,
+            tipo_documento=self.artigo,
+            status=self.status_publicado,
+        )
+        registro_primeiro_tcce.autores.add(self.autor_ativo)
+        outro_projeto = Projeto.objects.create(pk=3, nome='Outro TCCE ativo', ativo=True)
+        outro_subprojeto = Subprojeto.objects.create(
+            projeto=outro_projeto,
+            nome='Subprojeto de outro TCCE',
+            ativo=True,
+        )
+        registro_outro_tcce = self._criar_registro(
+            subprojeto=outro_subprojeto,
+            tipo_documento=self.artigo,
+            status=self.status_publicado,
+        )
+        registro_outro_tcce.autores.add(self.autor_ativo)
+
+        estatisticas_tcce = TCCEView()._calcular_estatisticas_tcce(self.projeto.pk)
+        estatisticas_outro_tcce = TCCEView()._calcular_estatisticas_tcce(outro_projeto.pk)
+        estatisticas_globais = TCCEView()._calcular_estatisticas_todos_tcces()
+
+        self.assertEqual(estatisticas_tcce['autores_unicos'], 1)
+        self.assertEqual(estatisticas_outro_tcce['autores_unicos'], 1)
+        self.assertEqual(
+            estatisticas_tcce['autores_unicos'] + estatisticas_outro_tcce['autores_unicos'],
+            2,
+        )
+        self.assertEqual(estatisticas_globais['autores_unicos'], 1)

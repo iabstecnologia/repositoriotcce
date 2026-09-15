@@ -159,7 +159,8 @@ class TCCEView(TemplateView):
             tipo_documento__nome__icontains='ARTIGO'
         ).count()
         
-        # Autores ativos vinculados a registros em projetos e subprojetos ativos.
+        # União de autores ativos vinculados a registros ativos; um autor
+        # presente em mais de um TCCE deve ser contado uma única vez.
         autores_unicos = Autor.objects.filter(
             autores__ativo=True,
             autores__subprojeto__projeto__ativo=True,
