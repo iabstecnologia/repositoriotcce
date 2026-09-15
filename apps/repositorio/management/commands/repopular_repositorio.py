@@ -11,6 +11,7 @@ from django.db.migrations.executor import MigrationExecutor
 
 from apps.repositorio.models import (
     AreaTematica,
+    SubAreaTematica,
     Autor,
     Projeto,
     Registro,
@@ -129,13 +130,28 @@ class Command(BaseCommand):
 
     def report_dry_run(self, items):
         current_records = Registro.objects_all.count()
+        current_autores = Autor.objects_all.count()
+        current_tipo_documentos = TipoDocumento.objects_all.count()
+        current_projetos = Projeto.objects_all.count()
+        current_subprojetos = Subprojeto.objects_all.count()
+        current_areas = AreaTematica.objects_all.count()
+        current_subareas = SubAreaTematica.objects_all.count()
+        current_tipo_publicacoes = TipoPublicacao.objects_all.count()
         current_tags = Tag.objects_all.count()
         current_users = get_user_model().objects.count()
-        self.stdout.write(
-            f'DRY-RUN registros atuais={current_records} '
-            f'registros esperados={len(items)} tags atuais={current_tags} '
-            f'usuários preservados={current_users}'
-        )
+
+        self.stdout.write('DRY-RUN')
+        self.stdout.write(f'registros atuais={current_records}')
+        self.stdout.write(f'registros esperados={len(items)}')
+        self.stdout.write(f'subáreas atuais={current_subareas}')
+        self.stdout.write(f'subprojetos atuais={current_subprojetos}')
+        self.stdout.write(f'projetos atuais={current_projetos}')
+        self.stdout.write(f'áreas temáticas atuais={current_areas}')
+        self.stdout.write(f'autores atuais={current_autores}')
+        self.stdout.write(f'tipo de documentos atuais={current_tipo_documentos}')
+        self.stdout.write(f'tipo de publicações atuais={current_tipo_publicacoes}')
+        self.stdout.write(f'tags atuais={current_tags}')
+        self.stdout.write(f'usuários preservados={current_users}')
         self.stdout.write('Nenhuma alteração foi executada.')
 
     def clear_repository(self):
