@@ -72,10 +72,12 @@ class Command(BaseCommand):
         with transaction.atomic():
             self.clear_repository()
             self.load_reference_sql()
+            self.reset_sequences()
             self.ensure_references(items)
             self.reset_sequences()
             auditor_user = self.get_auditor_user()
             imported = self.import_records(items, auditor_user)
+            self.reset_sequences()  # Garante que as sequências fiquem sincronizadas após a importação final
 
         self.stdout.write(
             self.style.SUCCESS(
