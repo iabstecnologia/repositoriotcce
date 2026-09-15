@@ -53,3 +53,4 @@ PyCharm
 
 # Não versionar PDFs de media
 www/media/*.pdf
+www/media/*
