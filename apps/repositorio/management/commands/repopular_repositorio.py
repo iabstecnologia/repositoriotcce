@@ -246,9 +246,18 @@ class Command(BaseCommand):
             link_externo = link_real if (
                 'LINK' in tipo_publicacao.nome.upper() or link_real.startswith('http')
             ) else None
-            arquivo = None if link_externo else (
-                link_real if link_real.lower().endswith('.pdf') else f'{link_real}.pdf'
-            )
+            if link_externo:
+                arquivo = None
+            else:
+                filename = link_real.lstrip('/')
+                if not filename.lower().endswith('.pdf'):
+                    filename = f'{filename}.pdf'
+
+                # Preserva o caminho caso já esteja na estrutura padrão de uploads
+                if filename.startswith('repositorio/'):
+                    arquivo = filename
+                else:
+                    arquivo = f'repositorio/old_files/{filename}'
 
             registro = Registro.objects.create(
                 subprojeto=subprojeto,
