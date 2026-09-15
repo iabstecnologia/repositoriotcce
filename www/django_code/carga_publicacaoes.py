@@ -84,9 +84,12 @@ def run_import():
                     data_str = item_data.get("DATA", "")
                     data_publicacao = None
                     if data_str and '/' in data_str:
-                        try:
-                            data_publicacao = datetime.strptime(f'01/{data_str}', '%d/%m/%Y').date()
-                        except: pass
+                        for formato in ('%d/%m/%Y', '%m/%Y'):
+                            try:
+                                data_publicacao = datetime.strptime(data_str, formato).date()
+                                break
+                            except ValueError:
+                                continue
 
                     # Lógica de Arquivo vs Link
                     link_real = (item_data.get("LINK_REAL") or "").strip()
