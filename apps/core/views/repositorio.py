@@ -39,9 +39,7 @@ def subprojetos_por_projeto(request):
     ]
     return JsonResponse({'subprojetos': data})
 
-# Função para Download (Mantida)
-def download_registro(request, pk):
-    registro = get_object_or_404(Registro, pk=pk)
+
 # Função para Download (Mantida)
 def download_registro(request, pk):
     registro = get_object_or_404(Registro, pk=pk)

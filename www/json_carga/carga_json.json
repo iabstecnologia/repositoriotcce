@@ -2296,8 +2296,8 @@
     "TIPO_DOCUMENTO": "PUBLICAÇÃO CIENTÍFICA (ARTIGOS)",
     "AREA_TEMATICA": "MEIO BIÓTICO",
     "STATUS": "PUBLICADO",
-    "TIPO_PUBLICACAO": "ARQUIVO PDF",
-    "LINK_REAL": "SUBPROJETO_17.4_(PAULO_OLIVEIRA)_ARTIGO-1",
+    "TIPO_PUBLICACAO": "LINK WEB PAGE",
+    "LINK_REAL": "https://www.sciencedirect.com/science/article/abs/pii/S0034666723001525",
     "TAGS": "AMAZÔNIA; CARAJÁS; GUANO DE MORCEGO; CONJUNTO DE PÓLEM; EDITAL; FERRUGINOSAS"
   },
   {
@@ -5911,7 +5911,7 @@
     "AREA_TEMATICA": "OUTROS",
     "STATUS": "PRODUZIDO",
     "TIPO_PUBLICACAO": "ARQUIVO PDF",
-    "LINK_REAL": "https://tcce.inf.br/media/repositorio/tcce-12022/subprojeto-22-acao-423/Relatório_Final.pdf",
+    "LINK_REAL": "repositorio/tcce-12022/subprojeto-22-acao-423/Relatório_Final.pdf",
     "TAGS": "CURSO; ESPELEOLOGIA; PAN CAVERNAS"
   },
   {
@@ -5924,7 +5924,7 @@
     "AREA_TEMATICA": "OUTROS",
     "STATUS": "PRODUZIDO",
     "TIPO_PUBLICACAO": "ARQUIVO PDF",
-    "LINK_REAL": "https://tcce.inf.br/media/repositorio/tcce-12018/subprojeto-10/Relatório_Final.pdf",
+    "LINK_REAL": "repositorio/tcce-12018/subprojeto-10/Relatório_Final.pdf",
     "TAGS": "CECAV; CURSO; LICENCIAMENTO"
   },
   {
@@ -5937,7 +5937,7 @@
     "AREA_TEMATICA": "OUTROS",
     "STATUS": "PRODUZIDO",
     "TIPO_PUBLICACAO": "ARQUIVO PDF",
-    "LINK_REAL": "https://tcce.inf.br/media/repositorio/tcce-12018/subprojeto-8/Relatório_Final.pdf",
+    "LINK_REAL": "repositorio/tcce-12018/subprojeto-8/Relatório_Final.pdf",
     "TAGS": "CAVIDADE NATURAL SUBTERRÂNEA; CECAV; ESPELOMETRIA"
   }
 ]
