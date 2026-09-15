@@ -1,307 +1,878 @@
 INSERT INTO
     repositorio_projeto (id, nome, ativo)
 VALUES (1, 'TCCE 1/2018', TRUE),
-    (2, 'TCCE 1/2020', TRUE),
     (3, 'TCCE 2/2020', TRUE),
-    (4, 'TCCE 1/2022', TRUE)
+    (4, 'TCCE 1/2022', TRUE),
+    (5, 'TCCE 3/2026', TRUE)
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO
-    repositorio_subprojeto (id, nome, ativo, projeto_id)
-VALUES (1, 'SUBPROJETO 1', TRUE, 4),
-    (2, 'SUBPROJETO 5', TRUE, 4),
-    (3, 'SUBPROJETO 6', TRUE, 4),
-    (4, 'SUBPROJETO 8', TRUE, 4),
-    (5, 'SUBPROJETO 9', TRUE, 4),
-    (6, 'SUBPROJETO 10', TRUE, 4),
-    (7, 'SUBPROJETO 20', TRUE, 4),
-    (
-        8,
-        'SUBPROJETO 25.10',
-        TRUE,
-        4
-    ),
-    (
-        9,
-        'SUBPROJETO 18.10',
-        TRUE,
-        4
-    ),
-    (
-        10,
-        'SUBPROJETO 22 (AÇÃO 4.20.1)',
-        TRUE,
-        4
-    ),
-    (
-        11,
-        'SUBPROJETO 22 (AÇÃO 4.20.2)',
-        TRUE,
-        4
-    ),
-    (
-        12,
-        'SUBPROJETO 22 (AÇÃO 4.20.3)',
-        TRUE,
-        4
-    ),
-    (
-        13,
-        'SUBPROJETO 22 (AÇÃO 4.20.5)',
-        TRUE,
-        4
-    ),
-    (14, 'SUBPROJETO 3', TRUE, 4),
-    (15, 'SUBPROJETO 12', TRUE, 4),
-    (16, 'SUBPROJETO 13', TRUE, 4),
-    (17, 'SUBPROJETO 14', TRUE, 4),
-    (18, 'SUBPROJETO 15', TRUE, 4),
-    (19, 'SUBPROJETO 17', TRUE, 4),
-    (20, 'SUBPROJETO 19', TRUE, 4),
-    (21, 'SUBPROJETO 21', TRUE, 4),
-    (
-        22,
-        'SUBPROJETO 25.2',
-        TRUE,
-        4
-    ),
-    (
-        23,
-        'SUBPROJETO 25.3',
-        TRUE,
-        4
-    ),
-    (
-        24,
-        'SUBPROJETO 25.4',
-        TRUE,
-        4
-    ),
-    (
-        25,
-        'SUBPROJETO 25.5',
-        TRUE,
-        4
-    ),
-    (
-        26,
-        'SUBPROJETO 25.6',
-        TRUE,
-        4
-    ),
-    (
-        27,
-        'SUBPROJETO 25.7',
-        TRUE,
-        4
-    ),
-    (
-        28,
-        'SUBPROJETO 25.8',
-        TRUE,
-        4
-    ),
-    (
-        29,
-        'SUBPROJETO 25.9',
-        TRUE,
-        4
-    ),
-    (
-        30,
-        'SUBPROJETO 25.11',
-        TRUE,
-        4
-    ),
-    (
-        31,
-        'SUBPROJETO 25.12',
-        TRUE,
-        4
-    ),
-    (
-        32,
-        'SUBPROJETO 25.13',
-        TRUE,
-        4
-    ),
-    (33, 'SUBPROJETO 2', TRUE, 1),
-    (34, 'SUBPROJETO 3', TRUE, 1),
-    (35, 'SUBPROJETO 4.1', TRUE, 1),
-    (36, 'SUBPROJETO 4.2', TRUE, 1),
-    (37, 'SUBPROJETO 4.3', TRUE, 1),
-    (38, 'SUBPROJETO 4.4', TRUE, 1),
-    (39, 'SUBPROJETO 4.5', TRUE, 1),
-    (40, 'SUBPROJETO 5.1', TRUE, 1),
-    (41, 'SUBPROJETO 5.2', TRUE, 1),
-    (
-        42,
-        'SUBPROJETO 5.3.1',
+    repositorio_subprojeto (nome, ativo, projeto_id)
+VALUES (
+        'Estudos Espeleológicos (Caráter Especial - Execução por Contrato)',
         TRUE,
         1
     ),
     (
-        43,
-        'SUBPROJETO 5.3.2',
-        TRUE,
-        1
-    ),
-    (44, 'SUBPROJETO 6', TRUE, 1),
-    (45, 'SUBPROJETO 7', TRUE, 1),
-    (46, 'SUBPROJETO 12', TRUE, 1),
-    (47, 'SUBPROJETO 13', TRUE, 1),
-    (48, 'SUBPROJETO 16', TRUE, 1),
-    (
-        49,
-        'SUBPROJETO 17.1',
+        'Filogeografia de invertebrados troglóbios em formações ferríferas e carbonáticas',
         TRUE,
         1
     ),
     (
-        50,
-        'SUBPROJETO 17.2',
+        'Bat caves em cavernas ferríferas da Floresta Nacional de Carajás: aspectos físicos, biológicos e cronológicos',
         TRUE,
         1
     ),
     (
-        51,
-        'SUBPROJETO 17.3',
+        'Edital de Pesquisas Ecossistemica da Flona Carajás',
         TRUE,
         1
     ),
     (
-        52,
-        'SUBPROJETO 17.4',
+        'Monitoramento térmico de bat caves em Florestas Nacional de Carajás',
         TRUE,
         1
     ),
     (
-        53,
-        'SUBPROJETO 17.5',
+        'Associação de morcegos (Mammalia, Chiroptera) a cavidades ferríferas através de levantamentos simples - a importância das Aicom''s e Sicom''s',
         TRUE,
         1
     ),
     (
-        54,
-        'SUBPROJETO 17.6',
+        'Geoquímica e Isótopos aplicados ao estudo geoecológico das cavernas da região de Carajás',
         TRUE,
         1
     ),
     (
-        55,
-        'SUBPROJETO 17.7',
+        'Morcegos de cavernas: conhecer para preservar. Diversidade genética, banco de células e de tecidos',
         TRUE,
         1
     ),
     (
-        56,
-        'SUBPROJETO 17.8',
+        'Diversidade de Arthropoda em cavidades da Floresta Nacional de Carajás e Parque Nacional dos Campos Ferruginosos - o habitat subterrâneo, a conectividade entre suas populações e a influência do entorno',
         TRUE,
         1
     ),
-    (57, 'SUBPROJETO 1', TRUE, 2),
-    (58, 'SUBPROJETO 3', TRUE, 2),
-    (59, 'SUBPROJETO 5', TRUE, 2),
-    (60, 'SUBPROJETO 8', TRUE, 2),
-    (61, 'SUBPROJETO 10', TRUE, 2),
-    (62, 'SUBPROJETO 13', TRUE, 2),
     (
-        63,
-        'SUBPROJETO 13.1',
+        'Restauração Ambiental',
         TRUE,
-        2
+        1
     ),
     (
-        64,
-        'SUBPROJETO 13.2',
+        'Susceptibilidade, hidrologia e geomorfologia cárstica aplicadas à conservação do patrimônio espelológico da Área de Proteção Ambiental das nascentes do Rio Vermelho',
         TRUE,
-        2
+        1
     ),
     (
-        65,
-        'SUBPROJETO 13.3',
+        'Espeleometria e Gestão do Projeto',
         TRUE,
-        2
+        1
     ),
     (
-        66,
-        'SUBPROJETO 13.4',
+        'Apoio à gestão da APA',
         TRUE,
-        2
+        1
     ),
     (
-        67,
-        'SUBPROJETO 13.5',
+        'Estudo para criação de unidade de conservação federal de proteção integral na região da Serra do Ramalho, Bahia (Cooperação Técnica)',
         TRUE,
-        2
+        1
     ),
     (
-        68,
-        'SUBPROJETO 13.6',
+        'Correção, modernização e atualização do Cadastro Nacional de Informações Espeleológicas - CANIE',
         TRUE,
-        2
+        1
     ),
     (
-        69,
-        'SUBPROJETO 13.7',
+        'Aprimoramentos metodológicos para o Levantamento de Atributos Espeleométricos no Rito do Licenciamento Ambiental',
         TRUE,
-        2
+        1
     ),
-    (70, 'SUBPROJETO 1', TRUE, 3),
-    (71, 'SUBPROJETO 3', TRUE, 3),
-    (72, 'SUBPROJETO 5', TRUE, 3),
-    (73, 'SUBPROJETO 8', TRUE, 3),
-    (74, 'SUBPROJETO 10', TRUE, 3),
-    (75, 'SUBPROJETO 13', TRUE, 3),
     (
-        76,
-        'SUBPROJETO 13.1',
+        'Construção do Centro de Referência em Espeleologia e da sede do Cecav/ICMBio',
+        TRUE,
+        1
+    ),
+    (
+        '5ª Edição curso Espeleologia (40 pessoas - 40 Horas) - Curso de Espeleologia e Licenciamento Ambiental do Instituto Chico Mendes',
+        TRUE,
+        1
+    ),
+    (
+        'Livro Cavernas ferríferas do Brasil',
+        TRUE,
+        1
+    ),
+    (
+        'Ecologia de Vertebrados Associados a Cavernas do Espinhaço Meridional',
+        TRUE,
+        1
+    ),
+    (
+        'Dispersão versus confinamento: análise composicional e de estrutura de habitat como subsídio à compreensão de mecanismos responsáveis pela identidade faunística subterrânea',
+        TRUE,
+        1
+    ),
+    (
+        'Revelando a biodiversidade subterrânea em um oásis na Caatinga',
+        TRUE,
+        1
+    ),
+    (
+        'Prêmio Michel Le Bret de Espeleologia',
+        TRUE,
+        1
+    ),
+    (
+        'Divulgação Científica e Educomunicação junto às comunidades locais no Parque Nacional Cavernas do Peruaçu, MG',
+        TRUE,
+        1
+    ),
+    (
+        'Edital de Chamamento Público para seleção de Projetos sobre o Patrimônio Espeleológico em Rochas Ferruginosas',
+        TRUE,
+        1
+    ),
+    (
+        'Diversidade taxonômica e funcional de insetos aquáticos neotropicais em igarapés das áreas ferruginosas do Brasil',
+        TRUE,
+        1
+    ),
+    (
+        'DIVERSIDADE METABARCODING E FUNCIONAL DE COMUNIDADES MICROBIANAS DO SOLO DE CAVERNAS FERRÍFERAS DO PARQUE NACIONAL DOS CAMPOS FERRUGINOSOS - PA',
+        TRUE,
+        1
+    ),
+    (
+        'Estudos da paisagem, da geodiversidade e propostas de geoconservação do Geossistema Ferruginoso Carajás, PA',
+        TRUE,
+        1
+    ),
+    (
+        'Registros paleoambientais de depósitos de guano em cavernas ferríferas da Floresta Nacional de Carajás',
+        TRUE,
+        1
+    ),
+    (
+        'Passado, presente e futuro para a conservação das áreas cavernícolas e dos serviços ecossistêmicos prestados por morcegos',
+        TRUE,
+        1
+    ),
+    (
+        'Diversidade de organismos do solo, em cavernas em formação ferrífera no Quadrilatero Ferrifero, Minas Gerais, Brasil, com uso de DNA metabarcoding',
+        TRUE,
+        1
+    ),
+    (
+        'Microbiota de cavernas da FLONA Carajás/PA: inventário e subsídios para o manejo espeleoturístico',
+        TRUE,
+        1
+    ),
+    (
+        'TAXONOMIA E FILOGENIA MOLECULAR DE FUNGOS EM CAVERNAS FERRÍFERAS ENTRE AS REGIÕES DE CONCEIÇÃO DO MATO DENTRO E SERRO, MINAS GERAIS',
+        TRUE,
+        1
+    ),
+    (
+        '37º Congresso Brasileiro de Espeleologia',
+        TRUE,
+        4
+    ),
+    (
+        '39º Congresso Brasileiro de Espeleologia',
+        TRUE,
+        4
+    ),
+    (
+        '19º Congresso Internacional de Espeleologia - CIE',
+        TRUE,
+        4
+    ),
+    (
+        'CAVE TOOLS - Caderno de Campo Digital do CECAV - app para dispositivo móvel',
+        TRUE,
+        4
+    ),
+    (
+        'Recifes de Coral - as cavernas submarinas do Nordeste do Brasil',
+        TRUE,
+        4
+    ),
+    (
+        'Paisagem Sonora de Cavernas e dos Ecossistemas em seu entorno no Parque Nacional da Serra do Cipó',
+        TRUE,
+        4
+    ),
+    (
+        'GAP - Gestão Administrativa dos Projetos e Ações necessários para viabilização e implementação das compensações espeleológicas',
+        TRUE,
+        4
+    ),
+    (
+        'Geoespeleologia do Carste Siliciclático da Formação Tombador: Subsídios à Conservação do Patrimônio Espeleológico na Chapada Diamantina',
+        TRUE,
+        4
+    ),
+    (
+        'Projeto Luzes na Escuridão',
+        TRUE,
+        4
+    ),
+    (
+        'Aplicação de Traçadores corantes para caracterização da dinâmica atual de fluxo d''água subterrânea no Carste de São Desidério - Bahia',
+        TRUE,
+        4
+    ),
+    (
+        'Prêmio Michel Le Bret de Espeleologia',
+        TRUE,
+        4
+    ),
+    (
+        'As Cavernas de Ibitipoca',
+        TRUE,
+        4
+    ),
+    (
+        'O Carste em rochas carbonáticas pré-cambrianas dos grupos Ceará e Frecheirinha',
+        TRUE,
+        4
+    ),
+    (
+        'Vivências 3D: Uma imersão em realidade virtual no Parque Nacional Cavernas do Peruaçu e Furna Feia',
+        TRUE,
+        4
+    ),
+    (
+        'Livro "O Carste Potiguar"',
+        TRUE,
+        4
+    ),
+    (
+        'Segurança, Prevenção de Acidentes e Primeiros Socorros em Cavidades Naturais Subterrâneas e Áreas Remotas',
+        TRUE,
+        4
+    ),
+    (
+        'Mapeamento de Feições cársticas hidrofuncionais na APA Nascente do Rio Vermelho',
+        TRUE,
+        4
+    ),
+    (
+        'Edital de Conservação do Patrimônio Espeleológico em Unidades de Conservação',
+        TRUE,
+        4
+    ),
+    (
+        'Investigando o Patrimônio Espeleológico no Mosáico do Espinhaço',
+        TRUE,
+        4
+    ),
+    (
+        'Manejando o Patrimônio Espeleológico do Parque Estadual de Ibitipoca',
+        TRUE,
+        4
+    ),
+    (
+        'Avaliação do potencial espeleoturístico das principais cavidades do Parque Estadual do Itacolomi (PEIT)',
+        TRUE,
+        4
+    ),
+    (
+        'Cavidades ferríferas de Carajás: Plano de Manejo Espeleológico como instrumento de conservação e valorização dos seus patrimônios',
+        TRUE,
+        4
+    ),
+    (
+        'Desvendando uma potencial nova espécie de morcego nectarívoro (Lonchophyllinae) das cavernas de Carajás: um estudo sobre história natural, genética, filogenia e distribuição',
+        TRUE,
+        4
+    ),
+    (
+        'Identificação e mapeamento topográfico de cavidades presentes no Parque Estadual do Itacolomi (PEIT)',
+        TRUE,
+        4
+    ),
+    (
+        'Diagnóstico Ambiental Espeleológico Monumento Natural Estadual Gruta Rei do Mato',
+        TRUE,
+        4
+    ),
+    (
+        'Avaliação de contaminação das águas por agroquímicos e metais e sua relação com a proteção do Patrimônio Espeleológico na APA das Nascentes do Rio Vermelho',
+        TRUE,
+        4
+    ),
+    (
+        'Planejamento e Desenvolvimento de Ações para valorização do Patrimônio Natural e Cultural da Unidade de Conservação Municipal Monumento Natural Cárstico de Brejo do Amparo/Januária - Minas Gerais',
+        TRUE,
+        4
+    ),
+    (
+        'Patrimônio Espeleológico da APA Carste de Lagoa Santa',
+        TRUE,
+        4
+    ),
+    (
+        'Inventário e Diagnóstico do Patrimônio Espeleológico do Refúgio de Vida Silvestre Libélulas da Serra de José e Área de Proteção Ambiental São José',
+        TRUE,
+        4
+    ),
+    (
+        'Fortalecimento da gestão e da utilização sustentável do patrimônio espeleológico do Parque Nacional da Furna Feia',
+        TRUE,
+        4
+    ),
+    (
+        'Ações de Conservação do Patrimônio Espeleológico na UC Parque Nacional de Ubajara',
+        TRUE,
+        4
+    ),
+    (
+        'Ordenamento turístico para conservação do patrimônio espeleológico em UC Federais dos Estados de Sergipe, Bahia e Alagoas',
+        TRUE,
+        4
+    ),
+    (
+        'Inventário de Fungos em cavernas de UCs de biomas brasileiros: diversidade e subsídios para manejo espeleológico',
+        TRUE,
+        4
+    ),
+    (
+        'Revitalização da estrutura de apoio à visitação do Lajedo de Soledade, Apodi/RN',
+        TRUE,
+        4
+    ),
+    (
+        'Publicação e Divulgação da obra Aves do Parque Nacional da Furna Feia',
+        TRUE,
+        4
+    ),
+    (
+        'Plano de Ação Nacional Cavernas do Brasil',
+        TRUE,
+        4
+    ),
+    (
+        'Fauna associada às cavernas granitoides na Mata Atlântica do Nordeste de Minas e Espírito Santo: inventário faunístico, ecologia e avaliação de impactos como subsídios à conservação destes ambientes negligenciados',
+        TRUE,
+        4
+    ),
+    (
+        'Inventário e Abordagens Ecológico-Evolutivas de Peixes Subterrâneos dos Estados de Goiás e Bahia',
+        TRUE,
+        4
+    ),
+    (
+        'Descobrindo o novo mundo e as dolinas de barbosilândia: Aracnídeos cavernícolas da região de APA Nascentes do Rio Vermelho e Bacia do Rio Corrente',
+        TRUE,
+        4
+    ),
+    (
+        'Ecos da Escuridão: Inventário integrativo da biodiversida subterrânea',
+        TRUE,
+        4
+    ),
+    (
+        'Conservação de morcegos cavernícolas no Cerrado: biodiversidade, espécies ameaçadas e ações de proteção integradas',
+        TRUE,
+        4
+    ),
+    (
+        'Realizar diagnóstico sobre o tratamento do patrimônio espeleológico no âmbito dos Estados da Federação, Distrito Federal e União nos processos de licenciamento, autorização e fiscalização',
+        TRUE,
+        4
+    ),
+    (
+        'Articular junto ao IPHAN a elaboração de um fluxograma para a avaliação da existência do atributo "destacada relevância histórico-cultural ou religiosa" em cavidades naturais subterrâneas',
+        TRUE,
+        4
+    ),
+    (
+        'Definição de diretrizes para a prospecção espelológica em processos de licenciamento ambiental',
+        TRUE,
+        4
+    ),
+    (
+        'Integração de sistemas de alerta de desmatamento em regiões de interesse espeleológico para fins de controle, monitoramento e fiscalização ambiental',
+        TRUE,
+        4
+    ),
+    (
+        'Cursos sobre práticas de Conservação, Redução de Impactos e Recuperação de danos em cavernas turísticas',
+        TRUE,
+        4
+    ),
+    (
+        'Articular e elaborar, em níveis estadual e federal, cursos de boas práticas de manejo de morcegos para agentes de controle agropecuário e de zoonoses',
+        TRUE,
+        4
+    ),
+    (
+        'Caracterização do uso turístico das cavernas do Brasil',
+        TRUE,
+        4
+    ),
+    (
+        'Analisar a efetividade das metodologias de avaliação de impacto de visitação em cavernas e divulgar os resultados obtidos',
+        TRUE,
+        4
+    ),
+    (
+        'Elaboração de diretrizes para capacitação de agentes de espeleoturismo',
+        TRUE,
+        4
+    ),
+    (
+        'Elaborar um manual de boas práticas de uso turístico, desportivo, educativo e cultural em cavernas com sítios arqueológicos',
+        TRUE,
+        4
+    ),
+    (
+        'Realizar ações para divulgação do conhecimento sobre o patrimônio espeleológico para o público geral do PAN Cavernas do Brasil',
+        TRUE,
+        4
+    ),
+    (
+        'Realizar inventário de morcegos nas áreas identificadas',
+        TRUE,
+        4
+    ),
+    (
+        'Sítios de monitoramento de longo prazo em cavernas, focado em espécies alvo do PAN',
+        TRUE,
+        4
+    ),
+    (
+        'Gerar e aprimorar informações essenciais para o processo de classificação das espécies cavernícolas alvo e ameaçadas de extinção (atendendo aos critérios da IUCN)',
+        TRUE,
+        4
+    ),
+    (
+        'Testar a viabilidade do uso de portões (Bat gates) para cavernas no Brasil',
+        TRUE,
+        4
+    ),
+    (
+        'Geoespacialização de sítios arqueológicos no contexto do patrimônio espeleológico brasileiro',
+        TRUE,
+        4
+    ),
+    (
+        'Elaborar e manter listas atualizadas de cavernas com ocorrência de espécies cavernícolas ameaçadas de extinção, de troglobios raros e batcaves.',
+        TRUE,
+        4
+    ),
+    (
+        'Fomentar a realização de Congressos, Simpósios ou outros eventos científicos em Espeleologia, em nível nacional ou internacional.',
+        TRUE,
+        4
+    ),
+    (
+        'Grupos Regionais de Espeleologia no Multiverso Espeleológico',
+        TRUE,
+        4
+    ),
+    (
+        'Projeto CLPI Peruaçu',
+        TRUE,
+        4
+    ),
+    ('III SCIVAPE', TRUE, 4),
+    (
+        'II Café Espeleológico: Conectividade hídrica e biológica em cavidades naturais - desafios científicos e legais',
+        TRUE,
+        4
+    ),
+    (
+        'VIII Encontro Pernambucano de Micologia - Funga Nordestina em Expansão: Ciência, Cultura e Conservação',
+        TRUE,
+        4
+    ),
+    (
+        'IV Seminário Científico de Pesquisas do Vale do Rio Peruaçu - SCIVAPE',
+        TRUE,
+        4
+    ),
+    (
+        'XII Encontro Brasileiro de Estudo de Quirópteros (EBEQ)',
+        TRUE,
+        4
+    ),
+    (
+        'Seminário APA Morro da Pedreira',
+        TRUE,
+        4
+    ),
+    (
+        'Sociedade Excursionista e Espeleológica: 90 Anos de Exploração e Descobertas',
+        TRUE,
+        4
+    ),
+    (
+        'Oficina do curso "Tutela Jurídica de Cavernas e Espeleologia Básica"',
+        TRUE,
+        4
+    ),
+    (
+        '2ª Edição do curso de "Tutela Jurídica em Cavernas e Introdução à Espeleologia"',
+        TRUE,
+        4
+    ),
+    (
+        'Realizar expedições para coleta de material genético de espécies cavernícolas no âmbito do projeto GBB (Genômica da Biodiversidade Brasileira)',
+        TRUE,
+        4
+    ),
+    (
+        'Plano Integrado de melhoria do uso do solo para conservação do patrimônio espeleológico e da sociobiodiversidade em ambientes cársticos',
+        TRUE,
+        4
+    ),
+    (
+        'Prospecção Espeleológica em áreas prioritárias para conservação do patrimônio Espeleológico Brasileiro',
+        TRUE,
+        4
+    ),
+    (
+        'Arapongas: Uma nova fronteira de exploração no Vale do Ribeira',
+        TRUE,
+        4
+    ),
+    (
+        'Dolinas de Barbosilândia - Descobrir para preservar o Patrimônio Espeleológico Goiano',
+        TRUE,
+        4
+    ),
+    (
+        'Do Vale do Rio Gameleira ao Mundo Novo - Conexões Espeleológicas do Nordeste Goiano',
+        TRUE,
+        4
+    ),
+    (
+        'Atualização e Adequação do Cadastro das Informações Espeleológica do Município Doutor Ulysses - PR',
+        TRUE,
+        4
+    ),
+    (
+        'Levantamento Espeleológico na região do Ribeirão do Farto - Núcleo Caboclos do Parque Estadual Turístico do Alto Ribeira - SP',
+        TRUE,
+        4
+    ),
+    (
+        'Projeto de Prospecção Espelológica Subaquática Iraquara/Bahia',
+        TRUE,
+        4
+    ),
+    (
+        'Prospecção, exploração e mapeamento espeleológico na região compreendida entre o Parque Nacional da Serra do Cipó e Parque Natural Municipal Alto do Rio do Tanque, nos municípios de Itabira, Jaboticatubas, Itambé do Mato Dentro e Nova União, Minas Gerais',
+        TRUE,
+        4
+    ),
+    (
+        'Amapá Espeleológico: Prospecção e Topografia de Cavidades Naturais nas Microrregiões do Oiapoque e Mazagão - AP',
+        TRUE,
+        4
+    ),
+    (
+        'EspeleoPG: Prospecção espeleológica e educação patrimonial no município de Ponta Grossa, Paraná',
+        TRUE,
+        4
+    ),
+    (
+        'Levantamento Espeleológico na Região do Lajedo - Iporanga - São Paulo',
+        TRUE,
+        4
+    ),
+    (
+        'Edital de Chamamento Público para seleção de projetos de pesquisa sobre o patrimônio espeleológico (Edital)',
+        TRUE,
+        4
+    ),
+    (
+        'Diversidade, distribuição e evolução de troglomorfismo em aranhas cavernícolas brasileiras (Araneae: Pholcidae, Trechaleidae)',
+        TRUE,
+        4
+    ),
+    (
+        'Estado da arte dos escorpiões cavernícolas brasileiros',
+        TRUE,
+        4
+    ),
+    (
+        'Da Caatinga a Mata Atlântica: diversificação e conservação dos esquizomideos do gênero Rowlandius (Schizomida: Hubardiidae) através de dados genômicos, ecológicos e morfológicos',
+        TRUE,
+        4
+    ),
+    (
+        'Singularidade ecológica e biodiversidade zooplanctônica em ambientes subterrâneos do semiárido',
+        TRUE,
+        4
+    ),
+    (
+        'Identidades Faunísticas em cavernas da região central do estado da Bahia: a importância de elementos da paisagem e fatores ambientais intrínsecos na definição de prioridades de conservação',
+        TRUE,
+        4
+    ),
+    (
+        'Explorando as Cavernas do Rio Grande do Norte: Conservação, Pesquisa e Divulgação do Patrimônio Espeleológico no Museus Câmara Cascudo/UFRN',
+        TRUE,
+        4
+    ),
+    (
+        'Reconhecimento de Sítios Arqueológicos no Vale do Rio Peruaçu',
+        TRUE,
+        4
+    ),
+    (
+        'Preenchendo lacunas de conhecimento taxonômico em cavernas brasileiras: descrição de novas espécies de Isopoda, Amphipoda, Pseudoscorpiones e Orthoptera',
+        TRUE,
+        4
+    ),
+    (
+        'Bioprospecção de fungos isolados em cavernas brasileiras: conhecer, explorar e preservar',
+        TRUE,
+        4
+    ),
+    (
+        'Um olhar para o Passado: Oscilações Paleoclimáticas Explicam os Potenciais Berçários de Troglofauna do Brasil',
+        TRUE,
+        4
+    ),
+    (
+        'Um tesouro inexplorado da Serra do Espinhaço Meridional: levantamento taxonômico e uso sustentável de fungos cavernícolas',
+        TRUE,
+        4
+    ),
+    (
+        'A piaba branca Stygichthys typhlops Britta & Bohlke 1965 do Norte de Minas Gerais: ampliando o conhecimento e a divulgação de uma peixe emblemático e ameaçado de águas subterrâneas brasileiras',
+        TRUE,
+        4
+    ),
+    (
+        'Diversidade escondida: Taxonomia, sistemática morfológica e molecular, história natural e conservação de vermes-de-veludo (Onychophora) da Serra da Bodoquena',
+        TRUE,
+        4
+    ),
+    (
+        'Comunicação e Educação Ambiental para a conservação do patrimônio Espeleológico',
+        TRUE,
+        4
+    ),
+    (
+        'Caracterização e regionalização dos terrenos cársticos, em rochas carbonáticas, no Estado da Bahia',
         TRUE,
         3
     ),
     (
-        77,
-        'SUBPROJETO 13.2',
+        'Edição do Curso de Espeleologia e Licenciamento Ambiental do Instituto Chico Mendes',
         TRUE,
         3
     ),
     (
-        78,
-        'SUBPROJETO 13.3',
+        'Análise de metodologias para definição de relevância e impactos sobre a fauna subterrânea',
         TRUE,
         3
     ),
     (
-        79,
-        'SUBPROJETO 13.4',
+        'Repositório institucional de publicações técnicas e científicas do Instituto Chico Mendes',
         TRUE,
         3
     ),
     (
-        80,
-        'SUBPROJETO 13.5',
+        'Introdução às práticas de conservação e recuperação ambiental em cavernas turísticas',
         TRUE,
         3
     ),
     (
-        81,
-        'SUBPROJETO 13.6',
+        'Implementação dos planos de manejo espeleológicos das grutas do castelo e lapão',
         TRUE,
         3
     ),
     (
-        82,
-        'SUBPROJETO 13.7',
+        'Articulação CANIE, SISBIO e CNC (Sprints/Aplicativo para catalogação de cavernas)',
         TRUE,
         3
     ),
     (
-        83,
-        'SUBPROJETO 22 (AÇÃO 4.23)',
+        'Modelagem 3D de cavidades naturais subterrâneas',
         TRUE,
-        4
+        3
+    ),
+    (
+        'Ampliação da pesquisa e conservação do patrimônio espeleológico no Nordeste brasileiro',
+        TRUE,
+        3
+    ),
+    (
+        'Ampliação da Pesquisa e Conservação de Morcegos Brasileiros',
+        TRUE,
+        3
+    ),
+    (
+        'Divulgação de material audiovisual sobre as cavernas e os ambientes cársticos do Brasil',
+        TRUE,
+        3
+    ),
+    (
+        'Implantação do turismo espeleológico no Parque Nacional da Furna Feia/RN',
+        TRUE,
+        3
+    ),
+    ('Pró-Cavernas', TRUE, 3),
+    (
+        'Prospecção e topografia de cavernas na porção norte da Serra de Baldim',
+        TRUE,
+        3
+    ),
+    (
+        'Atualização e adequação do cadastro das informações espeleológicas do município de Rio Branco do Sul - PR',
+        TRUE,
+        3
+    ),
+    (
+        'Vale do Rio Gameleira – Redescobertas Espeleológicas no P.A. Gameleira e Entorno – Flores de Goiás/GO',
+        TRUE,
+        3
+    ),
+    (
+        'CAVERNAS DA SERRA NEGRA: Prospecção, exploração, topografia, mapeamento, levantamento faunístico e avaliação arqueológica das cavidades naturais do Parque Estadual da Serra Negra da Mantiqueira, MG, e áreas do entorno',
+        TRUE,
+        3
+    ),
+    (
+        'Topografia e cadastro das Grutas: Barrigudas, Urubus, Salitre e Xiranha, Localizadas no Morro das Araras – Ituaçu-Bahia',
+        TRUE,
+        3
+    ),
+    (
+        'O GRANDE ROTEIRO DE PETER LUND – PART II: As cavernas não visitadas por Lund, porém reveladas pelo projeto',
+        TRUE,
+        3
+    ),
+    (
+        'Prospecção e mapeamento de cavernas na Serra do Itaqueri – SP',
+        TRUE,
+        3
+    ),
+    (
+        'Cursos de capacitação para guias e condutores em espeleoturismo',
+        TRUE,
+        3
+    ),
+    (
+        'Além dos condutos: popularização e divulgação da ciência espeleológica',
+        TRUE,
+        5
+    ),
+    (
+        'Revisão do Plano de Manejo da Área de Proteção Ambiental Carste de Lagoa Santa',
+        TRUE,
+        5
+    ),
+    (
+        'Recifes de coral - as Cavernas Submarinas do Nordeste do Brasil',
+        TRUE,
+        5
+    ),
+    (
+        'Gerenciamento de dados dos Planos de Ação para a Conservação das Espécies Ameaçadas de Extinção',
+        TRUE,
+        5
+    ),
+    (
+        'Sistema Nacional de Anilhamento de Aves e Morcegos Silvestres',
+        TRUE,
+        5
+    ),
+    (
+        'Ampliação das ações de divulgação, pesquisa e conservação do patrimônio espeleológico nos estados da Bahia e Rio Grande do Norte',
+        TRUE,
+        5
+    ),
+    (
+        'Fortalecimento Operacional e Capacitação da Seção de Espeleorresgate da Sociedade Brasileira de Espeleologia',
+        TRUE,
+        5
+    ),
+    (
+        'Sounds in cave: Descobrindo a ecoacústica em cavernas do Semiárido',
+        TRUE,
+        5
+    ),
+    (
+        'Filogeografia de colêmbolos cavernícolas na Caatinga',
+        TRUE,
+        5
+    ),
+    (
+        'GAP - Gestão Administrativa dos Projetos e ações necessários para viabilização e implementação das compensações espeleológicas',
+        TRUE,
+        5
+    ),
+    (
+        'Implementação de ações do PAN Cavernas do Brasil',
+        TRUE,
+        5
+    ),
+    (
+        'Conservação e gestão do patrimônio espeleológico brasileiro e a ocupação pré-colonial do planalto central a partir do sítio arqueológico GO-Ja-02, Serranópolis, Goiás',
+        TRUE,
+        5
+    ),
+    (
+        'Reconstituição paleoclimática desde o Último Máximo Glacial da região Nordeste do Brasil utilizando estalagmites',
+        TRUE,
+        5
+    ),
+    (
+        'Programa de Apoio ao Turismo de Base Comunitária em Unidades de Conservação federais com Cavidades Naturais Subterrâneas e Áreas Cársticas',
+        TRUE,
+        5
+    ),
+    (
+        'Caixa de Pedra: Resgate e inserção da comunidade Montana na Rota Turística do Parque Naional da Furna Feia',
+        TRUE,
+        5
+    ),
+    ('Casa de Memória', TRUE, 5),
+    ('Projeto Geoaves 2', TRUE, 5),
+    (
+        'Raízes e Trilhas: Fortalecimento do Turismo de Base Comunitária em Ubajara',
+        TRUE,
+        5
+    ),
+    (
+        'Catálogo Integrado das Trilhas, Cavernas, natureza e Pontos Turísticos dos Municípios Maturéia, Mãe d’água, Teixeira, São José do Bonfim e Imaculada, integrantes do PARNA SERRA DO TEIXEIRA',
+        TRUE,
+        5
+    ),
+    (
+        'Cuidar do Sagrado: Sítios arqueológicos ancestrais Kapinawá',
+        TRUE,
+        5
+    ),
+    (
+        'Mapeamento Genético e Morfológico De Collembola (Hexapoda) Cavernícolas do Brasil',
+        TRUE,
+        5
+    ),
+    (
+        'Fortalecimento estratégico da comunicação institucional e científica do ICMBIo',
+        TRUE,
+        5
+    ),
+    (
+        'Apoio à Implantação do Centro de Referência em Espeleologia',
+        TRUE,
+        5
+    ),
+    (
+        'CECAV 30 Anos – Fortalecimento Institucional e Gestão da Conservação do Patrimônio Espeleológico',
+        TRUE,
+        5
     )
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT DO NOTHING;
 
 INSERT INTO
     repositorio_tipodocumento (id, nome, ativo)
@@ -3524,6 +4095,64 @@ INSERT INTO
 VALUES (1, 'MEIO FÍSICO', TRUE),
     (2, 'MEIO BIÓTICO', TRUE),
     (3, 'OUTROS', TRUE)
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO
+    repositorio_subareatematica (
+        id,
+        nome,
+        ativo,
+        area_tematica_id
+    )
+VALUES (
+        1,
+        'Geologia e Geomorfologia',
+        TRUE,
+        1
+    ),
+    (
+        2,
+        'Hidrologia e Hidrogeologia',
+        TRUE,
+        1
+    ),
+    (
+        3,
+        'Espeleologia e Caracterização Ambiental',
+        TRUE,
+        1
+    ),
+    (
+        4,
+        'Biodiversidade Subterrânea',
+        TRUE,
+        2
+    ),
+    (5, 'Ecologia', TRUE, 2),
+    (
+        6,
+        'Conservação da biodiversidade',
+        TRUE,
+        2
+    ),
+    (
+        7,
+        'Socioeconômico e socioambiental',
+        TRUE,
+        3
+    ),
+    (
+        8,
+        'Gestão Ambiental',
+        TRUE,
+        3
+    ),
+    (
+        9,
+        'Espeleoturismo e Uso Público',
+        TRUE,
+        3
+    )
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO

@@ -27,13 +27,24 @@ Como os dados iniciais são inseridos via SQL, é necessário resetar os contado
 python manage.py sqlsequencereset apps.repositorio | python manage.py dbshell
 ```
 
-## 📥 Scripts de Importação
-Os scripts estão localizados em `www/django_code/`:
+## 📥 Importação e repopulação
+O fluxo operacional está concentrado no comando Django `repopular_repositorio`:
 
-1. **`carga_json.json`**: Contém os 454 itens brutos.
-2. **`carga_publicacaoes.py`**: Script que realiza a leitura do JSON e cria os objetos no Django.
-   - **Nota:** O script utiliza `Registro.objects.create()` para garantir que todos os 454 itens sejam inseridos, mesmo que haja títulos repetidos.
-3. **`achar_duplicatas.py`**: Utilitário para auditoria de registros repetidos no arquivo de origem.
+1. **`carga_json.json`**: Contém os 457 itens da carga.
+2. **`repopular_repositorio`**: Valida, limpa e repopula o app `repositorio` em uma transação. Os nomes dos subprojetos já vêm atualizados no JSON a partir dos CSVs.
+3. **`achar_duplicatas.py`**: Utilitário independente para auditoria de registros repetidos no arquivo de origem.
+
+Valide antes de qualquer alteração:
+
+```bash
+python manage.py repopular_repositorio --dry-run
+```
+
+Para aplicar a repopulação, faça backup e use a confirmação explícita:
+
+```bash
+python manage.py repopular_repositorio --apply --confirm-repopulate
+```
 
 ## 📂 Arquivos de Mídia
 Os registros apontam para arquivos PDF. Certifique-se de que o diretório `media/` (ou o bucket S3 de produção) contenha os arquivos referenciados no campo `arquivo` do banco.
