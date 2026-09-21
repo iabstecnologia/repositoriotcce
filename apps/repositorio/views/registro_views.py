@@ -177,6 +177,9 @@ class RegistroListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         """Adiciona dados extras ao contexto."""
         context = super().get_context_data(**kwargs)
+        # Host da aplicação
+        context['application_host'] = self.request.build_absolute_uri('/')
+
         context['search_query'] = self.request.GET.get('q', '')
         
         # Para os filtros nos dropdowns
