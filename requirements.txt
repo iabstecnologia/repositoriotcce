@@ -33,3 +33,6 @@ whitenoise==6.11.0
 python-stdnum
 
 python-decouple==3.8
+
+# OUTRAS DEPENDÊNCIAS
+openpyxl>=3.1.0

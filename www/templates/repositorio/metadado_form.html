@@ -38,9 +38,11 @@
                         {% endfor %}
 
                         <div class="d-flex justify-content-end gap-2">
-                            <a href="javascript:history.back()" class="btn btn-secondary">Cancelar</a>
+                            <a href="{{ url_retorno_com_filtros }}" class="btn btn-secondary">
+                                <i class="bi bi-x-circle"></i> Cancelar
+                            </a>
                             <button type="submit" class="btn btn-primary">
-                                {% if object %}Atualizar{% else %}Salvar{% endif %}
+                                <i class="bi bi-check-circle"></i> {% if object %}Atualizar{% else %}Salvar{% endif %}
                             </button>
                         </div>
                     </form>

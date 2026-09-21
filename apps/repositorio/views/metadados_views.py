@@ -16,6 +16,11 @@ from apps.repositorio.forms.metadados_forms import (
     TipoDocumentoForm,
     TipoPublicacaoForm,
 )
+from apps.repositorio.mixins import (
+    FiltroListViewMixin,
+    FiltroFormViewMixin,
+    FiltroDeleteViewMixin,
+)
 from apps.repositorio.models.repositorio import (
     AreaTematica,
     SubAreaTematica,
@@ -28,15 +33,19 @@ from apps.repositorio.models.repositorio import (
 )
 
 
-class BaseMetadataListView(LoginRequiredMixin, ListView):
+# ═══════════════════════════════════════════════════════════════════════════
+# CLASSES BASE
+# ═══════════════════════════════════════════════════════════════════════════
+
+class BaseMetadataListView(FiltroListViewMixin, LoginRequiredMixin, ListView):
     login_url = '/admin/login/'
     paginate_by = 20
     search_fields = ['nome']
     context_object_name = 'itens'
+    filtro_session_key = None
+    filtro_default_url = None
 
     def get_queryset(self):
-        # Em modo administrativo queremos incluir itens inativos também;
-        # usa-se `objects_all` para listar todos (ativos + inativos).
         queryset = self.model.objects_all.all()
 
         search = self.request.GET.get('q')
@@ -63,8 +72,10 @@ class BaseMetadataListView(LoginRequiredMixin, ListView):
         return context
 
 
-class BaseMetadataCreateView(LoginRequiredMixin, CreateView):
+class BaseMetadataCreateView(FiltroFormViewMixin, LoginRequiredMixin, CreateView):
     login_url = '/admin/login/'
+    filtro_session_key = None
+    filtro_default_url = None
 
     def form_valid(self, form):
         messages.success(self.request, self.success_message)
@@ -75,11 +86,12 @@ class BaseMetadataCreateView(LoginRequiredMixin, CreateView):
         return super().form_invalid(form)
 
 
-class BaseMetadataUpdateView(LoginRequiredMixin, UpdateView):
+class BaseMetadataUpdateView(FiltroFormViewMixin, LoginRequiredMixin, UpdateView):
     login_url = '/admin/login/'
+    filtro_session_key = None
+    filtro_default_url = None
 
     def get_queryset(self):
-        # Use `objects_all` when available so admin can update inactive items
         if hasattr(self.model, 'objects_all'):
             return self.model.objects_all.all()
         return super().get_queryset()
@@ -93,52 +105,42 @@ class BaseMetadataUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_invalid(form)
 
 
-class BaseMetadataDeleteView(LoginRequiredMixin, DeleteView):
+class BaseMetadataDeleteView(FiltroDeleteViewMixin, LoginRequiredMixin, DeleteView):
     """
-    View base para exclusão de metadados.
-    Captura ProtectedError quando houver registros vinculados e exibe
-    uma mensagem detalhada com os nomes dos registros que bloqueiam a exclusão.
+    View base para exclusão de metadados com tratamento de ProtectedError
+    e preservação de filtros.
     """
     login_url = '/admin/login/'
-    
-    # Mapeamento de qual modelo de Registro está vinculado a cada modelo de metadado
-    # Pode ser sobrescrito nas subclasses se necessário
-    related_registry_field = None  # Ex: 'subprojeto', 'tipo_documento', 'area_tematica'
+    related_registry_field = None
+    filtro_session_key = None
+    filtro_default_url = None
 
     def _get_linked_registries(self):
-        """
-        Busca os registros vinculados ao objeto que está sendo excluído.
-        Usa o related_name definido na ForeignKey do modelo Registro.
-        """
         from apps.repositorio.models.repositorio import Registro
-        
+
         obj = self.object
-        
-        # Mapeamento automático baseado no tipo do modelo
+
         model_to_field = {
             'Subprojeto': 'subprojeto',
             'TipoDocumento': 'tipo_documento',
             'AreaTematica': 'area_tematica',
             'SubAreaTematica': 'subareas_tematicas',
             'TipoPublicacao': 'tipo_publicacao',
-            'Projeto': 'subprojeto__projeto',  # Projeto não tem FK direta, usa subprojeto
-            'Autor': 'autores',                # ManyToMany
-            'Tag': 'tags',                     # ManyToMany
+            'Projeto': 'subprojeto__projeto',
+            'Autor': 'autores',
+            'Tag': 'tags',
         }
-        
+
         model_name = obj.__class__.__name__
         field_name = self.related_registry_field or model_to_field.get(model_name)
-        
+
         if not field_name:
             return Registro.objects.none()
-        
+
         kwargs = {f'{field_name}': obj}
         return Registro.objects.filter(**kwargs).distinct().order_by('titulo')
 
     def post(self, request, *args, **kwargs):
-        """
-        Sobrescreve o método post para capturar ProtectedError.
-        """
         try:
             self.object = self.get_object()
             success_url = self.get_success_url()
@@ -148,15 +150,14 @@ class BaseMetadataDeleteView(LoginRequiredMixin, DeleteView):
         except ProtectedError:
             registros = self._get_linked_registries()
             count = registros.count()
-            
+
             if count > 0:
-                # Pega os primeiros 5 títulos para exibir na mensagem
                 primeiros = registros.values_list('titulo', flat=True)[:5]
                 lista = '; '.join(f'"{titulo}"' for titulo in primeiros)
-                
+
                 if count > 5:
                     lista += f' e mais {count - 5} registro(s)'
-                
+
                 messages.error(
                     request,
                     f'Não é possível excluir "{self.object.nome}" porque '
@@ -170,11 +171,10 @@ class BaseMetadataDeleteView(LoginRequiredMixin, DeleteView):
                     f'Não é possível excluir "{self.object.nome}" porque '
                     f'existem registros vinculados a este item.'
                 )
-            
+
             return redirect(self.get_success_url())
 
     def get_queryset(self):
-        # Allow deletion of inactive items in admin by using objects_all when present
         if hasattr(self.model, 'objects_all'):
             return self.model.objects_all.all()
         return super().get_queryset()
@@ -188,15 +188,17 @@ class BaseMetadataDeleteView(LoginRequiredMixin, DeleteView):
         return context
 
 
-# =========================================================================
+# ═══════════════════════════════════════════════════════════════════════════
 # SUBPROJETO
-# =========================================================================
+# ═══════════════════════════════════════════════════════════════════════════
 
 class SubprojetoListView(BaseMetadataListView):
     model = Subprojeto
     template_name = 'repositorio/subprojeto_list.html'
     context_object_name = 'subprojetos'
     search_fields = ['nome', 'projeto__nome']
+    filtro_session_key = 'filtros_subprojeto'
+    filtro_default_url = reverse_lazy('repositorio:subprojeto_lista')
 
     def get_queryset(self):
         queryset = self.model.objects_all.select_related('projeto').all()
@@ -229,9 +231,10 @@ class SubprojetoCreateView(BaseMetadataCreateView):
     model = Subprojeto
     form_class = SubprojetoForm
     template_name = 'repositorio/metadado_form.html'
-    success_url = reverse_lazy('repositorio:subprojeto_lista')
     success_message = 'Subprojeto criado com sucesso!'
     error_message = 'Erro ao criar subprojeto. Verifique os campos.'
+    filtro_session_key = 'filtros_subprojeto'
+    filtro_default_url = reverse_lazy('repositorio:subprojeto_lista')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -243,9 +246,10 @@ class SubprojetoUpdateView(BaseMetadataUpdateView):
     model = Subprojeto
     form_class = SubprojetoForm
     template_name = 'repositorio/metadado_form.html'
-    success_url = reverse_lazy('repositorio:subprojeto_lista')
     success_message = 'Subprojeto atualizado com sucesso!'
     error_message = 'Erro ao atualizar subprojeto. Verifique os campos.'
+    filtro_session_key = 'filtros_subprojeto'
+    filtro_default_url = reverse_lazy('repositorio:subprojeto_lista')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -256,9 +260,10 @@ class SubprojetoUpdateView(BaseMetadataUpdateView):
 class SubprojetoDeleteView(BaseMetadataDeleteView):
     model = Subprojeto
     template_name = 'repositorio/metadado_confirm_delete.html'
-    success_url = reverse_lazy('repositorio:subprojeto_lista')
     context_object_name = 'item'
     success_message = 'Subprojeto excluído com sucesso!'
+    filtro_session_key = 'filtros_subprojeto'
+    filtro_default_url = reverse_lazy('repositorio:subprojeto_lista')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -267,23 +272,26 @@ class SubprojetoDeleteView(BaseMetadataDeleteView):
         return context
 
 
-# =========================================================================
+# ═══════════════════════════════════════════════════════════════════════════
 # TIPO DE DOCUMENTO
-# =========================================================================
+# ═══════════════════════════════════════════════════════════════════════════
 
 class TipoDocumentoListView(BaseMetadataListView):
     model = TipoDocumento
     template_name = 'repositorio/tipodocumento_list.html'
     context_object_name = 'tipos_documento'
+    filtro_session_key = 'filtros_tipo_documento'
+    filtro_default_url = reverse_lazy('repositorio:tipodocumento_lista')
 
 
 class TipoDocumentoCreateView(BaseMetadataCreateView):
     model = TipoDocumento
     form_class = TipoDocumentoForm
     template_name = 'repositorio/metadado_form.html'
-    success_url = reverse_lazy('repositorio:tipodocumento_lista')
     success_message = 'Tipo de documento criado com sucesso!'
     error_message = 'Erro ao criar tipo de documento. Verifique os campos.'
+    filtro_session_key = 'filtros_tipo_documento'
+    filtro_default_url = reverse_lazy('repositorio:tipodocumento_lista')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -295,9 +303,10 @@ class TipoDocumentoUpdateView(BaseMetadataUpdateView):
     model = TipoDocumento
     form_class = TipoDocumentoForm
     template_name = 'repositorio/metadado_form.html'
-    success_url = reverse_lazy('repositorio:tipodocumento_lista')
     success_message = 'Tipo de documento atualizado com sucesso!'
     error_message = 'Erro ao atualizar tipo de documento. Verifique os campos.'
+    filtro_session_key = 'filtros_tipo_documento'
+    filtro_default_url = reverse_lazy('repositorio:tipodocumento_lista')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -308,9 +317,10 @@ class TipoDocumentoUpdateView(BaseMetadataUpdateView):
 class TipoDocumentoDeleteView(BaseMetadataDeleteView):
     model = TipoDocumento
     template_name = 'repositorio/metadado_confirm_delete.html'
-    success_url = reverse_lazy('repositorio:tipodocumento_lista')
     context_object_name = 'item'
     success_message = 'Tipo de documento excluído com sucesso!'
+    filtro_session_key = 'filtros_tipo_documento'
+    filtro_default_url = reverse_lazy('repositorio:tipodocumento_lista')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -319,23 +329,26 @@ class TipoDocumentoDeleteView(BaseMetadataDeleteView):
         return context
 
 
-# =========================================================================
+# ═══════════════════════════════════════════════════════════════════════════
 # ÁREA TEMÁTICA
-# =========================================================================
+# ═══════════════════════════════════════════════════════════════════════════
 
 class AreaTematicaListView(BaseMetadataListView):
     model = AreaTematica
     template_name = 'repositorio/areatematica_list.html'
     context_object_name = 'areas_tematicas'
+    filtro_session_key = 'filtros_area_tematica'
+    filtro_default_url = reverse_lazy('repositorio:areatematica_lista')
 
 
 class AreaTematicaCreateView(BaseMetadataCreateView):
     model = AreaTematica
     form_class = AreaTematicaForm
     template_name = 'repositorio/metadado_form.html'
-    success_url = reverse_lazy('repositorio:areatematica_lista')
     success_message = 'Área temática criada com sucesso!'
     error_message = 'Erro ao criar área temática. Verifique os campos.'
+    filtro_session_key = 'filtros_area_tematica'
+    filtro_default_url = reverse_lazy('repositorio:areatematica_lista')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -347,9 +360,10 @@ class AreaTematicaUpdateView(BaseMetadataUpdateView):
     model = AreaTematica
     form_class = AreaTematicaForm
     template_name = 'repositorio/metadado_form.html'
-    success_url = reverse_lazy('repositorio:areatematica_lista')
     success_message = 'Área temática atualizada com sucesso!'
     error_message = 'Erro ao atualizar área temática. Verifique os campos.'
+    filtro_session_key = 'filtros_area_tematica'
+    filtro_default_url = reverse_lazy('repositorio:areatematica_lista')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -360,9 +374,10 @@ class AreaTematicaUpdateView(BaseMetadataUpdateView):
 class AreaTematicaDeleteView(BaseMetadataDeleteView):
     model = AreaTematica
     template_name = 'repositorio/metadado_confirm_delete.html'
-    success_url = reverse_lazy('repositorio:areatematica_lista')
     context_object_name = 'item'
     success_message = 'Área temática excluída com sucesso!'
+    filtro_session_key = 'filtros_area_tematica'
+    filtro_default_url = reverse_lazy('repositorio:areatematica_lista')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -371,15 +386,17 @@ class AreaTematicaDeleteView(BaseMetadataDeleteView):
         return context
 
 
-# =========================================================================
+# ═══════════════════════════════════════════════════════════════════════════
 # SUBÁREA TEMÁTICA
-# =========================================================================
+# ═══════════════════════════════════════════════════════════════════════════
 
 class SubAreaTematicaListView(BaseMetadataListView):
     model = SubAreaTematica
     template_name = 'repositorio/subareatematica_list.html'
     context_object_name = 'subareas_tematicas'
     search_fields = ['nome', 'area_tematica__nome']
+    filtro_session_key = 'filtros_subarea_tematica'
+    filtro_default_url = reverse_lazy('repositorio:subareatematica_lista')
 
     def get_queryset(self):
         return super().get_queryset().select_related('area_tematica')
@@ -389,9 +406,10 @@ class SubAreaTematicaCreateView(BaseMetadataCreateView):
     model = SubAreaTematica
     form_class = SubAreaTematicaForm
     template_name = 'repositorio/metadado_form.html'
-    success_url = reverse_lazy('repositorio:subareatematica_lista')
     success_message = 'Subárea temática criada com sucesso!'
     error_message = 'Erro ao criar subárea temática. Verifique os campos.'
+    filtro_session_key = 'filtros_subarea_tematica'
+    filtro_default_url = reverse_lazy('repositorio:subareatematica_lista')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -403,9 +421,10 @@ class SubAreaTematicaUpdateView(BaseMetadataUpdateView):
     model = SubAreaTematica
     form_class = SubAreaTematicaForm
     template_name = 'repositorio/metadado_form.html'
-    success_url = reverse_lazy('repositorio:subareatematica_lista')
     success_message = 'Subárea temática atualizada com sucesso!'
     error_message = 'Erro ao atualizar subárea temática. Verifique os campos.'
+    filtro_session_key = 'filtros_subarea_tematica'
+    filtro_default_url = reverse_lazy('repositorio:subareatematica_lista')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -416,9 +435,10 @@ class SubAreaTematicaUpdateView(BaseMetadataUpdateView):
 class SubAreaTematicaDeleteView(BaseMetadataDeleteView):
     model = SubAreaTematica
     template_name = 'repositorio/metadado_confirm_delete.html'
-    success_url = reverse_lazy('repositorio:subareatematica_lista')
     context_object_name = 'item'
     success_message = 'Subárea temática excluída com sucesso!'
+    filtro_session_key = 'filtros_subarea_tematica'
+    filtro_default_url = reverse_lazy('repositorio:subareatematica_lista')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -427,23 +447,26 @@ class SubAreaTematicaDeleteView(BaseMetadataDeleteView):
         return context
 
 
-# =========================================================================
+# ═══════════════════════════════════════════════════════════════════════════
 # TIPO DE PUBLICAÇÃO
-# =========================================================================
+# ═══════════════════════════════════════════════════════════════════════════
 
 class TipoPublicacaoListView(BaseMetadataListView):
     model = TipoPublicacao
     template_name = 'repositorio/tipopublicacao_list.html'
     context_object_name = 'tipos_publicacao'
+    filtro_session_key = 'filtros_tipo_publicacao'
+    filtro_default_url = reverse_lazy('repositorio:tipopublicacao_lista')
 
 
 class TipoPublicacaoCreateView(BaseMetadataCreateView):
     model = TipoPublicacao
     form_class = TipoPublicacaoForm
     template_name = 'repositorio/metadado_form.html'
-    success_url = reverse_lazy('repositorio:tipopublicacao_lista')
     success_message = 'Tipo de publicação criado com sucesso!'
     error_message = 'Erro ao criar tipo de publicação. Verifique os campos.'
+    filtro_session_key = 'filtros_tipo_publicacao'
+    filtro_default_url = reverse_lazy('repositorio:tipopublicacao_lista')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -455,9 +478,10 @@ class TipoPublicacaoUpdateView(BaseMetadataUpdateView):
     model = TipoPublicacao
     form_class = TipoPublicacaoForm
     template_name = 'repositorio/metadado_form.html'
-    success_url = reverse_lazy('repositorio:tipopublicacao_lista')
     success_message = 'Tipo de publicação atualizado com sucesso!'
     error_message = 'Erro ao atualizar tipo de publicação. Verifique os campos.'
+    filtro_session_key = 'filtros_tipo_publicacao'
+    filtro_default_url = reverse_lazy('repositorio:tipopublicacao_lista')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -468,9 +492,10 @@ class TipoPublicacaoUpdateView(BaseMetadataUpdateView):
 class TipoPublicacaoDeleteView(BaseMetadataDeleteView):
     model = TipoPublicacao
     template_name = 'repositorio/metadado_confirm_delete.html'
-    success_url = reverse_lazy('repositorio:tipopublicacao_lista')
     context_object_name = 'item'
     success_message = 'Tipo de publicação excluído com sucesso!'
+    filtro_session_key = 'filtros_tipo_publicacao'
+    filtro_default_url = reverse_lazy('repositorio:tipopublicacao_lista')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -479,24 +504,27 @@ class TipoPublicacaoDeleteView(BaseMetadataDeleteView):
         return context
 
 
-# =========================================================================
+# ═══════════════════════════════════════════════════════════════════════════
 # AUTOR
-# =========================================================================
+# ═══════════════════════════════════════════════════════════════════════════
 
 class AutorListView(BaseMetadataListView):
     model = Autor
     template_name = 'repositorio/autor_list.html'
     context_object_name = 'autores'
     search_fields = ['nome', 'lattes_id']
+    filtro_session_key = 'filtros_autor'
+    filtro_default_url = reverse_lazy('repositorio:autor_lista')
 
 
 class AutorCreateView(BaseMetadataCreateView):
     model = Autor
     form_class = AutorForm
     template_name = 'repositorio/metadado_form.html'
-    success_url = reverse_lazy('repositorio:autor_lista')
     success_message = 'Autor criado com sucesso!'
     error_message = 'Erro ao criar autor. Verifique os campos.'
+    filtro_session_key = 'filtros_autor'
+    filtro_default_url = reverse_lazy('repositorio:autor_lista')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -508,9 +536,10 @@ class AutorUpdateView(BaseMetadataUpdateView):
     model = Autor
     form_class = AutorForm
     template_name = 'repositorio/metadado_form.html'
-    success_url = reverse_lazy('repositorio:autor_lista')
     success_message = 'Autor atualizado com sucesso!'
     error_message = 'Erro ao atualizar autor. Verifique os campos.'
+    filtro_session_key = 'filtros_autor'
+    filtro_default_url = reverse_lazy('repositorio:autor_lista')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -521,9 +550,10 @@ class AutorUpdateView(BaseMetadataUpdateView):
 class AutorDeleteView(BaseMetadataDeleteView):
     model = Autor
     template_name = 'repositorio/metadado_confirm_delete.html'
-    success_url = reverse_lazy('repositorio:autor_lista')
     context_object_name = 'item'
     success_message = 'Autor excluído com sucesso!'
+    filtro_session_key = 'filtros_autor'
+    filtro_default_url = reverse_lazy('repositorio:autor_lista')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -532,23 +562,26 @@ class AutorDeleteView(BaseMetadataDeleteView):
         return context
 
 
-# =========================================================================
+# ═══════════════════════════════════════════════════════════════════════════
 # TAG (PALAVRA-CHAVE)
-# =========================================================================
+# ═══════════════════════════════════════════════════════════════════════════
 
 class TagListView(BaseMetadataListView):
     model = Tag
     template_name = 'repositorio/tag_list.html'
     context_object_name = 'tags'
+    filtro_session_key = 'filtros_tag'
+    filtro_default_url = reverse_lazy('repositorio:tag_lista')
 
 
 class TagCreateView(BaseMetadataCreateView):
     model = Tag
     form_class = TagForm
     template_name = 'repositorio/metadado_form.html'
-    success_url = reverse_lazy('repositorio:tag_lista')
     success_message = 'Palavra-chave criada com sucesso!'
     error_message = 'Erro ao criar palavra-chave. Verifique os campos.'
+    filtro_session_key = 'filtros_tag'
+    filtro_default_url = reverse_lazy('repositorio:tag_lista')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -560,9 +593,10 @@ class TagUpdateView(BaseMetadataUpdateView):
     model = Tag
     form_class = TagForm
     template_name = 'repositorio/metadado_form.html'
-    success_url = reverse_lazy('repositorio:tag_lista')
     success_message = 'Palavra-chave atualizada com sucesso!'
     error_message = 'Erro ao atualizar palavra-chave. Verifique os campos.'
+    filtro_session_key = 'filtros_tag'
+    filtro_default_url = reverse_lazy('repositorio:tag_lista')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -573,9 +607,10 @@ class TagUpdateView(BaseMetadataUpdateView):
 class TagDeleteView(BaseMetadataDeleteView):
     model = Tag
     template_name = 'repositorio/metadado_confirm_delete.html'
-    success_url = reverse_lazy('repositorio:tag_lista')
     context_object_name = 'item'
     success_message = 'Palavra-chave excluída com sucesso!'
+    filtro_session_key = 'filtros_tag'
+    filtro_default_url = reverse_lazy('repositorio:tag_lista')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -584,23 +619,26 @@ class TagDeleteView(BaseMetadataDeleteView):
         return context
 
 
-# =========================================================================
+# ═══════════════════════════════════════════════════════════════════════════
 # PROJETO
-# =========================================================================
+# ═══════════════════════════════════════════════════════════════════════════
 
 class ProjetoListView(BaseMetadataListView):
     model = Projeto
     template_name = 'repositorio/projeto_list.html'
     context_object_name = 'projetos'
+    filtro_session_key = 'filtros_projeto'
+    filtro_default_url = reverse_lazy('repositorio:projeto_lista')
 
 
 class ProjetoCreateView(BaseMetadataCreateView):
     model = Projeto
     form_class = ProjetoForm
     template_name = 'repositorio/metadado_form.html'
-    success_url = reverse_lazy('repositorio:projeto_lista')
     success_message = 'Projeto criado com sucesso!'
     error_message = 'Erro ao criar projeto. Verifique os campos.'
+    filtro_session_key = 'filtros_projeto'
+    filtro_default_url = reverse_lazy('repositorio:projeto_lista')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -612,9 +650,10 @@ class ProjetoUpdateView(BaseMetadataUpdateView):
     model = Projeto
     form_class = ProjetoForm
     template_name = 'repositorio/metadado_form.html'
-    success_url = reverse_lazy('repositorio:projeto_lista')
     success_message = 'Projeto atualizado com sucesso!'
     error_message = 'Erro ao atualizar projeto. Verifique os campos.'
+    filtro_session_key = 'filtros_projeto'
+    filtro_default_url = reverse_lazy('repositorio:projeto_lista')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -625,9 +664,10 @@ class ProjetoUpdateView(BaseMetadataUpdateView):
 class ProjetoDeleteView(BaseMetadataDeleteView):
     model = Projeto
     template_name = 'repositorio/metadado_confirm_delete.html'
-    success_url = reverse_lazy('repositorio:projeto_lista')
     context_object_name = 'item'
     success_message = 'Projeto excluído com sucesso!'
+    filtro_session_key = 'filtros_projeto'
+    filtro_default_url = reverse_lazy('repositorio:projeto_lista')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
