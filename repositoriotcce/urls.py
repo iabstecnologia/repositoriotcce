@@ -16,6 +16,9 @@ urlpatterns = [
     
     # URLs do repositório (gestão de registros)
     path('gestao/', include('apps.repositorio.urls')),
+
+    # URLs do Django Explorer (ferramenta de exploração de dados)
+    path('gestao/explorer/', include('explorer.urls')),
 ]
 
 # Configuração para servir arquivos de mídia e estáticos em desenvolvimento

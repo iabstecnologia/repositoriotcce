@@ -57,6 +57,7 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     'django_cleanup.apps.CleanupConfig',
     'storages',
+    'explorer',  # Adicione esta linha
 ]
 
 LOCAL_APPS = [
@@ -149,3 +150,13 @@ TIME_ZONE = 'America/Sao_Paulo'
 USE_I18N = USE_L10N = USE_TZ = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'accounts.User'
+
+# Configuração do SQL Explorer
+EXPLORER_CONNECTIONS = { 'Default': 'default' } # Usa a conexão padrão do Django
+EXPLORER_DEFAULT_CONNECTION = 'default'
+
+EXPLORER_DATA_EXPORTERS = [
+    ('csv', 'explorer.exporters.CSVExporter'),
+    ('excel', 'explorer.exporters.ExcelExporter'),
+    ('json', 'explorer.exporters.JSONExporter')
+]

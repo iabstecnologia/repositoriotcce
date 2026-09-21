@@ -19,6 +19,12 @@
                 <i class="bi bi-plus-circle"></i> Novo Registro
             </a>
             {% if registros %}
+            <!-- Botão Exportar Planilha -->
+            <!-- Exportar tudo -->
+            <a href="https://tcce.inf.br/gestao/explorer/1/download?format=excel" target="_blank" class="btn btn-outline-success">
+                <i class="bi bi-file-earmark-excel"></i> Exportar Todos
+            </a>
+            <!-- Botão Baixar Arquivos Filtrados -->
             <a href="{% url 'repositorio:download_filtrados' %}?{{ query_params }}" class="btn btn-info" title="Baixar todos os arquivos filtrados em ZIP">
                 <i class="bi bi-download"></i> Baixar Arquivos Filtrados
             </a>
