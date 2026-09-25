@@ -8,6 +8,17 @@ from apps.core.repository_filters import (
     filter_repository_queryset,
 )
 from apps.repositorio.models.repositorio import Registro, Subprojeto
+from apps.core.utils.filtros_publicos import (
+    projetos_em_uso,
+    subprojetos_em_uso,
+    tipos_documento_em_uso,
+    areas_tematicas_em_uso,
+    tipos_publicacao_em_uso,
+    autores_em_uso,
+    tags_em_uso,
+    anos_em_uso,
+    subareas_tematicas_em_uso,
+)
 
 
 class RepositorioView(ListView):
@@ -28,6 +39,29 @@ class RepositorioView(ListView):
         context.update(build_repositorio_filter_context(self.request.GET))
         return context
 
+def repositorio_view(request):
+    # ... montagem do queryset de registros (já existente) ...
+
+    projeto_id = request.GET.get('projeto')
+
+    contexto = {
+        # ... dados já existentes (page_obj, registros, etc.) ...
+
+        # ───────────────────────────────────────────────────────────
+        # Filtros facetados: apenas metadados EM USO (área pública)
+        # ───────────────────────────────────────────────────────────
+        'projetos':          projetos_em_uso(),
+        'subprojetos':       subprojetos_em_uso(projeto_id) if projeto_id else subprojetos_em_uso(),
+        'tipos_documento':   tipos_documento_em_uso(),
+        'areas_tematicas':   areas_tematicas_em_uso(),
+        'tipos_publicacao':  tipos_publicacao_em_uso(),
+        'autores':           autores_em_uso(),
+        'tags':              tags_em_uso(),
+        'anos':              anos_em_uso(),
+        'subareas_tematicas': subareas_tematicas_em_uso(),
+    }
+
+    return render(request, 'website/repo_busca.html', contexto)
 
 def subprojetos_por_projeto(request):
     projeto_id = request.GET.get('projeto_id')

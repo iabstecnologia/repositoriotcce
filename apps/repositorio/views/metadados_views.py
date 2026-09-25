@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.db.models.deletion import ProtectedError
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
@@ -515,6 +515,44 @@ class AutorListView(BaseMetadataListView):
     search_fields = ['nome', 'lattes_id']
     filtro_session_key = 'filtros_autor'
     filtro_default_url = reverse_lazy('repositorio:autor_lista')
+
+    def get_queryset(self):
+        queryset = Autor.objects_all.all()
+
+        # Busca textual
+        search = self.request.GET.get('q')
+        if search:
+            query = Q()
+            for field in self.search_fields:
+                query |= Q(**{f'{field}__icontains': search})
+            queryset = queryset.filter(query)
+
+        # Filtro por situação ativo/inativo (agora com getlist)
+        ativos_selecionados = self.request.GET.getlist('ativo')
+
+        if ativos_selecionados:
+            # Se apenas "Ativos" marcado → filtra por ativo=True
+            # Se apenas "Inativos" marcado → filtra por ativo=False
+            # Se ambos marcados → mostra todos (sem filtro de ativo)
+            if ativos_selecionados == ['1']:
+                queryset = queryset.filter(ativo=True)
+            elif ativos_selecionados == ['0']:
+                queryset = queryset.filter(ativo=False)
+            # Se ambos: não filtra (traz tudo)
+
+        # Filtro: autores sem nenhum registro vinculado
+        sem_registro = self.request.GET.get('sem_registro')
+        if sem_registro == '1':
+            queryset = queryset.annotate(
+                total_registros=Count('autores')
+            ).filter(total_registros=0)
+
+        return queryset.order_by('nome')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['sem_registro_ativo'] = self.request.GET.get('sem_registro') == '1'
+        return context
 
 
 class AutorCreateView(BaseMetadataCreateView):

@@ -16,7 +16,8 @@
         <form method="get" class="row g-3">
             <div class="col-md-6"><label class="form-label">Buscar</label><input type="text" name="q" class="form-control" value="{{ search_query }}" placeholder="Nome ou ID Lattes"></div>
             <div class="col-md-6"><label class="form-label">Situação</label><select name="ativo" class="form-select"><option value="" {% if not request.GET.ativo %}selected{% endif %}>Todos</option><option value="1" {% if request.GET.ativo == '1' %}selected{% endif %}>Ativos</option><option value="0" {% if request.GET.ativo == '0' %}selected{% endif %}>Inativos</option></select></div>
-            <div class="col-12"><button type="submit" class="btn btn-primary">Filtrar</button> <a href="{% url 'repositorio:autor_lista' %}" class="btn btn-secondary">Limpar</a></div>
+            <!-- Sem registro -->
+            <div class="col-md-2"><div class="form-check mt-4"><input type="checkbox" class="form-check-input" id="filtro-sem-registro" name="sem_registro" value="1" {% if sem_registro_ativo %}checked{% endif %}><label class="form-check-label" for="filtro-sem-registro">Sem publicações</label></div></div><div class="col-12"><button type="submit" class="btn btn-primary">Filtrar</button> <a href="{% url 'repositorio:autor_lista' %}" class="btn btn-secondary">Limpar</a></div>
         </form>
     </div></div>
 
