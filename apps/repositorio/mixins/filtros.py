@@ -26,7 +26,6 @@ class FiltroContextMixin:
             return
 
         query_params = self.request.GET.copy()
-        query_params.pop('page', None)
 
         if query_params:
             self.request.session[self.filtro_session_key] = query_params.urlencode()

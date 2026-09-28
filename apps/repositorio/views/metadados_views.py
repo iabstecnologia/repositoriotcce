@@ -597,7 +597,9 @@ class AutorDeleteView(BaseMetadataDeleteView):
         context = super().get_context_data(**kwargs)
         context['entity_name'] = 'Autor'
         context['item_name'] = self.object.nome
+        context['item_id'] = self.object.id
         return context
+    
 
 
 # ═══════════════════════════════════════════════════════════════════════════
