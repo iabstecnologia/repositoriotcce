@@ -10,61 +10,66 @@
             <div class="card border-danger shadow">
                 <div class="card-body p-4">
 
-                    <p class="mb-3">
-                        Tem certeza que deseja excluir
-                        <strong>{{ item_name }}</strong>?
-                    </p>
+                    {% if is_bulk_delete %}
+                        {# ─────── MODO EM MASSA ─────── #}
+                        <h5 class="mb-3">
+                            <i class="bi bi-exclamation-triangle text-danger"></i>
+                            Exclusão em massa
+                        </h5>
 
-                    {% if registros_vinculados %}
-                    <div class="alert alert-warning">
-                        <h6 class="alert-heading">
-                            <i class="bi bi-exclamation-triangle-fill"></i>
-                            Este item está vinculado a {{ total_vinculados }} registro(s)
-                        </h6>
-                        <p class="mb-2 small">
-                            Reassocie os registros abaixo antes de tentar excluir:
+                        <p>
+                            Você está prestes a excluir
+                            <strong>{{ total_itens }}</strong> {{ entity_name|lower }}.
+                            Todos são órfãos (sem registros vinculados).
                         </p>
-                        <ul class="mb-0 small">
-                            {% for registro in registros_vinculados|slice:":20" %}
-                            <li>
-                                <a href="{% url 'repositorio:detalhe' registro.pk %}" target="_blank">
-                                    {{ registro.titulo|truncatechars:80 }}
-                                </a>
-                            </li>
-                            {% endfor %}
-                            {% if total_vinculados > 20 %}
-                            <li class="text-muted">
-                                ... e mais {{ total_vinculados|add:"-20" }} registro(s)
-                            </li>
-                            {% endif %}
-                        </ul>
-                    </div>
 
-                    <div class="d-flex justify-content-end gap-2">
-                        <a href="{{ url_retorno_com_filtros }}" class="btn btn-secondary">
-                            <i class="bi bi-x-circle"></i> Cancelar
-                        </a>
-                        <button type="button" class="btn btn-danger" disabled
-                            title="Impossível excluir enquanto houver vínculos">
-                            <i class="bi bi-trash"></i> Excluir
-                        </button>
-                    </div>
-                    {% else %}
-                    <p class="text-muted small">
-                        Nenhum registro vinculado. Esta ação não pode ser desfeita.
-                    </p>
-                    <form method="post">
-                        {% csrf_token %}
-                        <div class="d-flex justify-content-end gap-2">
-                            <a href="{{ url_retorno_com_filtros }}" class="btn btn-secondary">
-                                <i class="bi bi-x-circle"></i> Cancelar
-                            </a>
-                            <button type="submit" class="btn btn-danger">
-                                <i class="bi bi-trash"></i> Excluir
-                            </button>
+                        <div class="alert alert-warning">
+                            <strong>Atenção:</strong> esta ação é irreversível.
                         </div>
-                    </form>
+
+                        <details class="mb-3">
+                            <summary class="small text-muted" style="cursor: pointer;">
+                                Ver lista completa ({{ total_itens }} itens)
+                            </summary>
+                            <ul class="small mt-2 mb-0" style="max-height: 300px; overflow-y: auto;">
+                                {% for item in itens_para_excluir %}
+                                    <li>{{ item.nome }}</li>
+                                {% endfor %}
+                            </ul>
+                        </details>
+
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="d-flex justify-content-end gap-2">
+                                <a href="{{ url_retorno_com_filtros }}" class="btn btn-secondary">
+                                    <i class="bi bi-x-circle"></i> Cancelar
+                                </a>
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="bi bi-trash"></i>
+                                    Excluir {{ total_itens }} item(ns)
+                                </button>
+                            </div>
+                        </form>
+
+                    {% else %}
+                        {# ─────── MODO INDIVIDUAL (existente) ─────── #}
+                        <p class="mb-4">
+                            Tem certeza que deseja excluir
+                            <strong>{{ item_name }}</strong>?
+                        </p>
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="d-flex justify-content-end gap-2">
+                                <a href="{{ url_retorno_com_filtros }}" class="btn btn-secondary">
+                                    <i class="bi bi-x-circle"></i> Cancelar
+                                </a>
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="bi bi-trash"></i> Excluir
+                                </button>
+                            </div>
+                        </form>
                     {% endif %}
+
                 </div>
             </div>
         </div>
