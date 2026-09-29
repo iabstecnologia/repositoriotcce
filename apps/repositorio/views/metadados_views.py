@@ -181,10 +181,16 @@ class BaseMetadataDeleteView(FiltroDeleteViewMixin, LoginRequiredMixin, DeleteVi
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
         if hasattr(self.object, 'nome'):
             context['item_name'] = self.object.nome
         elif hasattr(self.object, 'titulo'):
             context['item_name'] = self.object.titulo
+
+        # Registros vinculados (para exibir antes da exclusão)
+        context['registros_vinculados'] = self._get_linked_registries()
+        context['total_vinculados'] = context['registros_vinculados'].count()
+
         return context
 
 
