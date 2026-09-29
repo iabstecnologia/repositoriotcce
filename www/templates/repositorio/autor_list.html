@@ -10,7 +10,28 @@
     <div class="row mb-4"><div class="col-12">{% for message in messages %}<div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">{{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>{% endfor %}</div></div>
     {% endif %}
 
-    <div class="row mb-4"><div class="col-12 text-end"><a href="{% url 'repositorio:autor_criar' %}" class="btn btn-success">Novo Autor</a></div></div>
+    <div class="d-flex gap-2">
+        <!-- Dropdown de Ações -->
+        <div class="dropdown">
+            <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="acoesAutorDropdown"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-three-dots-vertical"></i> Ações
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="acoesAutorDropdown">
+                <li>
+                    <a class="dropdown-item text-danger"
+                        href="{% url 'repositorio:autor_excluir_orfaos' %}?{{ query_params }}">
+                        <i class="bi bi-trash"></i> Excluir filtrados (apenas órfãos)
+                    </a>
+                </li>
+            </ul>
+        </div>
+            <div class="row mb-4">
+                <div class="col-12 text-end">
+                    <a href="{% url 'repositorio:autor_criar' %}" class="btn btn-success">Novo Autor</a>
+                </div>
+            </div>
+        </div>
 
     <div class="card mb-4"><div class="card-body">
         <form method="get" class="row g-3">

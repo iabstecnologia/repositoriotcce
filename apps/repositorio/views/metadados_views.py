@@ -3,9 +3,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q, Count
 from django.db.models.deletion import ProtectedError
 from django.shortcuts import redirect
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
-
+from django.views import View
 from apps.repositorio.forms.metadados_forms import (
     AreaTematicaForm,
     SubAreaTematicaForm,
@@ -720,3 +720,213 @@ class ProjetoDeleteView(BaseMetadataDeleteView):
         context['entity_name'] = 'Projeto'
         context['item_name'] = self.object.nome
         return context
+
+
+
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# EXCLUSÃO EM MASSA — AUTORES ÓRFÃOS
+# ═══════════════════════════════════════════════════════════════════════════
+
+class AutorOrfaosDeleteView(LoginRequiredMixin, View):
+    """
+    Exclui em massa todos os autores filtrados que NÃO possuem registros vinculados.
+    Mostra um modal de confirmação antes de executar.
+    """
+    login_url = '/admin/login/'
+    filtro_session_key = 'filtros_autor'
+    filtro_default_url = reverse_lazy('repositorio:autor_lista')
+
+    def _get_queryset_orfaos(self):
+        """Retorna autores filtrados que NÃO possuem vínculos com registros."""
+        from apps.repositorio.models.repositorio import Registro
+
+        # Aplica os mesmos filtros da listagem
+        queryset = Autor.objects_all.all()
+
+        search = self.request.GET.get('q')
+        if search:
+            from django.db.models import Q
+            queryset = queryset.filter(
+                Q(nome__icontains=search) | Q(lattes_id__icontains=search)
+            )
+
+        ativos_selecionados = self.request.GET.getlist('ativo')
+        if ativos_selecionados == ['1']:
+            queryset = queryset.filter(ativo=True)
+        elif ativos_selecionados == ['0']:
+            queryset = queryset.filter(ativo=False)
+
+        # Apenas órfãos (sem registros vinculados)
+        queryset = queryset.annotate(
+            total_registros=Count('autores')
+        ).filter(total_registros=0)
+
+        return queryset.order_by('nome')
+
+    def get(self, request, *args, **kwargs):
+        """Exibe modal de confirmação com a lista de autores a excluir."""
+        orfaos = self._get_queryset_orfaos()
+
+        if not orfaos.exists():
+            messages.warning(
+                request,
+                'Nenhum autor órfão encontrado com os filtros aplicados.'
+            )
+            return redirect(self._url_lista_com_filtros())
+
+        # Renderiza o modal de confirmação reutilizando o template existente
+        from django.shortcuts import render
+        return render(request, 'repositorio/metadado_confirm_delete.html', {
+            'entity_name': 'Autor(es) órfão(s)',
+            'item_name': f'{orfaos.count()} autor(es) sem publicações',
+            'itens_para_excluir': orfaos,
+            'total_itens': orfaos.count(),
+            'url_retorno_com_filtros': self._url_lista_com_filtros(),
+            'is_bulk_delete': True,
+        })
+
+    def post(self, request, *args, **kwargs):
+        """Executa a exclusão em massa."""
+        orfaos = self._get_queryset_orfaos()
+        total = orfaos.count()
+
+        if total == 0:
+            messages.warning(
+                request,
+                'Nenhum autor órfão encontrado com os filtros aplicados.'
+            )
+            return redirect(self._url_lista_com_filtros())
+
+        # Como são todos órfãos, o delete() do model não vai lançar ProtectedError
+        # Mas por segurança, iteramos individualmente para log e contagem precisa
+        excluidos = 0
+        erros = []
+
+        for autor in orfaos:
+            try:
+                autor.delete()
+                excluidos += 1
+            except Exception as e:
+                erros.append(f'{autor.nome}: {e}')
+
+        if erros:
+            messages.warning(
+                request,
+                f'{excluidos} autor(es) excluído(s). '
+                f'{len(erros)} não puderam ser excluídos: '
+                + '; '.join(erros[:3])
+                + (f' ... e mais {len(erros) - 3}' if len(erros) > 3 else '')
+            )
+        else:
+            messages.success(
+                request,
+                f'{excluidos} autor(es) órfão(s) excluído(s) com sucesso.'
+            )
+
+        return redirect(self._url_lista_com_filtros())
+
+    def _url_lista_com_filtros(self):
+        """Monta a URL de retorno preservando os filtros salvos."""
+        base_url = str(self.filtro_default_url)
+        filtros = self.request.session.get(self.filtro_session_key, '')
+        return f'{base_url}?{filtros}' if filtros else base_url
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# EXCLUSÃO EM MASSA — TAGS ÓRFÃS
+# ═══════════════════════════════════════════════════════════════════════════
+
+class TagOrfasDeleteView(LoginRequiredMixin, View):
+    """
+    Exclui em massa todas as tags filtradas que NÃO possuem registros vinculados.
+    """
+    login_url = '/admin/login/'
+    filtro_session_key = 'filtros_tag'
+    filtro_default_url = reverse_lazy('repositorio:tag_lista')
+
+    def _get_queryset_orfas(self):
+        from django.db.models import Q
+
+        queryset = Tag.objects_all.all()
+
+        search = self.request.GET.get('q')
+        if search:
+            queryset = queryset.filter(nome__icontains=search)
+
+        ativos_selecionados = self.request.GET.getlist('ativo')
+        if ativos_selecionados == ['1']:
+            queryset = queryset.filter(ativo=True)
+        elif ativos_selecionados == ['0']:
+            queryset = queryset.filter(ativo=False)
+
+        # Apenas órfãs (sem registros vinculados)
+        queryset = queryset.annotate(
+            total_registros=Count('tags')
+        ).filter(total_registros=0)
+
+        return queryset.order_by('nome')
+
+    def get(self, request, *args, **kwargs):
+        from django.shortcuts import render
+
+        orfas = self._get_queryset_orfas()
+
+        if not orfas.exists():
+            messages.warning(
+                request,
+                'Nenhuma tag órfã encontrada com os filtros aplicados.'
+            )
+            return redirect(self._url_lista_com_filtros())
+
+        return render(request, 'repositorio/metadado_confirm_delete.html', {
+            'entity_name': 'Tag(s) órfã(s)',
+            'item_name': f'{orfas.count()} tag(s) sem publicações',
+            'itens_para_excluir': orfas,
+            'total_itens': orfas.count(),
+            'url_retorno_com_filtros': self._url_lista_com_filtros(),
+            'is_bulk_delete': True,
+        })
+
+    def post(self, request, *args, **kwargs):
+        orfas = self._get_queryset_orfas()
+        total = orfas.count()
+
+        if total == 0:
+            messages.warning(
+                request,
+                'Nenhuma tag órfã encontrada com os filtros aplicados.'
+            )
+            return redirect(self._url_lista_com_filtros())
+
+        excluidas = 0
+        erros = []
+
+        for tag in orfas:
+            try:
+                tag.delete()
+                excluidas += 1
+            except Exception as e:
+                erros.append(f'{tag.nome}: {e}')
+
+        if erros:
+            messages.warning(
+                request,
+                f'{excluidas} tag(s) excluída(s). '
+                f'{len(erros)} não puderam ser excluídas: '
+                + '; '.join(erros[:3])
+                + (f' ... e mais {len(erros) - 3}' if len(erros) > 3 else '')
+            )
+        else:
+            messages.success(
+                request,
+                f'{excluidas} tag(s) órfã(s) excluída(s) com sucesso.'
+            )
+
+        return redirect(self._url_lista_com_filtros())
+
+    def _url_lista_com_filtros(self):
+        base_url = str(self.filtro_default_url)
+        filtros = self.request.session.get(self.filtro_session_key, '')
+        return f'{base_url}?{filtros}' if filtros else base_url

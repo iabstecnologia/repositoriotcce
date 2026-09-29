@@ -16,7 +16,8 @@ from apps.repositorio.views.metadados_views import (
 	TipoPublicacaoListView, TipoPublicacaoCreateView, TipoPublicacaoUpdateView, TipoPublicacaoDeleteView,
 	AutorListView, AutorCreateView, AutorUpdateView, AutorDeleteView,
 	TagListView, TagCreateView, TagUpdateView, TagDeleteView,
-	ProjetoListView, ProjetoCreateView, ProjetoUpdateView, ProjetoDeleteView
+	ProjetoListView, ProjetoCreateView, ProjetoUpdateView, ProjetoDeleteView,
+	AutorOrfaosDeleteView, TagOrfasDeleteView
 )
 
 app_name = 'repositorio'
@@ -88,4 +89,16 @@ urlpatterns = [
 	path('galeria/nova/', FotoGaleriaCreateView.as_view(), name='galeria_criar'),
 	path('galeria/<int:pk>/editar/', FotoGaleriaUpdateView.as_view(), name='galeria_editar'),
 	path('galeria/<int:pk>/excluir/', FotoGaleriaDeleteView.as_view(), name='galeria_excluir'),
+
+	# Exclusão de registros órfãos
+	path(
+		'autores/excluir-orfaos/',
+		AutorOrfaosDeleteView.as_view(),
+		name='autor_excluir_orfaos',
+	),
+	path(
+		'tags/excluir-orfas/',
+		TagOrfasDeleteView.as_view(),
+		name='tag_excluir_orfas',
+	),
 ]
