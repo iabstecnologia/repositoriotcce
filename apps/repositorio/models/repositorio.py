@@ -5,6 +5,7 @@ from django.utils.text import slugify
 from datetime import date
 from django.utils import timezone
 from apps.repositorio.validators import validate_isbn
+from django.db.models.deletion import ProtectedError
 
 # Importa o modelo User customizado do projeto (apps.accounts.User)
 from django.contrib.auth import get_user_model
@@ -121,6 +122,20 @@ class Autor(models.Model):
         verbose_name_plural = "Autores"
         ordering = ['nome']
 
+    def delete(self, *args, **kwargs):
+        """
+        Bloqueia exclusão de autores com registros vinculados (M2M).
+        Lança ProtectedError para reutilizar o tratamento já existente nas views.
+        """
+        registros_vinculados = self.autores.all()
+        if registros_vinculados.exists():
+            raise ProtectedError(
+                f'Não é possível excluir o autor "{self.nome}" porque existem '
+                f'registros vinculados a ele.',
+                set(registros_vinculados),
+            )
+        return super().delete(*args, **kwargs)
+
     def __str__(self):
         return self.nome
 
@@ -138,6 +153,20 @@ class Tag(models.Model):
         verbose_name = "Tag / Palavra-chave"
         verbose_name_plural = "Tags / Palavras-chave"
         ordering = ['nome']
+
+    def delete(self, *args, **kwargs):
+        """
+        Bloqueia exclusão de tags com registros vinculados (M2M).
+        Lança ProtectedError para reutilizar o tratamento já existente nas views.
+        """
+        registros_vinculados = self.tags.all()
+        if registros_vinculados.exists():
+            raise ProtectedError(
+                f'Não é possível excluir a tag "{self.nome}" porque existem '
+                f'registros vinculados a ela.',
+                set(registros_vinculados),
+            )
+        return super().delete(*args, **kwargs)
 
     def __str__(self):
         return self.nome
