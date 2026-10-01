@@ -1,5 +1,6 @@
 from django.views.generic import ListView, DetailView
 from django.shortcuts import render, get_object_or_404
+from apps.core.utils.filtros_publicos import subprojetos_em_uso
 from django.http import FileResponse, Http404, HttpResponseRedirect, JsonResponse
 import os
 
@@ -30,8 +31,12 @@ class RepositorioView(ListView):
         return context
 
 def subprojetos_por_projeto(request):
+    """
+    Retorna subprojetos EM USO (com pelo menos um registro público vinculado)
+    do projeto especificado. Usado pelo AJAX do filtro público.
+    """
     projeto_id = request.GET.get('projeto_id')
-    subprojetos = Subprojeto.objects.filter(projeto_id=projeto_id)
+    subprojetos = subprojetos_em_uso(projeto_id=projeto_id)
 
     data = [
         {'id': subprojeto.id, 'nome': subprojeto.nome}
