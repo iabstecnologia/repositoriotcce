@@ -127,7 +127,7 @@ class Autor(models.Model):
         Bloqueia exclusão de autores com registros vinculados (M2M).
         Lança ProtectedError para reutilizar o tratamento já existente nas views.
         """
-        registros_vinculados = self.autores.all()
+        registros_vinculados = self.registros.all()
         if registros_vinculados.exists():
             raise ProtectedError(
                 f'Não é possível excluir o autor "{self.nome}" porque existem '
@@ -159,7 +159,7 @@ class Tag(models.Model):
         Bloqueia exclusão de tags com registros vinculados (M2M).
         Lança ProtectedError para reutilizar o tratamento já existente nas views.
         """
-        registros_vinculados = self.tags.all()
+        registros_vinculados = self.registros.all()
         if registros_vinculados.exists():
             raise ProtectedError(
                 f'Não é possível excluir a tag "{self.nome}" porque existem '
@@ -289,19 +289,19 @@ class Registro(models.Model):
     # ------------------------------------
     # RELAÇÕES E METADADOS CONTROLADOS
     # ------------------------------------
-    subprojeto = models.ForeignKey(Subprojeto, on_delete=models.PROTECT, related_name="subprojetos", verbose_name="Subprojeto")
-    autores = models.ManyToManyField(Autor, related_name="autores", verbose_name="Autores")
-    tags = models.ManyToManyField(Tag, related_name="tags", verbose_name="Palavras-chave")
-    tipo_documento = models.ForeignKey(TipoDocumento, on_delete=models.PROTECT, related_name="tipo_documentos", verbose_name="Tipo de Documento")
-    area_tematica = models.ForeignKey(AreaTematica, on_delete=models.PROTECT, related_name="areas_tematicas", verbose_name="Área Temática")
+    subprojeto = models.ForeignKey(Subprojeto, on_delete=models.PROTECT, related_name="registros", verbose_name="Subprojeto")
+    autores = models.ManyToManyField(Autor, related_name="registros", verbose_name="Autores")
+    tags = models.ManyToManyField(Tag, related_name="registros", verbose_name="Palavras-chave")
+    tipo_documento = models.ForeignKey(TipoDocumento, on_delete=models.PROTECT, related_name="registros", verbose_name="Tipo de Documento")
+    area_tematica = models.ForeignKey(AreaTematica, on_delete=models.PROTECT, related_name="registros", verbose_name="Área Temática")
     subareas_tematicas = models.ManyToManyField(
         'SubAreaTematica',
         related_name='registros',
         blank=True,
         verbose_name='Subáreas Temáticas',
     )
-    status = models.ForeignKey(Status, on_delete=models.PROTECT, related_name="status", verbose_name="Status de Publicação")
-    tipo_publicacao = models.ForeignKey(TipoPublicacao, on_delete=models.PROTECT, related_name="tipo_publicacaoes",  verbose_name="Veículo de Publicação")
+    status = models.ForeignKey(Status, on_delete=models.PROTECT, related_name="registros", verbose_name="Status de Publicação")
+    tipo_publicacao = models.ForeignKey(TipoPublicacao, on_delete=models.PROTECT, related_name="registros",  verbose_name="Veículo de Publicação")
 
     # ------------------------------------
     # CONTEÚDO E ARQUIVO

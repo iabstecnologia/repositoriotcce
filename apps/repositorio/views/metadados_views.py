@@ -550,7 +550,7 @@ class AutorListView(BaseMetadataListView):
         sem_registro = self.request.GET.get('sem_registro')
         if sem_registro == '1':
             queryset = queryset.annotate(
-                total_registros=Count('autores')
+                total_registros=Count('registros')
             ).filter(total_registros=0)
 
         return queryset.order_by('nome')
@@ -760,7 +760,7 @@ class AutorOrfaosDeleteView(LoginRequiredMixin, View):
 
         # Apenas órfãos (sem registros vinculados)
         queryset = queryset.annotate(
-            total_registros=Count('autores')
+            total_registros=Count('registros')
         ).filter(total_registros=0)
 
         return queryset.order_by('nome')
@@ -863,7 +863,7 @@ class TagOrfasDeleteView(LoginRequiredMixin, View):
 
         # Apenas órfãs (sem registros vinculados)
         queryset = queryset.annotate(
-            total_registros=Count('tags')
+            total_registros=Count('registros')
         ).filter(total_registros=0)
 
         return queryset.order_by('nome')
