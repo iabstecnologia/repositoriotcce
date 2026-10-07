@@ -167,9 +167,9 @@ class TCCEViewCountersTest(TestCase):
             'producoes_publicadas': 1,
             'artigos_cientificos': 1,
             'autores_unicos': Autor.objects.filter(
-                autores__ativo=True,
-                autores__subprojeto__projeto=self.projeto,
-                autores__subprojeto__ativo=True,
+                registros__ativo=True,
+                registros__subprojeto__projeto=self.projeto,
+                registros__subprojeto__ativo=True,
             ).distinct().count(),
             'relatorios_tecnicos': 1,
         }

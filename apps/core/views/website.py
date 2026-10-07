@@ -104,9 +104,9 @@ class TCCEView(TemplateView):
         
         # Autores ativos vinculados a registros em subprojetos ativos do projeto.
         autores_unicos = Autor.objects.filter(
-            autores__ativo=True,
-            autores__subprojeto__projeto=projeto,
-            autores__subprojeto__ativo=True,
+            registros__ativo=True,
+            registros__subprojeto__projeto=projeto,
+            registros__subprojeto__ativo=True,
         ).distinct().count()
         
         # Relatórios técnicos (tipo_documento contém 'RELATÓRIO')
@@ -162,9 +162,9 @@ class TCCEView(TemplateView):
         # União de autores ativos vinculados a registros ativos; um autor
         # presente em mais de um TCCE deve ser contado uma única vez.
         autores_unicos = Autor.objects.filter(
-            autores__ativo=True,
-            autores__subprojeto__projeto__ativo=True,
-            autores__subprojeto__ativo=True,
+            registros__ativo=True,
+            registros__subprojeto__projeto__ativo=True,
+            registros__subprojeto__ativo=True,
         ).distinct().count()
         
         # Relatórios técnicos (tipo_documento contém 'RELATÓRIO TÉCNICO FINAL')
