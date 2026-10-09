@@ -17,8 +17,8 @@
             <ul class="navbar-nav align-items-center gap-lg-4">
                 <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'home' %}fw-bold{% endif %}" href="{% url 'core:home' %}">Inicio</a></li>
                 <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'tcce' %}fw-bold{% endif %}" href="{% url 'core:tcce' %}">TCCEs</a></li>
-                <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'contato' %}fw-bold{% endif %}" href="{% url 'core:contato' %}">Contato</a></li>
                 <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'galeria' %}fw-bold{% endif %}" href="{% url 'core:galeria' %}">Galeria</a></li>
+                <li class="nav-item"><a class="nav-link {% if request.resolver_match.url_name == 'sobre' %}fw-bold{% endif %}" href="{% url 'core:sobre' %}">Sobre</a></li>
                 {% if request.user.is_authenticated %}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle {% if request.resolver_match.namespace == 'repositorio' %}fw-bold{% endif %}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">

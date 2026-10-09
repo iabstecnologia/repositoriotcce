@@ -111,6 +111,13 @@ class TCCEViewCountersTest(TestCase):
         self.autor_ativo = Autor.objects.create(nome='Autor ativo', ativo=True)
         self.autor_inativo = Autor.objects.create(nome='Autor inativo', ativo=False)
 
+    def test_tcce_page_labels_active_records_as_producoes(self):
+        response = self.client.get(reverse('core:tcce'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, '>Produções</p>', count=4)
+        self.assertNotContains(response, 'Produções Acadêmicas')
+
     def _criar_registro(self, *, subprojeto, tipo_documento, status, ativo=True):
         registro = Registro.objects.create(
             titulo=f'Registro {Registro.objects_all.count() + 1}',
