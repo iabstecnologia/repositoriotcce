@@ -4156,9 +4156,9 @@ VALUES (
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO
-    repositorio_status (id, nome, ativo, is_public)
-VALUES (1, 'PUBLICADO', TRUE, TRUE),
-    (2, 'PRODUZIDO', TRUE, TRUE)
+    repositorio_status (id, nome, ativo)
+VALUES (1, 'PUBLICADO', TRUE),
+    (2, 'PRODUZIDO', TRUE)
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO

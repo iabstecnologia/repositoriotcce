@@ -218,7 +218,7 @@ class Command(BaseCommand):
             )
             Status.objects.get_or_create(
                 nome=item['STATUS'],
-                defaults={'ativo': True, 'is_public': True},
+                defaults={'ativo': True},
             )
             TipoPublicacao.objects.get_or_create(
                 nome=item['TIPO_PUBLICACAO'],

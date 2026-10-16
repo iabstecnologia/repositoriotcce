@@ -39,7 +39,7 @@ class RegistroFormSpeciesFieldsTest(TestCase):
             nome='Geomorfologia',
             ativo=True,
         )
-        self.status = Status.objects.create(nome='Em Revisão', ativo=True, is_public=False)
+        self.status = Status.objects.create(nome='Em Revisão', ativo=True)
         self.tipo_publicacao = TipoPublicacao.objects.create(nome='Anais', ativo=True)
         self.autor = Autor.objects.create(nome='Autor do Form', ativo=True)
         self.tag = Tag.objects.create(nome='Tag do Form', ativo=True)

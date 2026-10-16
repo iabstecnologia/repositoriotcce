@@ -86,7 +86,6 @@ def filter_repository_queryset(query_params):
     """Aplica os filtros públicos de busca ao queryset de registros."""
     queryset = Registro.objects.filter(
         ativo=True,
-        status__is_public=True,
     ).prefetch_related(
         'autores',
         'tags',

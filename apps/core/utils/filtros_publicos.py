@@ -21,7 +21,6 @@ from apps.repositorio.models.repositorio import (
 def _registros_publicos():
     """
     Queryset base de registros visíveis ao público.
-    Ajuste conforme a regra do seu projeto (ex: status__is_public=True).
     """
     return Registro.objects.filter(
         ativo=True,
@@ -81,7 +80,7 @@ def tipos_publicacao_em_uso():
 
 def status_em_uso():
     return (
-        Status.objects.filter(ativo=True, is_public=True)
+        Status.objects.filter(ativo=True)
         .filter(Exists(_registros_publicos().filter(status=OuterRef('pk'))))
         .order_by('nome')
     )

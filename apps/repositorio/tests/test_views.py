@@ -34,7 +34,7 @@ class RegistroCreateViewSpeciesFieldsTest(TestCase):
             nome='Zoologia Aplicada',
             ativo=True,
         )
-        self.status = Status.objects.create(nome='Rascunho', ativo=True, is_public=False)
+        self.status = Status.objects.create(nome='Rascunho', ativo=True)
         self.tipo_publicacao = TipoPublicacao.objects.create(nome='Livro', ativo=True)
         self.autor = Autor.objects.create(nome='Autor da View', ativo=True)
         self.tag = Tag.objects.create(nome='Tag da View', ativo=True)
@@ -103,8 +103,8 @@ class TCCEViewCountersTest(TestCase):
         )
         self.artigo = TipoDocumento.objects.create(nome='ARTIGO CIENTÍFICO', ativo=True)
         self.relatorio = TipoDocumento.objects.create(nome='RELATÓRIO TÉCNICO FINAL', ativo=True)
-        self.status_publicado = Status.objects.create(nome='PUBLICADO', ativo=True, is_public=True)
-        self.status_rascunho = Status.objects.create(nome='RASCUNHO', ativo=True, is_public=False)
+        self.status_publicado = Status.objects.create(nome='PUBLICADO', ativo=True)
+        self.status_rascunho = Status.objects.create(nome='RASCUNHO', ativo=True)
         self.tipo_publicacao = TipoPublicacao.objects.create(nome='Revista', ativo=True)
         self.area_tematica = AreaTematica.objects.create(nome='Biologia', ativo=True)
         self.tag = Tag.objects.create(nome='Contadores', ativo=True)

@@ -33,17 +33,17 @@
                     <!-- Status e Informações Rápidas -->
                     <div class="row mb-4">
                         <div class="col-md-6">
-                            <p class="mb-1"><strong>Status:</strong> 
-                                <span class="badge {% if registro.status.is_public %}bg-success{% else %}bg-warning{% endif %}">
-                                    {{ registro.status.nome }}
-                                </span>
-                            </p>
                             <p class="mb-1"><strong>Ativo:</strong> 
                                 {% if registro.ativo %}
                                 <span class="badge bg-success">Sim</span>
                                 {% else %}
                                 <span class="badge bg-secondary">Não</span>
                                 {% endif %}
+                            </p>
+                            <p class="mb-1"><strong>Status:</strong> 
+                                <span class="badge {% if registro.status.nome == 'PUBLICADO' %}bg-success{% else %}bg-warning{% endif %}">
+                                    {{ registro.status.nome }}
+                                </span>
                             </p>
                         </div>
                         <div class="col-md-6 text-md-end">

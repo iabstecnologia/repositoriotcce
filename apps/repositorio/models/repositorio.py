@@ -247,7 +247,6 @@ class Status(models.Model):
     objects_all = TodosManager()
     nome = models.CharField(max_length=50, unique=True, verbose_name="Nome do Status")
     ativo = models.BooleanField(default=True, verbose_name="Ativo")
-    is_public = models.BooleanField(default=True, verbose_name="É público?")
 
     class Meta:
         verbose_name = "Status"

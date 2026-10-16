@@ -85,14 +85,29 @@
     overflow: hidden;
 }
 
+/* "safe center" evita cortar o primeiro card quando a linha excede a largura */
+.categories-section .row {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    justify-content: safe center !important;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 0.5rem;
+}
+
+.category-card {
+    flex: 0 0 140px;
+    width: 140px;
+}
+
 @media (min-width: 992px) {
     .categories-section .row {
-        flex-wrap: nowrap;
         gap: 1rem !important;
+        overflow-x: visible;
     }
 
     .category-card {
         flex: 1 1 0;
+        width: auto;
         min-width: 140px;
     }
 }

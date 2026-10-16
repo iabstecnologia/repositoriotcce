@@ -22,7 +22,7 @@ class RegistroAdmin(admin.ModelAdmin):
     )
 
     list_filter = (
-        'status__is_public', 'ativo', 'data_publicacao',
+        'ativo', 'data_publicacao',
         'tipo_documento', 'area_tematica', 'status', 'subprojeto__projeto',
     )
 

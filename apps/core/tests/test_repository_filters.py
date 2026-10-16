@@ -29,7 +29,7 @@ class PublicacoesCientificasCategoryTest(TestCase):
             ativo=True,
         )
         self.area_tematica = AreaTematica.objects.create(nome='Biologia', ativo=True)
-        self.status = Status.objects.create(nome='Publicado', ativo=True, is_public=True)
+        self.status = Status.objects.create(nome='Publicado', ativo=True)
         self.tipo_publicacao = TipoPublicacao.objects.create(nome='Revista', ativo=True)
 
     def _criar_registro(self, tipo_documento_nome):
@@ -83,6 +83,21 @@ class PublicacoesCientificasCategoryTest(TestCase):
                 resultado = filter_repository_queryset({campo: 'abc'})
 
                 self.assertFalse(resultado.exists())
+
+    def test_public_visibility_uses_record_active_flag_not_status_active_flag(self):
+        status_inativo = Status.objects_all.create(nome='Status inativo', ativo=False)
+        registro_com_status_inativo = self._criar_registro('LIVRO')
+        Registro.objects.filter(pk=registro_com_status_inativo.pk).update(status=status_inativo)
+
+        registro_inativo = self._criar_registro('TESE')
+        Registro.objects.filter(pk=registro_inativo.pk).update(ativo=False)
+
+        resultado = filter_repository_queryset({})
+
+        self.assertSetEqual(
+            set(resultado.values_list('pk', flat=True)),
+            {registro_com_status_inativo.pk},
+        )
 
     def test_explicit_category_filters_only_its_configured_document_type(self):
         artigo_cientifico = self._criar_registro('ARTIGO CIENTÍFICO')

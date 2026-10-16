@@ -74,9 +74,9 @@ class TipoPublicacaoAdmin(BaseMetadataAdmin):
 
 @admin.register(Status)
 class StatusAdmin(BaseMetadataAdmin):
-    """Gerenciamento de Status de Workflow, com indicador de acesso público."""
-    list_display = ('nome', 'is_public', 'ativo')
-    list_filter = ('is_public', 'ativo')
+    """Gerenciamento de Status de Workflow."""
+    list_display = ('nome', 'ativo')
+    list_filter = ('ativo',)
     ordering = ('nome',)
 
 @admin.register(Subprojeto)

@@ -146,7 +146,7 @@
                             <td>{{ registro.subprojeto.nome }}</td>
                             <td>{{ registro.tipo_documento.nome }}</td>
                             <td>
-                                <span class="badge {% if registro.status.is_public %}bg-success{% else %}bg-warning{% endif %}">
+                                <span class="badge {% if registro.status.nome == 'PUBLICADO' %}bg-success{% else %}bg-warning{% endif %}">
                                     {{ registro.status.nome }}
                                 </span>
                             </td>
