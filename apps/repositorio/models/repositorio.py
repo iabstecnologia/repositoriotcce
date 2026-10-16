@@ -351,6 +351,19 @@ class Registro(models.Model):
         """Verifica se o tipo de documento é um vídeo."""
         return 'vídeo' in self.tipo_documento.nome.lower()
 
+    @staticmethod
+    def validar_subareas_tematicas(area_tematica, subareas_tematicas):
+        if not area_tematica:
+            return
+
+        if any(
+            subarea.area_tematica_id != area_tematica.id
+            for subarea in subareas_tematicas
+        ):
+            raise ValidationError(
+                'Todas as subáreas devem pertencer à Área Temática selecionada.'
+            )
+
     def clean(self):
         """Validação personalizada para garantir a integridade dos dados."""
 

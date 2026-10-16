@@ -204,15 +204,10 @@ class RegistroForm(forms.ModelForm):
             self.add_error('subprojeto', 'Selecione um subprojeto existente ou informe um novo subprojeto.')
 
         if area_tematica and subareas_tematicas:
-            subareas_de_outra_area = [
-                subarea.nome for subarea in subareas_tematicas
-                if subarea.area_tematica_id != area_tematica.id
-            ]
-            if subareas_de_outra_area:
-                self.add_error(
-                    'subareas_tematicas',
-                    'Todas as subáreas devem pertencer à Área Temática selecionada.',
-                )
+            try:
+                Registro.validar_subareas_tematicas(area_tematica, subareas_tematicas)
+            except ValidationError as error:
+                self.add_error('subareas_tematicas', error)
 
         if novo_subprojeto and not cleaned_data.get('novo_projeto_subprojeto'):
             self.add_error('novo_projeto_subprojeto', 'Selecione o projeto para cadastrar o novo subprojeto.')
@@ -241,6 +236,14 @@ class RegistroForm(forms.ModelForm):
             instance.subprojeto = self._resolve_subprojeto()
 
             if commit:
+                area_anterior_id = None
+                if instance.pk:
+                    area_anterior_id = Registro.objects_all.filter(
+                        pk=instance.pk
+                    ).values_list('area_tematica_id', flat=True).first()
+                if area_anterior_id and area_anterior_id != instance.area_tematica_id:
+                    instance.subareas_tematicas.clear()
+
                 instance.save()
 
                 # --- CORREÇÃO: Inicializa a lista de IDs de autores vindos do formulário ---
