@@ -80,9 +80,21 @@
 
 .category-card {
     min-width: 120px;
-    max-width: 140px;
+    max-width: 160px;
     min-height: 120px;
     overflow: hidden;
+}
+
+@media (min-width: 992px) {
+    .categories-section .row {
+        flex-wrap: nowrap;
+        gap: 1rem !important;
+    }
+
+    .category-card {
+        flex: 1 1 0;
+        min-width: 140px;
+    }
 }
 
 .category-icon-container {
@@ -434,7 +446,7 @@
 <!-- Divider -->
 <div class="divider mt-1"></div>
 <!-- Categories Section -->
-<div class="container categories-section">
+<div class="container-xxl categories-section">
     <div class="categories-title">
         <h2 class="text-white text-center">PRINCIPAIS CATEGORIAS</h2>
     </div>
@@ -535,6 +547,26 @@
                     <img src="{% static 'assets/11-1294.svg' %}" alt="Publicação Científica" class="img-fluid" />
                 </div>
                 <p class="card-text mt-3 mb-0 text-custom-dark category-text">Publicações Científicas<br></p>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if category_mapping.publicacoes_eventos %}
+        <a href="{% url 'core:repositorio' %}?categoria=publicacoes_eventos" class="card category-card category-link text-decoration-none border-0 rounded-4 bg-custom-light-gray" data-category-name="Publicações em Eventos">
+            <div class="card-body p-3 d-flex flex-column justify-content-center align-items-center">
+                <div class="category-icon-container">
+                    <img src="{% static 'assets/11-1294.svg' %}" alt="Publicações em Eventos" class="img-fluid" />
+                </div>
+                <p class="card-text mt-3 mb-0 text-custom-dark category-text">Publicações em Eventos</p>
+            </div>
+        </a>
+        {% else %}
+        <div class="card category-card text-decoration-none border-0 rounded-4 bg-custom-light-gray" style="opacity: 0.6; cursor: not-allowed;" title="Categoria indisponível">
+            <div class="card-body p-3 d-flex flex-column justify-content-center align-items-center">
+                <div class="category-icon-container">
+                    <img src="{% static 'assets/11-1294.svg' %}" alt="Publicações em Eventos" class="img-fluid" />
+                </div>
+                <p class="card-text mt-3 mb-0 text-custom-dark category-text">Publicações em Eventos</p>
             </div>
         </div>
         {% endif %}

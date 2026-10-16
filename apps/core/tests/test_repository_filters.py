@@ -123,6 +123,22 @@ class PublicacoesCientificasCategoryTest(TestCase):
                     {registro.pk},
                 )
 
+    def test_events_category_filters_only_event_publications(self):
+        evento = self._criar_registro('PUBLICAÇÃO EM EVENTOS')
+        self._criar_registro('TESE')
+
+        resultado = filter_repository_queryset({'categoria': 'publicacoes_eventos'})
+
+        self.assertSetEqual(set(resultado.values_list('pk', flat=True)), {evento.pk})
+
+    def test_events_category_card_links_only_when_type_exists(self):
+        response = self.client.get(reverse('core:repositorio'))
+        self.assertNotContains(response, '?categoria=publicacoes_eventos')
+
+        TipoDocumento.objects.create(nome='PUBLICAÇÃO EM EVENTOS', ativo=True)
+        response = self.client.get(reverse('core:repositorio'))
+        self.assertContains(response, '?categoria=publicacoes_eventos')
+
     def test_unknown_category_returns_no_records(self):
         self._criar_registro('ARTIGO CIENTÍFICO')
 
