@@ -8,12 +8,13 @@ from apps.repositorio.models.repositorio import Registro, TipoDocumento
 
 
 CATEGORIA_TIPOS_DOCUMENTO = {
-    'livros': ('livro', 'livros'),
-    'artigos': ('artigo científico', 'publicação científica (artigos)'),
+    'livros': ('livro', 'capítulo de livro'),
+    'artigos': ('artigo científico'),
     'relatorios_tecnicos': ('relatório técnico', 'relatório técnico final'),
     'videos': ('vídeo', 'vídeos'),
     'publicacoes_cientificas': ('tcc/monografia', 'tese', 'dissertação'),
-    'publicacoes_eventos': ('publicação em eventos',),
+    'publicacoes_eventos': ('publicação em eventos'),
+    'materiais_educativos': ('material educativo',),
 }
 
 ORDENACOES_PERMITIDAS = frozenset({'-data_publicacao', 'data_publicacao', 'titulo'})
