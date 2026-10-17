@@ -9,9 +9,9 @@ from apps.repositorio.models.repositorio import Registro, TipoDocumento
 
 CATEGORIA_TIPOS_DOCUMENTO = {
     'livros': ('livro', 'capítulo de livro'),
-    'artigos': ('artigo científico'),
-    'relatorios_tecnicos': ('relatório técnico'),
-    'videos': ('vídeo'),
+    'artigos': ('artigo científico',),
+    'relatorios_tecnicos': ('relatório técnico',),
+    'videos': ('vídeo', 'vídeos'),
     'publicacoes_cientificas': ('tcc/monografia', 'tese', 'dissertação'),
     'publicacoes_eventos': ('publicação em eventos',),
 }
