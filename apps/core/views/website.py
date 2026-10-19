@@ -109,9 +109,9 @@ class TCCEView(TemplateView):
             registros__subprojeto__ativo=True,
         ).distinct().count()
         
-        # Relatórios técnicos (tipo_documento contém 'RELATÓRIO')
+        # Relatórios técnicos (nome exato, sem diferenciar maiúsculas/minúsculas)
         relatorios_tecnicos = registros_queryset.filter(
-            tipo_documento__nome__icontains='RELATÓRIO TÉCNICO FINAL'
+            tipo_documento__nome__iexact='RELATÓRIO TÉCNICO'
         ).count()
         
         return {
@@ -167,9 +167,9 @@ class TCCEView(TemplateView):
             registros__subprojeto__ativo=True,
         ).distinct().count()
         
-        # Relatórios técnicos (tipo_documento contém 'RELATÓRIO TÉCNICO FINAL')
+        # Relatórios técnicos (nome exato, sem diferenciar maiúsculas/minúsculas)
         relatorios_tecnicos = registros_queryset.filter(
-            tipo_documento__nome__icontains='RELATÓRIO TÉCNICO FINAL'
+            tipo_documento__nome__iexact='RELATÓRIO TÉCNICO'
         ).count()
         
         return {
