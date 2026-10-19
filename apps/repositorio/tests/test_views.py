@@ -102,7 +102,8 @@ class TCCEViewCountersTest(TestCase):
             ativo=True,
         )
         self.artigo = TipoDocumento.objects.create(nome='ARTIGO CIENTÍFICO', ativo=True)
-        self.relatorio = TipoDocumento.objects.create(nome='RELATÓRIO TÉCNICO FINAL', ativo=True)
+        self.relatorio = TipoDocumento.objects.create(nome='RELATÓRIO TÉCNICO', ativo=True)
+        self.relatorio_final = TipoDocumento.objects.create(nome='RELATÓRIO TÉCNICO FINAL', ativo=True)
         self.status_publicado = Status.objects.create(nome='PUBLICADO', ativo=True)
         self.status_rascunho = Status.objects.create(nome='RASCUNHO', ativo=True)
         self.tipo_publicacao = TipoPublicacao.objects.create(nome='Revista', ativo=True)
@@ -147,6 +148,11 @@ class TCCEViewCountersTest(TestCase):
             status=self.status_rascunho,
         )
         registro_relatorio.autores.add(self.autor_ativo)
+        self._criar_registro(
+            subprojeto=self.subprojeto,
+            tipo_documento=self.relatorio_final,
+            status=self.status_rascunho,
+        )
         registro_inativo = self._criar_registro(
             subprojeto=self.subprojeto,
             tipo_documento=self.artigo,
@@ -170,7 +176,7 @@ class TCCEViewCountersTest(TestCase):
         estatisticas = TCCEView()._calcular_estatisticas_tcce(self.projeto.pk)
         estatisticas_globais = TCCEView()._calcular_estatisticas_todos_tcces()
         esperado = {
-            'producoes_academicas': 2,
+            'producoes_academicas': 3,
             'producoes_publicadas': 1,
             'artigos_cientificos': 1,
             'autores_unicos': Autor.objects.filter(
