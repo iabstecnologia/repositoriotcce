@@ -1,7 +1,7 @@
 from .website import (
     HomeView,
     TCCEView,
-    SobreView,
+    ContatoView,
     GaleriaView,
 )
 from .repositorio import (

@@ -3,13 +3,13 @@ from django.test import TestCase
 from django.urls import reverse
 
 
-class SobrePageViewTest(TestCase):
-    def test_sobre_page_renders(self):
-        response = self.client.get(reverse('core:sobre'))
+class ContatoPageViewTest(TestCase):
+    def test_contato_page_renders(self):
+        response = self.client.get(reverse('core:contato'))
 
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'website/sobre.html')
-        self.assertContains(response, 'Sobre')
+        self.assertTemplateUsed(response, 'website/contato.html')
+        self.assertContains(response, 'Contato')
         self.assertContains(response, 'João Pedro Alves Loiola')
         self.assertContains(response, 'Pedro Henrique Soares')
         self.assertContains(response, 'Pedro Costa')
@@ -27,3 +27,6 @@ class SobrePageViewTest(TestCase):
 
     def test_sobre_url_resolves_to_sobre_path(self):
         self.assertEqual(reverse('core:sobre'), '/sobre/')
+
+    def test_contato_url_resolves_to_contato_path(self):
+        self.assertEqual(reverse('core:contato'), '/contato/')
